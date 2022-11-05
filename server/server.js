@@ -1,0 +1,31 @@
+'use strict';
+
+const express = require('express');
+const { expressValidator, check, validationResult } = require('express-validator');
+const cors = require('cors');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const session = require('express-session');
+
+
+// init express
+const app = express();
+const port = 3001;
+
+// set up the middlewares
+app.use(express.json());
+
+
+// set up and enable cors
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200,
+    credentials: true,
+};
+app.use(cors(corsOptions));
+
+
+/********* APIs *********/
+  
+// activate the server
+app.listen(port, () => console.log(`Server started at http://localhost:${port}.`));
