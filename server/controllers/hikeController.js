@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, checkSchema , validationResult} = require('express-validator');
+const {expressValidator, check, query, validationResult} = require('express-validator');
 const router = express.Router();
 
 const jsonValidator = require('jsonschema').Validator;
@@ -31,12 +31,15 @@ const hikeValidator = (req, res, next) => {
     next();
 }
 
-
-
-router.get('/hikes',
+router.get('/hikes', 
+    [query('minLen').isInt({ min: 0}), query('maxLen').isInt({ min: 0}),
+    query('minTime').isInt({ min: 0}), query('maxTime').isInt({ min: 0}),
+    query('minAscent').isInt({ min: 0}), query('maxAscent').isInt({ min: 0}),
+    query('difficulty').isString().trim().notEmpty(),
+    query('centerPointLat').isNumeric(), query('centerPointLon').isNumeric(), query('radius').isInt({ min: 0})],
     async (req, res) => {
         try {
-            const result = await hikeService.getAllHikes();
+            const result = await hikeService.getHikes(req.query.minLen, req.query.maxLen, req.query.minTime, req.query.maxTime, req.query.minAscent, req.query.maxAscent, req.query.difficulty ? req.query.difficulty : undefined, req.query.centerPointLat, req.query.centerPointLon, req.query.radius);
             return res.status(200).json(result);
         } catch (err) {
             switch(err.returnCode){
