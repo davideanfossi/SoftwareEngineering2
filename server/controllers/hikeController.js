@@ -36,10 +36,20 @@ router.get('/hikes',
     query('minTime').isInt({ min: 0}), query('maxTime').isInt({ min: 0}),
     query('minAscent').isInt({ min: 0}), query('maxAscent').isInt({ min: 0}),
     query('difficulty').isString().trim().notEmpty(),
-    query('centerPointLat').isNumeric(), query('centerPointLon').isNumeric(), query('radius').isInt({ min: 0})],
+    query('baseLat').isNumeric(), query('baseLon').isNumeric(), query('radius').isInt({ min: 0})],
     async (req, res) => {
         try {
-            const result = await hikeService.getHikes(req.query.minLen, req.query.maxLen, req.query.minTime, req.query.maxTime, req.query.minAscent, req.query.maxAscent, req.query.difficulty ? req.query.difficulty : undefined, req.query.centerPointLat, req.query.centerPointLon, req.query.radius);
+            const minLen = req.query.minLen ? Number.parseInt(req.query.minLen) : undefined;
+            const maxLen = req.query.maxLen ? Number.parseInt(req.query.maxLen) : undefined;
+            const minTime = req.query.minTime ?  Number.parseInt(req.query.minTime) : undefined;
+            const maxTime = req.query.maxTime ? Number.parseInt(req.query.maxTime) : undefined;
+            const minAscent = req.query.minAscent ? Number.parseInt(req.query.minAscent) : undefined;
+            const maxAscent = req.query.maxAscent ? Number.parseInt(req.query.maxAscent) : undefined;
+            const difficulty = req.query.difficulty ? req.query.difficulty : undefined;
+            const baseLat = req.query.baseLat ? Number.parseFloat(req.query.baseLat) : undefined;
+            const baseLon = req.query.baseLon ? Number.parseFloat(req.query.baseLon) : undefined;
+            const radius = req.query.radius ? Number.parseInt(req.query.radius) : undefined;
+            const result = await hikeService.getHikes(minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius);
             return res.status(200).json(result);
         } catch (err) {
             switch(err.returnCode){
