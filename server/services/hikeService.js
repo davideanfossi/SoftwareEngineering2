@@ -12,14 +12,17 @@ class HikeService {
         this.pointDAO = pointDAO;
     }
 
-    getHikes = async (minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius) => {
+    getHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius) => {
         try {
             let hikes;
+            const offset = (pageNumber - 1) * pageSize; // offset of the page
+            const totalPages = Math.ceil(await this.hikeDAO.countHikes() / pageSize);
+
             if (minLen === undefined && maxLen === undefined && minTime === undefined && maxTime === undefined 
                 && minAscent === undefined && maxAscent === undefined && difficulty === undefined)
-                hikes = await this.hikeDAO.getAllHikes();
+                hikes = await this.hikeDAO.getAllHikes(offset, pageSize);
             else
-                hikes = await this.hikeDAO.getHikes(minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty);
+                hikes = await this.hikeDAO.getHikes(minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, offset, pageSize);
             
             for (const hike of hikes) {
                 hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
@@ -38,7 +41,13 @@ class HikeService {
                         return false;
                 });
             }
-            return hikes;
+
+            // UserStory 4: add authorization for 
+            for (const hike of hikes) {
+                hike.referencePoints = [];
+            }
+
+            return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": hikes};
         } catch (err) {
             throw err;
         }

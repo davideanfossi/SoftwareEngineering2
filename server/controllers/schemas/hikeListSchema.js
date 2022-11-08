@@ -50,6 +50,7 @@ const hikeListSchema = {
     "properties": {
         "totalPages": {"type":"integer"},
         "pageNumber": {"type":"integer"},
+        "pageSize": {"type": "integer"},
         "pageItems": {
             "type":"array", 
             "items": {"$ref": "#definitions/hike"}
