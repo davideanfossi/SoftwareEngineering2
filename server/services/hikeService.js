@@ -24,13 +24,19 @@ class HikeService {
             for (const hike of hikes) {
                 hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
                 hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
-                // hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
+                hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
             }
             
             if(baseLat !== undefined && baseLon !== undefined && radius !== undefined){
-                hikes = hikes.filter(hike => 
-                    isWithinCircle(baseLat, baseLon, hike.startPoint.latitude, hike.startPoint.longitude, radius)
-                );
+                // filer all hikes with start point, end point or reference points inside the radius
+                hikes = hikes.filter(hike => {
+                    if (isWithinCircle(baseLat, baseLon, hike.startPoint.latitude, hike.startPoint.longitude, radius) 
+                        || isWithinCircle(baseLat, baseLon, hike.endPoint.latitude, hike.endPoint.longitude, radius)
+                        || hike.referencePoints.some(rp => isWithinCircle(baseLat, baseLon, rp.latitude, rp.longitude, radius)))
+                        return true;
+                    else
+                        return false;
+                });
             }
             return hikes;
         } catch (err) {
