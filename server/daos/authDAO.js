@@ -9,7 +9,7 @@ class authDAO {
     getUserbyEmail = async (email) => {
         try {
             const sql = "SELECT * FROM User WHERE email = ?";
-            const res = await this.dbManager.get(sql, [email]);
+            const res = await this.dbManager.get(sql, [email], true);
             return res ? res.id : null;
         } catch (err) {
             throw err;
