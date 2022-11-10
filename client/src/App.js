@@ -1,5 +1,6 @@
 import './App.css';
 import { LoginForm } from "./Components/Login"
+import { Register } from './Components/Register';
 
 function App() {
   return (
