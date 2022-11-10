@@ -42,7 +42,6 @@ router.get('/hikes',
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                console.log(errors.array());
                 return res.status(400).end();
             }
             const minLen = req.query.minLen ? Number.parseInt(req.query.minLen) : undefined;
@@ -60,7 +59,6 @@ router.get('/hikes',
             const result = await hikeService.getHikes(pageNumber, pageSize, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius);
             return res.status(200).json(result);
         } catch (err) {
-            console.log(err);
             switch(err.returnCode){
                 default:
                     return res.status(500).end();

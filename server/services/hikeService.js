@@ -97,7 +97,6 @@ function computeDistance(lat1, lon1, lat2, lon2) {
  * @returns true if the point is inside the radius, otherwise false
  */
 function isWithinCircle(baseLat, baseLng, lat, lng, radius){
-    // console.log(computeDistance(baseLat, baseLng, lat, lng));
     return computeDistance(baseLat, baseLng, lat, lng) <= radius;
 }
 

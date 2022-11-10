@@ -43,17 +43,6 @@ class HikeDAO {
             
         }
     }
-
-    countHikes = async () => {
-        try {
-            const sql = "SELECT count(id) AS n FROM Hike";
-            const res = await this.dbManager.get(sql, [], true);
-            return res.n;
-        } catch (err) {
-            throw err;
-        }
-    }
-
     
 }
 
