@@ -5,6 +5,7 @@ const router = express.Router();
 const DbManager = require("../database/dbManager");
 const AuthService = require('./../services/authService');
 const AuthDAO = require('./../daos/authDAO');
+const { User } = require('../models/authModel');
 const { json } = require('express');
 const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
@@ -28,16 +29,17 @@ const sender = {
 
 router.post('/signup',
     async (req, res) => {
-        let response={};
+        let response = {};
         try {
-            const { name, email, password } = req.body;
+            const { email, username, role, password, name, surname, phoneNumber } = req.body;
+
             let user = await authService.getUser(email);
             if (user) {
                 return res.status(400).json({ error: "User with this email already exists." });
             }
 
             const token = jwt.sign(
-                { name, email, password },
+                { email, username, role, name, surname, phoneNumber },
                 process.env.JWT_ACC_ACTIVATE,
                 { expiresIn: '20m' });
 
@@ -83,16 +85,24 @@ router.post('/signup',
                 to: [{ "email": email }],
                 subject: "HikeTrack Account - Email verification",
                 htmlContent: `
+                <form action="${process.env.CLIENT_URL}/authentication/activate/${token}">
+                    <button class="btn btn-danger btn-lg">Click here!</button>
+                </form>
+                
                 <h2>Please click on followng link in the next 20 minutes to activate your account!</h2>
                 <a href="${process.env.CLIENT_URL}/authentication/activate/${token}">Click here!</a>
                 `
-            }).then(console.log).catch((err) => {res.status(422).text(err.message)});
-            return res.status(201).json({"msg": "Registration request successful, to complete registration confirm email"}).end();
+            }).then(console.log(`${process.env.CLIENT_URL}/authentication/activate/${token}`)).catch((err) => { res.status(422).text(err.message) });
+
+
+            await authService.addUser(email, username, role, password, name, surname, phoneNumber);
+
+            return res.status(201).json({ "msg": "Registration request successful, to complete registration confirm email" }).end();
 
         } catch (err) {
             console.log(err);
             switch (err.returnCode) {
-                case 400:
+                case 422:
                     return res.status(422).text(err.message);
                 default:
                     return res.status(500).end();
@@ -104,22 +114,25 @@ router.post('/signup',
 router.post('/email-activate',
     async (req, res) => {
         try {
-            const { token } = req.body;
+            let { token } = req.body;
             if (token) {
                 jwt.verify(token, process.env.JWT_ACC_ACTIVATE, async function (err, decodedToken) {
-                    if (err)
+                    if (err) {
                         return res.status(400).json({ error: "incorrect or expired link." });
-                    const { name, email, password } = decodedToken;
-                    let user = await authService.getUser(email);
+                    }
+                    const { email, username, role, name, surname, phoneNumber } = decodedToken;
+
+                    let user = await authService.getUser(email, true);
                     if (user) {
                         return res.status(400).json({ error: "User with this email already exists." });
                     }
-                    let res = await authService.addUser(name, email, password);                   
+                    user = await authService.getUser(email);
+                    await authService.verifyUser(email);
+                    return res.status(201).json(new User(user, email, username, role, name, surname, phoneNumber, 'true')).end();
                 })
             } else {
                 return res.json({ error: "Something went wrong during verification process!" });
             }
-            return res.status(201).end();
         }
         catch (err) {
             return res.status(500).end();
