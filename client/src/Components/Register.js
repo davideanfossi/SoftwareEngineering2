@@ -9,24 +9,25 @@ function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
-
+    const [additionalData, setAdditionalData] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
 
     //A cosa serve Header?? a riga 16
     return(
         <>
-           
             <Container>
                 <Row className="justify-content-md-center">
                     <Form>
                         <h1>Hike Tracker</h1>
                         <h3>Please compile the data down below:</h3>
+                        {additionalData ? 
+                        <>
                         <Form.Group className='mb-2' controlId='name'>
                             <Form.Label>Name:</Form.Label>
                             <Form.Control 
                                     type="text" 
                                     value={name} 
-                                    onChange={(ev) => setName(ev.targer.value)} 
+                                    onChange={(ev) => setName(ev.target.value)} 
                                     required={true} 
                                     placeholder="Your name here" />
                         </Form.Group>
@@ -35,16 +36,18 @@ function Register() {
                         <Form.Control 
                                     type='text' 
                                     value={surname} 
-                                    onChange={(ev) => setSurname(ev.targer.value)} 
+                                    onChange={(ev) => setSurname(ev.target.value)} 
                                     required={true} 
                                     placeholder="Your surname here" />
                         </Form.Group>
+                        </> 
+                        : <></> }
                         <Form.Group className='mb-2' controlId='email'>
                         <Form.Label>Email:</Form.Label>
                         <Form.Control 
                                     type='email' 
                                     value={email} 
-                                    onChange={(ev) => setEmail(ev.targer.value)} 
+                                    onChange={(ev) => setEmail(ev.target.value)} 
                                     required={true} 
                                     placeholder="Enter email" />
                         </Form.Group>
@@ -53,7 +56,7 @@ function Register() {
                         <Form.Control 
                                     type='password' 
                                     value={password} 
-                                    onChange={(ev) => setPassword(ev.targer.value)} 
+                                    onChange={(ev) => setPassword(ev.target.value)} 
                                     required={true}
                                     minLength={8}
                                     placeholder="Enter a password" 
@@ -67,7 +70,7 @@ function Register() {
                         <Form.Control 
                                     type='password' 
                                     value={confPassword} 
-                                    onChange={(ev) => setConfPassword(ev.targer.value)} 
+                                    onChange={(ev) => setConfPassword(ev.target.value)} 
                                     required={true} 
                                     minLength={8}
                                     placeholder="Confirm your password" />
