@@ -69,7 +69,15 @@ class HikeService {
         }
     }
 
+    addHike = async (title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description) => {
+        try {
+            const res = await this.hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description);
+            return res;
+        } catch (err) {
+            throw err;
+        }
 
+    }
 }
 
 // compute the distance in kilometers between two points
@@ -99,5 +107,7 @@ function computeDistance(lat1, lon1, lat2, lon2) {
 function isWithinCircle(baseLat, baseLng, lat, lng, radius){
     return computeDistance(baseLat, baseLng, lat, lng) <= radius;
 }
+
+
 
 module.exports = HikeService;

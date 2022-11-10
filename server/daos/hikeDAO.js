@@ -42,7 +42,17 @@ class HikeDAO {
         } catch (err) {
             
         }
-    }
+    };
+
+    insertHike = async (title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description ) => {
+        try {
+            const sql="insert into Hike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description) values(?,?,?,?,?,?,?,?)";
+            const res = await this.dbManager.query(sql, [title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description], true);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    };
     
 }
 

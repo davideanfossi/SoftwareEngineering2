@@ -79,6 +79,43 @@ router.get('/hikes/limits',
         }
 });
 
+router.post('/hike',
+[
+    check('title').notEmpty().isString().trim(), 
+    check('length').notEmpty().isInt({ min: 0}),
+    check('expectedTime').notEmpty().isInt({ min: 0}), 
+    check('ascent').notEmpty().isInt({ min: 0}),
+    check('difficulty').notEmpty().isString().trim(), 
+    check('startPointId').notEmpty().isInt({ min: 0}),
+    check('endPointId').notEmpty().isInt({ min: 0}),
+    check('description').optional().isString().trim()
+], 
+    async(req,res) => {
+        try {
+             const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).end();
+            } 
+
+            const title=req.body.title;
+            const length =  Number.parseInt(req.body.length);
+            const expectedTime = Number.parseInt(req.body.expectedTime);
+            const ascent =  Number.parseInt(req.body.ascent);
+            const difficulty=req.body.difficulty;
+            const startPointId = Number.parseInt(req.body.startPointId);
+            const endPointId =  Number.parseInt(req.body.endPointId);
+            const description=req.body.description;
+
+            const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description);
+            return res.status(200).json(result);
+        } catch (err) {
+            switch(err.returnCode){
+                default:
+                    return res.status(500).json(err.message);
+            }
+        }
+    });
+
 
 // test json validator
 router.post('/validator', hikeValidator,
