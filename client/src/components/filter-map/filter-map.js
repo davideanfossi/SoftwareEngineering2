@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Circle, MapContainer, TileLayer } from "react-leaflet";
-const zoom = 13;
-export const FilterMap = ({ radius, lat, lon, setLat, setLon }) => {
+
+export const FilterMap = ({ radius, lat, lon,zoom, setLat, setLon, setZoom }) => {
   const [map, setMap] = useState(null);
   const center = useMemo(() => [lat, lon], [lat, lon]);
   const setCenter = useCallback(
@@ -14,8 +14,11 @@ export const FilterMap = ({ radius, lat, lon, setLat, setLon }) => {
   );
 
   const onMove = useCallback(() => {
-    if (map != null) setCenter(map.getCenter().lat, map.getCenter().lng);
-  }, [map, setCenter]);
+    if (map != null) {
+      setCenter(map.getCenter().lat, map.getCenter().lng);
+      setZoom(map.getZoom());
+    }
+  }, [map, setCenter, setZoom]);
 
   useEffect(() => {
     if (map != null) {
@@ -25,23 +28,6 @@ export const FilterMap = ({ radius, lat, lon, setLat, setLon }) => {
       };
     }
   }, [map, onMove]);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(function (position) {
-      setCenter(position.coords.latitude, position.coords.longitude);
-      if (map != null)
-        map.setView(
-          [position.coords.latitude, position.coords.longitude],
-          zoom
-        );
-    });
-  }, [map, setCenter]);
-  /*
-  useEffect(() => {
-    if (map != null) map.setView(center, zoom);
-    onMove();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map]);*/
 
   return (
     <div style={{ width: "100%", padding: "1rem" }}>
