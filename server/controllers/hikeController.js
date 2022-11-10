@@ -35,14 +35,13 @@ router.get('/hikes',
     [query('minLen').optional().isInt({ min: 0}), query('maxLen').optional().isInt({ min: 0}),
     query('minTime').optional().isInt({ min: 0}), query('maxTime').optional().isInt({ min: 0}),
     query('minAscent').optional().isInt({ min: 0}), query('maxAscent').optional().isInt({ min: 0}),
-    query('difficulty').optional().isString().trim().notEmpty(),
+    query('difficulty').optional().isString().trim(),
     query('baseLat').optional().isNumeric(), query('baseLon').optional().isNumeric(), query('radius').optional().isInt({ min: 0}),
     query('pageNumber').optional().isInt({min: 1}), query('pageSize').optional().isInt({min: 1})],
     async (req, res) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                console.log(errors.array());
                 return res.status(400).end();
             }
             const minLen = req.query.minLen ? Number.parseInt(req.query.minLen) : undefined;
@@ -60,7 +59,6 @@ router.get('/hikes',
             const result = await hikeService.getHikes(pageNumber, pageSize, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius);
             return res.status(200).json(result);
         } catch (err) {
-            console.log(err);
             switch(err.returnCode){
                 default:
                     return res.status(500).end();

@@ -12,17 +12,17 @@ class HikeService {
         this.pointDAO = pointDAO;
     }
 
-    getHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius) => {
+    getHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius=0) => {
         try {
             let hikes;
             const offset = (pageNumber - 1) * pageSize; // offset of the page
-            const totalPages = Math.ceil(await this.hikeDAO.countHikes() / pageSize);
 
             if (minLen === undefined && maxLen === undefined && minTime === undefined && maxTime === undefined 
-                && minAscent === undefined && maxAscent === undefined && difficulty === undefined)
-                hikes = await this.hikeDAO.getAllHikes(offset, pageSize);
+                && minAscent === undefined && maxAscent === undefined && difficulty === undefined){
+                    hikes = await this.hikeDAO.getAllHikes();
+                }
             else
-                hikes = await this.hikeDAO.getHikes(minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, offset, pageSize);
+                hikes = await this.hikeDAO.getHikes(minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty);
             
             for (const hike of hikes) {
                 hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
@@ -30,7 +30,8 @@ class HikeService {
                 hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
             }
             
-            if(baseLat !== undefined && baseLon !== undefined && radius !== undefined){
+            // if radius = 0 or not present then the filter is not executed
+            if((radius !== 0 && radius !== undefined) && baseLat !== undefined && baseLon !== undefined){
                 // filer all hikes with start point, end point or reference points inside the radius
                 hikes = hikes.filter(hike => {
                     if (isWithinCircle(baseLat, baseLon, hike.startPoint.latitude, hike.startPoint.longitude, radius) 
@@ -42,12 +43,17 @@ class HikeService {
                 });
             }
 
+            // take only page requested
+            const result = hikes.slice(offset, offset + pageSize);
+            
             // UserStory 4: add authorization for 
             for (const hike of hikes) {
                 hike.referencePoints = [];
             }
 
-            return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": hikes};
+            const totalPages = Math.ceil(hikes.length / pageSize);
+
+            return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": result};
         } catch (err) {
             throw err;
         }
@@ -91,7 +97,6 @@ function computeDistance(lat1, lon1, lat2, lon2) {
  * @returns true if the point is inside the radius, otherwise false
  */
 function isWithinCircle(baseLat, baseLng, lat, lng, radius){
-    // console.log(computeDistance(baseLat, baseLng, lat, lng));
     return computeDistance(baseLat, baseLng, lat, lng) <= radius;
 }
 
