@@ -45,4 +45,3 @@ CREATE TABLE "User" (
 	"tokenExpires" TEXT,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-
