@@ -35,7 +35,7 @@ router.get('/hikes',
     [query('minLen').optional().isInt({ min: 0}), query('maxLen').optional().isInt({ min: 0}),
     query('minTime').optional().isInt({ min: 0}), query('maxTime').optional().isInt({ min: 0}),
     query('minAscent').optional().isInt({ min: 0}), query('maxAscent').optional().isInt({ min: 0}),
-    query('difficulty').optional().isString().trim().notEmpty(),
+    query('difficulty').optional().isString().trim(),
     query('baseLat').optional().isNumeric(), query('baseLon').optional().isNumeric(), query('radius').optional().isInt({ min: 0}),
     query('pageNumber').optional().isInt({min: 1}), query('pageSize').optional().isInt({min: 1})],
     async (req, res) => {
