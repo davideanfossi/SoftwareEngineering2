@@ -17,9 +17,12 @@ CREATE TABLE "Hike" (
 	"startPointId" INTEGER NOT NULL,
 	"endPointId" INTEGER NOT NULL,
 	"description" TEXT,
+	"gpxPath" TEXT,
+	"userId" INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("startPointId") REFERENCES "Points"("id"),
-	FOREIGN KEY("endPointId") REFERENCES "Points"("id")
+	FOREIGN KEY("endPointId") REFERENCES "Points"("id"),
+	FOREIGN KEY("userId") REFERENCES "User"("id")
 );
 
 CREATE TABLE "ReferencePoints" (
