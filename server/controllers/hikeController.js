@@ -88,7 +88,8 @@ router.post('/hike',
     check('difficulty').notEmpty().isString().trim(), 
     check('startPointId').notEmpty().isInt({ min: 0}),
     check('endPointId').notEmpty().isInt({ min: 0}),
-    check('description').optional().isString().trim()
+    check('description').optional().isString().trim(),
+    check('gpxPath').optional().isString().trim()
 ], 
     async(req,res) => {
         try {
@@ -105,8 +106,11 @@ router.post('/hike',
             const startPointId = Number.parseInt(req.body.startPointId);
             const endPointId =  Number.parseInt(req.body.endPointId);
             const description=req.body.description;
+            const gpxPath=req.body.gpxPath;
+            const userId=req.user? req.user.id : null;
 
-            const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description);
+
+            const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description,gpxPath,userId);
             return res.status(200).json(result);
         } catch (err) {
             switch(err.returnCode){
