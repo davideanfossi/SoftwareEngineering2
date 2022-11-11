@@ -12,22 +12,34 @@ class HikeService {
         this.pointDAO = pointDAO;
     }
 
-    getHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius=0) => {
+    getHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius=0, city, province) => {
         try {
             let hikes;
+            let returnedHikes;
             const offset = (pageNumber - 1) * pageSize; // offset of the page
 
-            if (minLen === undefined && maxLen === undefined && minTime === undefined && maxTime === undefined 
-                && minAscent === undefined && maxAscent === undefined && difficulty === undefined){
+            if (!minLen && !maxLen && !minTime && !maxTime && !minAscent && !maxAscent && !difficulty)
                     hikes = await this.hikeDAO.getAllHikes();
-                }
             else
                 hikes = await this.hikeDAO.getHikes(minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty);
             
+            // get points
             for (const hike of hikes) {
                 hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
                 hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
                 hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
+            }
+
+            if(city){
+                hikes = hikes.filter(hike => {
+                   return hike.startPoint.city === city || hike.endPoint.city === city || hike.referencePoints.some(p => p.city === city);
+                });
+            }
+
+            if(province){
+                hikes = hikes.filter(hike => {
+                   return hike.startPoint.province === province || hike.endPoint.province === province || hike.referencePoints.some(p => p.province === province);
+                });
             }
             
             // if radius = 0 or not present then the filter is not executed
@@ -44,16 +56,11 @@ class HikeService {
             }
 
             // take only page requested
-            const result = hikes.slice(offset, offset + pageSize);
-            
-            // UserStory 4: add authorization for 
-            for (const hike of hikes) {
-                hike.referencePoints = [];
-            }
-
+            returnedHikes = hikes.slice(offset, offset + pageSize);
+                        
             const totalPages = Math.ceil(hikes.length / pageSize);
 
-            return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": result};
+            return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes};
         } catch (err) {
             throw err;
         }
@@ -98,6 +105,23 @@ function computeDistance(lat1, lon1, lat2, lon2) {
  */
 function isWithinCircle(baseLat, baseLng, lat, lng, radius){
     return computeDistance(baseLat, baseLng, lat, lng) <= radius;
+}
+
+
+/** TODO: check if it works.
+ * compute the ascent of the hike in meters
+ * @param {*} pointsList list of points (start + reference + end)
+ * @returns the ascent computed as the sum of positive delta between points altitudes
+ */
+function computeHikeAscent(pointsList){
+    const ascent = 0;
+    pointsList.forEach((point, idx) => {
+        if(idx+1 <= pointsList.length - 1){
+            const delta = pointsList[idx+1].altitude - point.altitude;
+            ascent += delta > 0 ? delta : 0; 
+        }
+    });
+    return ascent;
 }
 
 module.exports = HikeService;
