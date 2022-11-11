@@ -8,7 +8,7 @@ class DBManager {
     #db;
     #address;
     constructor(dbName) {
-        if (DBManager._instance) {
+        if (dbName !== "TEST" && DBManager._instance) {
             return DBManager._instance;
         }
         DBManager._instance = this;
