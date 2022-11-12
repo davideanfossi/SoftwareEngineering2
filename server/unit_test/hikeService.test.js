@@ -98,6 +98,10 @@ describe('Hike DAO unit test', () => {
     testGetHikes("test get hikes province", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Lombardia",
         {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4]});
 
+
+    testAddHike("title 5", 1000, 120, 300, mid, 1, 2, "description 5", null, 1);
+    testAddHike("title 6", 2000, 220, 400, high, 3, 4, "description 6", null, 1);
+    testAddHike("title 7", 3000, 320, 500, low, 1, 4, "description 7", null, 1);
 });
 
 
@@ -116,4 +120,15 @@ function testGetHikesLimits(expectedObj) {
     });
 }
 
+function testAddHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId){
+    test('add new hike', async() => {
+
+        let lastID = await hikeService.addHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
+        expect(lastID).toBeTruthy();
+
+        var res = await hikeService.getHikes(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, difficulty, undefined, undefined, undefined, undefined, undefined);
+        expect(res.pageItems.length).toBeGreaterThan(0);
+
+    })
+}
 

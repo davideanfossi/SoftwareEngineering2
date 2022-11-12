@@ -98,10 +98,10 @@ function testInsertHike(title, length, expectedTime,ascent, difficulty ,startPoi
         let lastID = await hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
         expect(lastID).toBeTruthy();
 
-        var res = await hikeDAO.getAllHikes();
+        var res = await hikeDAO.getHikes(undefined,undefined,undefined,undefined,undefined,undefined,difficulty);
         expect(res.length).toBeGreaterThan(0);
 
-    })
+    });
 }
 
 
