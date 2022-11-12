@@ -8,7 +8,7 @@ const difficultyType = {
 
 class Hike{
 
-    constructor(id, title, length, expectedTime, ascent, difficulty, startPoint, endPoint, description, referencePoints=[]){
+    constructor(id, title, length, expectedTime, ascent, difficulty, startPoint, endPoint, description, referencePoints=[], gpxPath, userId){
         this.id = id;
         this.title = title;
         this.length = length;
@@ -19,6 +19,8 @@ class Hike{
         this.endPoint = endPoint;
         this.description = description;
         this.referencePoints = referencePoints;
+        this.gpxPath = gpxPath;
+        this.userId = userId;
     }
 }
 

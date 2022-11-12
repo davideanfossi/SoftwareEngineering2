@@ -14,7 +14,7 @@ class HikeDAO {
         try {
             const sql = "SELECT * FROM Hike ORDER BY id;";
             const res = await this.dbManager.get(sql, []);
-            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r. endPointId, r.description));
+            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r.endPointId, r.description, [], r.gpxPath, r.userId));
         } catch (err) {
             throw err;
         }
@@ -28,7 +28,7 @@ class HikeDAO {
             const res = difficulty ? 
                 await this.dbManager.get(sql, [minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty]) :
                 await this.dbManager.get(sql, [minLen, maxLen, minTime, maxTime, minAscent, maxAscent]);
-            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r. endPointId, r.description));
+            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r. endPointId, r.description, [], r.gpxPath, r.userId));
         } catch (err) {
             throw err;
         }
