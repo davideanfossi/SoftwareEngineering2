@@ -7,7 +7,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const DBManager = require("./database/dbManager");
 const LoginController = require("./controllers/loginController");
-const UserDAO = require("./daos/counterDAO");
+const UserDAO = require("./daos/userDAO");
 const session = require('express-session');
 
 

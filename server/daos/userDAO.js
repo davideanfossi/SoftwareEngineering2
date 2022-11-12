@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('../dtos/counterDTO');
+const User = require('../dtos/userDTO');
 const crypto = require("crypto");
 
 class UserDAO {
@@ -22,13 +22,12 @@ class UserDAO {
     }
 
   async insertUser(email, password) {    
-    let query = "INSERT INTO User (email, hash, salt) VALUES (?, ?, ?)";
+    let query = "INSERT INTO User (email, password) VALUES (?, ?)";
     try {
-      const output = await generateSecurePassword(password);
+      const encryptedPass = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
       const userId = await this.dbManager.query(query, [
         email,
-        output[0],
-        output[1]
+        encryptedPass
       ]);
 
       return userId;
@@ -46,29 +45,18 @@ class UserDAO {
         throw { err: 401, msg: "User not found" };
       }
       const login = await verifyPassword(
-        user[0].hash,
+        user[0].password,
         user[0].salt,
         password
       );
       if (!login) throw { err: 401, msg: "Invalid password" };
-      return new User(user[0].id, user[0].user);
+      return new User(user[0].id, user[0].username);
     } catch (err) {
       throw err;
     }
   }
 }
 
-//let encryptedPass = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
-
-async function generateSecurePassword(password) {
-  const buf = crypto.randomBytes(128); // generate random bytes
-  const salt = buf.toString("hex"); // convert bytes to hex string (to store in the DB)
-  const hash = crypto.createHash("sha256");
-  hash.update(password); // generate digest as SHA-256(password | salt)
-  hash.update(buf);
-  const pwd = hash.digest("hex");
-  return [pwd, salt];
-}
 
 async function verifyPassword(passwordStored, saltStored, password) {
   const salt = Buffer.from(saltStored, "hex"); // convert saltStored (hex string) to bytes
@@ -81,4 +69,6 @@ async function verifyPassword(passwordStored, saltStored, password) {
     return true;
   return false;
 }
+
+
 module.exports = UserDAO;
