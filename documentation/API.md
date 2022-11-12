@@ -24,7 +24,9 @@
     - `baseLat`: latitude of the center of the searched area (decimal number)
     - `baseLon`: longitude of the center of the searched area (decimal number)
     - `radius`: radius of the searched area expressed in `kilometers`
-- Example: `/api/hikes?minLen=500&maxLen=1500&difficulty=Hiker`
+    - `city`: string of the city
+    - `province`: string of the province
+- Example: `/api/hikes?page=1&pageSize=5&minLen=500&maxLen=1500&difficulty=Hiker`
 - Response: `200 OK` (success), `400 Bad Request` (query params not correct) or `500 Internal Server Error` (generic error).
 - Response body: 
     ```
