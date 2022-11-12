@@ -1,11 +1,16 @@
 'use strict'
-const { use } = require("passport");
 
- 
+const roles = [
+   "Hiker",
+   "Local Guide", 
+   //PlatformManager: "platformManager",
+   "Hut Worker",
+   //EmergencyOperator:"emergencyOperator" 
+]
 
 class User{
     
-    constructor(id, email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires){
+    constructor(id, email, username, role, name, surname, phoneNumber, isVerified){
         this.id = id;
         this.email = email;
         this.username = username;
@@ -18,4 +23,4 @@ class User{
 
 }
 
-module.exports = {User};
+module.exports = {User, roles};

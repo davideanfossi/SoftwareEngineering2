@@ -2,6 +2,7 @@
 
 const { rejects } = require('assert');
 const crypto = require('crypto');
+const { roles } = require('../models/authModel');
 
 
 class authService {
@@ -38,12 +39,19 @@ class authService {
 
     addUser = async (email, username, role, password, name, surname, phoneNumber) => {
         try {
-            //TODO insert validation
-            //if(validation FAIL)
-            //throw {
-            //    returncode: 422, 
-            //    message: 'validation of request body failed or attempt to create manager or administrator accounts'
-            //};
+            
+            if (role == "Hiker" && (name || surname || phoneNumber)) {
+                throw {
+                    returncode: 422, 
+                    message: 'validation of request body failed, Hiker should have only username, email and password fields'
+            };};
+
+            if (role != "Hiker" && (!name || !surname || !phoneNumber)) {
+                throw {
+                    returncode: 422, 
+                    message: 'validation of request body failed, this role should specify also name, surname and phone number'
+            };};
+
             let salt = crypto.randomBytes(16).toString('hex');
             let encryptedPass = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
             const res = await this.authDAO.insertUser(email, username, role, encryptedPass, salt, name, surname, phoneNumber);
@@ -51,6 +59,10 @@ class authService {
         } catch (err) {
             throw err;
         }
+    };
+
+    getRoles = () => {
+        return roles;
     };
 
 

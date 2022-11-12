@@ -9,6 +9,8 @@ const { User } = require('../models/authModel');
 const { json } = require('express');
 const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
+const userSchema = require('./../models/userSchema');
+const jsonValidator = require('jsonschema').Validator;
 
 const dbManager = new DbManager("PROD");
 const authDAO = new AuthDAO(dbManager);
@@ -27,8 +29,21 @@ const sender = {
 }
 
 
-router.post('/signup',
+const userValidator = (req, res, next) => {
+    const validator = new jsonValidator();
+    try {    
+        validator.validate(req.body, userSchema.user, { throwError: true }); 
+    } 
+    catch (error) {   
+        console.log(error, req.body);
+        return res.status(401).send('Invalid user format: ' + error.message); 
+    }  
+    next();
+}
+
+router.post('/signup', userValidator, 
     async (req, res) => {
+        console.log(userSchema);
         let response = {};
         try {
             const { email, username, role, password, name, surname, phoneNumber } = req.body;
@@ -80,19 +95,17 @@ router.post('/signup',
             //     email: email
             // ];
 
-            tranEmailApi.sendTransacEmail({
+            await tranEmailApi.sendTransacEmail({
                 sender: sender,
                 to: [{ "email": email }],
                 subject: "HikeTrack Account - Email verification",
                 htmlContent: `
+                <h2>Please click on followng button in the next 20 minutes to activate your account!</h2>
                 <form action="${process.env.CLIENT_URL}/authentication/activate/${token}">
                     <button class="btn btn-danger btn-lg">Click here!</button>
                 </form>
-                
-                <h2>Please click on followng link in the next 20 minutes to activate your account!</h2>
-                <a href="${process.env.CLIENT_URL}/authentication/activate/${token}">Click here!</a>
                 `
-            }).then(console.log(`${process.env.CLIENT_URL}/authentication/activate/${token}`)).catch((err) => { res.status(422).text(err.message) });
+            }).then(console.log(`${process.env.CLIENT_URL}/authentication/activate/${token}`)).catch((err) => { res.status(422).json(err.message) });
 
 
             await authService.addUser(email, username, role, password, name, surname, phoneNumber);
@@ -101,9 +114,9 @@ router.post('/signup',
 
         } catch (err) {
             console.log(err);
-            switch (err.returnCode) {
+            switch (err.returncode) {
                 case 422:
-                    return res.status(422).text(err.message);
+                    return res.status(422).json(err.message);
                 default:
                     return res.status(500).end();
             }
@@ -139,5 +152,12 @@ router.post('/email-activate',
         }
     }
 );
+
+router.get('/roles', 
+        (req, res) => {
+            let response = authService.getRoles();
+            res.status(200).json(response);
+        }
+    )
 
 module.exports = router;
