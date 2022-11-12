@@ -64,6 +64,10 @@ describe('Hike DAO unit test', () => {
 
     const expectedMaxData = {"maxLength": 2000, "maxExpectedTime": 180, "maxAscent": 500};
     testGetMaxData(expectedMaxData);
+
+    testInsertHike("title 5", 1000, 120, 300, mid, 1, 2, "description 5", null, 1);
+    testInsertHike("title 6", 2000, 220, 400, high, 3, 4, "description 6", null, 1);
+    testInsertHike("title 7", 3000, 320, 500, low, 1, 4, "description 7", null, 1);
 });
 
 
@@ -86,6 +90,18 @@ function testGetMaxData(expectedObj) {
         const res = await hikeDAO.getMaxData();
         expect(res).toEqual(expectedObj);
     });
+}
+
+function testInsertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId){
+    test('add new hike', async() => {
+
+        let lastID = await hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
+        expect(lastID).toBeTruthy();
+
+        var res = await hikeDAO.getAllHikes();
+        expect(res.length).toBeGreaterThan(0);
+
+    })
 }
 
 
