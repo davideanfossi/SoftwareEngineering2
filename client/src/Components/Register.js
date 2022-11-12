@@ -6,9 +6,11 @@ function Register() {
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
+
     const [additionalData, setAdditionalData] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
 
@@ -29,7 +31,8 @@ function Register() {
                                     value={name} 
                                     onChange={(ev) => setName(ev.target.value)} 
                                     required={true} 
-                                    placeholder="Your name here" />
+                                    placeholder="Your name here"
+                                    maxLength={20}/>
                         </Form.Group>
                         <Form.Group className='mb-2' controlId='surname'>
                         <Form.Label>Surname:</Form.Label>
@@ -38,10 +41,21 @@ function Register() {
                                     value={surname} 
                                     onChange={(ev) => setSurname(ev.target.value)} 
                                     required={true} 
-                                    placeholder="Your surname here" />
+                                    placeholder="Your surname here" 
+                                    maxLength={20}/>
                         </Form.Group>
                         </> 
                         : <></> }
+                        <Form.Group className='mb-2' controlId='surname'>
+                        <Form.Label>Username:</Form.Label>
+                        <Form.Control 
+                                    type='text' 
+                                    value={username} 
+                                    onChange={(ev) => setUsername(ev.target.value)} 
+                                    required={true} 
+                                    placeholder="Create a fancy username"
+                                    maxLength={20} />
+                        </Form.Group>
                         <Form.Group className='mb-2' controlId='email'>
                         <Form.Label>Email:</Form.Label>
                         <Form.Control 
@@ -49,7 +63,8 @@ function Register() {
                                     value={email} 
                                     onChange={(ev) => setEmail(ev.target.value)} 
                                     required={true} 
-                                    placeholder="Enter email" />
+                                    placeholder="Enter email"
+                                    maxLength={40} />
                         </Form.Group>
                         <Form.Group className='mb-2' controlId='password'>
                         <Form.Label>Password:</Form.Label>
@@ -59,6 +74,7 @@ function Register() {
                                     onChange={(ev) => setPassword(ev.target.value)} 
                                     required={true}
                                     minLength={8}
+                                    maxLength={20}
                                     placeholder="Enter a password" 
                                     aria-describedby="passwordHelpBlock" />
                         <Form.Text id="passwordHelpBlock" muted>
@@ -73,6 +89,7 @@ function Register() {
                                     onChange={(ev) => setConfPassword(ev.target.value)} 
                                     required={true} 
                                     minLength={8}
+                                    maxLength={20}
                                     placeholder="Confirm your password" />
                         </Form.Group>
                         <Form.Group className='mt-3'>

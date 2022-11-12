@@ -57,7 +57,7 @@ function LoginForm(props) {
                 <Row className="justify-content-md-center">
                         <Form onSubmit={handleLogin}>
                             <h1>Hike Tracker</h1>
-                            <h3>Please insert your email and password</h3>
+                            <h3>Please insert your email and password:</h3>
                             <Form.Group className='mb-2' controlId='email'>
                                 <Form.Label>Email:</Form.Label>
                                 <Form.Control 
