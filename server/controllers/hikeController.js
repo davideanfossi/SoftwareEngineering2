@@ -1,8 +1,10 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query, validationResult} = require('express-validator');
+const {expressValidator, check, query,body, validationResult} = require('express-validator');
 const router = express.Router();
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
 const jsonValidator = require('jsonschema').Validator;
 
@@ -80,23 +82,23 @@ router.get('/hikes/limits',
 });
 
 router.post('/hike',
-[
-    check('title').notEmpty().isString().trim(), 
-    check('length').notEmpty().isInt({ min: 0}),
-    check('expectedTime').notEmpty().isInt({ min: 0}), 
-    check('ascent').notEmpty().isInt({ min: 0}),
-    check('difficulty').notEmpty().isString().trim(), 
-    check('startPointId').notEmpty().isInt({ min: 0}),
-    check('endPointId').notEmpty().isInt({ min: 0}),
-    check('description').optional().isString().trim(),
-    check('gpxPath').optional().isString().trim()
-], 
+ [
+    body('title').notEmpty().isString().trim(), 
+    body('length').notEmpty().isInt({ min: 0}),
+    body('expectedTime').notEmpty().isInt({ min: 0}), 
+    body('ascent').notEmpty().isInt({ min: 0}),
+    body('difficulty').notEmpty().isString().trim(), 
+    body('startPointId').notEmpty().isInt({ min: 0}),
+    body('endPointId').notEmpty().isInt({ min: 0}),
+    body('description').optional().isString().trim(),
+    check('trackingfile').optional()
+],  
     async(req,res) => {
         try {
-             const errors = validationResult(req);
+              const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).end();
-            } 
+            }  
 
             const title=req.body.title;
             const length =  Number.parseInt(req.body.length);
@@ -105,11 +107,24 @@ router.post('/hike',
             const difficulty=req.body.difficulty;
             const startPointId = Number.parseInt(req.body.startPointId);
             const endPointId =  Number.parseInt(req.body.endPointId);
-            const description=req.body.description;
-            const gpxPath=req.body.gpxPath;
+            const description=req.body.description;  
+            
             const userId=req.user? req.user.id : null;
 
-
+            
+            const trackingfile =req.files ? req.files.trackingfile : null;
+            const gpxPath=trackingfile ? './files/' + title+'-'+uuidv4() + path.extname(trackingfile.name) : null;
+            if(trackingfile)
+            {
+                //  mv() method places the file inside public directory
+                trackingfile.mv(gpxPath, function (err) {
+                    if (err) {
+                        console.log(err)
+                        return res.status(500).send({ msg: "Error occured" });
+                    }
+                });
+            }
+            
             const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description,gpxPath,userId);
             return res.status(200).json(result);
         } catch (err) {
