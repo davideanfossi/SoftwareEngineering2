@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import { HikeRow } from "./hike-row";
+import { HikeRow } from "../atoms/hike-row";
 
 export const HikeTable = ({ hikeList }) => {
   return (

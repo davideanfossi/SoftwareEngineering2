@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import API from "../API";
+import API from "../../API";
 import { MapModal } from "./map-modal";
-import { MultiRangeSlider } from "./multi-range-slider/multi-range-slider";
+import { MultiRangeSlider } from "../atoms/multi-range-slider/multi-range-slider";
 
 export const HikeFilter = ({
   handleServerResponse,
