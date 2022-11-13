@@ -3,8 +3,6 @@
 const express = require('express');
 const {expressValidator, check, query,body, validationResult} = require('express-validator');
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid');
-const path = require('path');
 
 const DbManager = require("../database/dbManager");
 const HikeDAO = require('../daos/hikeDAO');
@@ -122,6 +120,5 @@ router.post('/hike',
             }
         }
     });
-
-
+    
 module.exports = router;
