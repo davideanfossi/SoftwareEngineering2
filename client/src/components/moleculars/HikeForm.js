@@ -52,27 +52,9 @@ function HikeForm (props) {
 
         setSuccess('yes');
       })
-      .catch((e) => {
+      .catch(() => {
         setSuccess('no');
       })
-
-      /*
-      //for errors display  
-      if (domanda==null) setDomanda("");
-      if (soluzione==null) setSoluzione("");
-      if (sugg1==null) setSugg1("");
-      if (sugg2==null) setSugg2("");
-      if (tempo==null || !(parseInt(tempo)<=600 && parseInt(tempo)>=30)) setTempo("");
-      
-      // check data correct
-      if (domanda!="" && soluzione!="" && sugg1!="" && sugg2!="" && tempo!="" 
-      && domanda!=null && soluzione!=null && sugg1!=null && sugg2!=null && tempo!=null
-      && (parseInt(tempo)<=600 && parseInt(tempo)>=30)) {
-        const submittedIndovinello = new Indovinello(props.user.id, domanda, soluzione, sugg1, sugg2, difficolta, tempo, "aperto");
-  
-        props.addIndovinello(submittedIndovinello);
-      }
-      */
     };
   
     return (
