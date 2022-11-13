@@ -6,27 +6,41 @@ import Hike from "../../models/hike";
 function HikeForm (props) {
     // Form state
     const [title, setTitle] = useState('');
-    const [lenght, setLenght] = useState('');
+    const [length, setLength] = useState('');
     const [expectedTime, setExpectedTime] = useState('');
     const [ascent, setAscent] = useState('');
     const [difficult, setDifficult] = useState('tourist');
     const [description, setDescription] = useState('');
     const [startPoint, setStartPoint] = useState('');
     const [endPoint, setEndPoint] = useState('');
+    const [file, setFile] = useState(null);
 
     const handleSubmit = event => {
       event.preventDefault();
 
-      const hike = new Hike(0, title, lenght, expectedTime, ascent, difficult, description, startPoint, endPoint, 0);
-      API.newHike(hike)
+      //const hike = new Hike(0, title, length, expectedTime, ascent, difficult, description, startPoint, endPoint, 0);
+
+      const formData = new FormData();
+      formData.append('trackingfile', file);
+      formData.append('title', title);
+      formData.append('length', length);
+      formData.append('expectedTime', expectedTime);
+      formData.append('ascent', ascent);
+      formData.append('difficulty', difficult);
+      formData.append('description', description);
+      formData.append('startPointId', startPoint);
+      formData.append('endPointId', endPoint);
+
+      API.newHike(formData)
       .then(() => {
         setTitle('');
-        setLenght('');
+        setLength('');
         setExpectedTime('');
         setAscent('');
         setDescription('');
         setStartPoint(''); 
         setEndPoint('');
+        setFile(null);
       });
 
       // reset form
@@ -72,14 +86,14 @@ function HikeForm (props) {
               </Form.Group>
   
               <Form.Group style={{"paddingTop": "12px"}}>
-                <Form.Label>Lenght</Form.Label>
-                <Form.Control isInvalid={lenght==null}
+                <Form.Label>length</Form.Label>
+                <Form.Control isInvalid={length==null}
                               type="text"
-                              placeholder="Lenght"
-                              value={lenght}
-                              onChange={event => {setLenght(event.target.value);}}/>
+                              placeholder="length"
+                              value={length}
+                              onChange={event => {setLength(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
-                  Lenght cant be empty
+                  length cant be empty
                 </Form.Control.Feedback>
               </Form.Group>
 
@@ -138,6 +152,17 @@ function HikeForm (props) {
                               placeholder="End Point"
                               value={endPoint}
                               onChange={event => {setEndPoint(event.target.value);}}/>
+                <Form.Control.Feedback type="invalid">
+                End Point cant be empty
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group style={{"paddingTop": "12px"}}>
+                <Form.Label>Gpx File</Form.Label>
+                <Form.Control isInvalid={endPoint==null}
+                              type="file"
+                              placeholder="gpx file"
+                              onChange={event => {setFile(event.target.files[0]);}}/>
                 <Form.Control.Feedback type="invalid">
                 End Point cant be empty
                 </Form.Control.Feedback>
