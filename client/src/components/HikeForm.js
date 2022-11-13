@@ -5,20 +5,32 @@ import Hike from "../models/hike";
 
 function HikeForm (props) {
     // Form state
-    const [title, setTitle] = useState(null);
-    const [lenght, setLenght] = useState(null);
-    const [expectedTime, setExpectedTime] = useState(null);
-    const [ascent, setAscent] = useState(null);
+    const [title, setTitle] = useState('');
+    const [lenght, setLenght] = useState('');
+    const [expectedTime, setExpectedTime] = useState('');
+    const [ascent, setAscent] = useState('');
     const [difficult, setDifficult] = useState('tourist');
-    const [description, setDescription] = useState(null);
-    const [startPoint, setStartPoint] = useState(null);
-    const [endPoint, setEndPoint] = useState(null);
+    const [description, setDescription] = useState('');
+    const [startPoint, setStartPoint] = useState('');
+    const [endPoint, setEndPoint] = useState('');
 
     const handleSubmit = event => {
       event.preventDefault();
 
       const hike = new Hike(0, title, lenght, expectedTime, ascent, difficult, description, startPoint, endPoint, 0);
-      API.newHike(hike);
+      API.newHike(hike)
+      .then(() => {
+        setTitle('');
+        setLenght('');
+        setExpectedTime('');
+        setAscent('');
+        setDescription('');
+        setStartPoint(''); 
+        setEndPoint('');
+      });
+
+      // reset form
+      
 
       /*
       //for errors display  
@@ -49,9 +61,10 @@ function HikeForm (props) {
             <Row className="mb-3">
               <Form.Group>
                 <Form.Label>Title</Form.Label>
-                <Form.Control isInvalid={title==""}
+                <Form.Control isInvalid={title==null}
                               type="text"
                               placeholder="Title"
+                              value={title}
                               onChange={event => {setTitle(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
                   Title cant be empty
@@ -60,9 +73,10 @@ function HikeForm (props) {
   
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Lenght</Form.Label>
-                <Form.Control isInvalid={lenght==""}
+                <Form.Control isInvalid={lenght==null}
                               type="text"
                               placeholder="Lenght"
+                              value={lenght}
                               onChange={event => {setLenght(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
                   Lenght cant be empty
@@ -71,9 +85,10 @@ function HikeForm (props) {
 
               <Form.Group>
                 <Form.Label>Expected Time</Form.Label>
-                <Form.Control isInvalid={expectedTime==""}
+                <Form.Control isInvalid={expectedTime==null}
                               type="text"
                               placeholder="Expected Time"
+                              value={expectedTime}
                               onChange={event => {setExpectedTime(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
                   Expected Time cant be empty
@@ -82,9 +97,10 @@ function HikeForm (props) {
   
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Ascent</Form.Label>
-                <Form.Control isInvalid={ascent==""}
+                <Form.Control isInvalid={ascent==null}
                               type="text"
                               placeholder="Ascent"
+                              value={ascent}
                               onChange={event => {setAscent(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
                   Ascent cant be empty
@@ -93,9 +109,10 @@ function HikeForm (props) {
   
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Description</Form.Label>
-                <Form.Control isInvalid={description==""}
+                <Form.Control isInvalid={description==null}
                               type="text"
                               placeholder="Description"
+                              value={description}
                               onChange={event => {setDescription(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
                   Description cant be empty
@@ -104,9 +121,10 @@ function HikeForm (props) {
 
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Start Point</Form.Label>
-                <Form.Control isInvalid={startPoint==""}
+                <Form.Control isInvalid={startPoint==null}
                               type="text"
                               placeholder="Start Point"
+                              value={startPoint}
                               onChange={event => {setStartPoint(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
                   Start Point cant be empty
@@ -115,9 +133,10 @@ function HikeForm (props) {
 
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>End Point</Form.Label>
-                <Form.Control isInvalid={endPoint==""}
+                <Form.Control isInvalid={endPoint==null}
                               type="text"
                               placeholder="End Point"
+                              value={endPoint}
                               onChange={event => {setEndPoint(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
                 End Point cant be empty

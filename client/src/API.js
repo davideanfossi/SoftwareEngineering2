@@ -28,8 +28,17 @@ const newHike = async hike => {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
-        },
-        body:  JSON.stringify(hike),
+        },  
+        body:  JSON.stringify({
+          "title": hike.title,
+          "length": hike.lenght,
+          "expectedTime": hike.expectedTime,
+          "ascent": hike.ascent,
+          "difficulty": hike.difficult,
+          "startPointId": hike.startPoint,
+          "endPointId": hike.endPoint,
+          "description": hike.description
+      }),
       }
     );
     if (response.ok) {
