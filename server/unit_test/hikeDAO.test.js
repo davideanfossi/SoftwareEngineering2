@@ -14,7 +14,7 @@ const high = difficultyType.high;
 describe('Hike DAO unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
-        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?,);";
+        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
         let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
         res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
         res = await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "address 3"]);
