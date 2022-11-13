@@ -1,20 +1,53 @@
 import { useState } from 'react';
 import { Container, Form, Button, Row, Alert } from 'react-bootstrap';
 import { Header } from './Header'
-
+/*
+function CheckBoxLine(setData) {
+    return(
+        <Form.Group className='check-line'>
+            <div key={'inline-radio'} classname="mb-3">
+                <Form.Check
+                    inline
+                    label="Hiker"
+                    name='group1'
+                    type='radio'
+                    id='inline-radio-1'
+                    onClick={() => setData(false)}
+                />
+                <Form.Check
+                    inline
+                    label="Local guide"
+                    name='group1'
+                    type='radio'
+                    id='inline-radio-2'
+                    onClick={() => setData(true)}
+                />
+                <Form.Check
+                    inline
+                    label="Hut worker"
+                    name='group1'
+                    type='radio'
+                    id='inline-radio-3'
+                    onClick={() => setData(true)}
+                />
+            </div>
+        </Form.Group>
+    )
+}
+*/
 function Register() {
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
 
-    const [additionalData, setAdditionalData] = useState(true);
+    const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
 
-    //A cosa serve Header?? a riga 16
     return(
         <>
             <Container>
@@ -22,6 +55,36 @@ function Register() {
                     <Form>
                         <h1>Hike Tracker</h1>
                         <h3>Please compile the data down below:</h3>
+                        <li>Select your profile:
+                        </li>
+                        <Form.Group className='check-line'>
+                            <div key={'inline-radio'} classname="mb-3">
+                                <Form.Check
+                                    inline
+                                    label="Hiker"
+                                    name='group1'
+                                    type='radio'
+                                    id='inline-radio-1'
+                                    onClick={() => setAdditionalData(false)}
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Local guide"
+                                    name='group1'
+                                    type='radio'
+                                    id='inline-radio-2'
+                                    onClick={() => setAdditionalData(true)}
+                                />
+                                <Form.Check
+                                    inline
+                                    label="Hut worker"
+                                    name='group1'
+                                    type='radio'
+                                    id='inline-radio-3'
+                                    onClick={() => setAdditionalData(true)}
+                                />
+                            </div>
+                        </Form.Group>
                         {additionalData ? 
                         <>
                         <Form.Group className='mb-2' controlId='name'>
@@ -44,9 +107,21 @@ function Register() {
                                     placeholder="Your surname here" 
                                     maxLength={20}/>
                         </Form.Group>
+                        <Form.Group className='mb-2' controlId='phone-number'>
+                            <Form.Label>Phone number:</Form.Label>
+                            <Form.Control 
+                                    type="text" 
+                                    value={phoneNumber} 
+                                    onChange={(ev) => setPhoneNumber(ev.target.value)} 
+                                    required={true} 
+                                    placeholder="Your phone number here"
+                                    minLength={10}
+                                    maxLength={13}/>
+                        </Form.Group>
                         </> 
-                        : <></> }
-                        <Form.Group className='mb-2' controlId='surname'>
+                        : 
+                        <>
+                        <Form.Group className='mb-2' controlId='username'>
                         <Form.Label>Username:</Form.Label>
                         <Form.Control 
                                     type='text' 
@@ -56,6 +131,7 @@ function Register() {
                                     placeholder="Create a fancy username"
                                     maxLength={20} />
                         </Form.Group>
+                        </> }
                         <Form.Group className='mb-2' controlId='email'>
                         <Form.Label>Email:</Form.Label>
                         <Form.Control 
@@ -103,6 +179,8 @@ function Register() {
                             </Form.Group>
                             <Alert style={{ marginTop:20 }} variant='success' dismissible
                             show={showAlert}   onClose={() => setShowAlert(false)}>You registered correctly!</Alert>
+                            <Alert style={{ marginTop:20 }} variant='danger' dismissible
+                            show={showAlert}   onClose={() => setShowAlert(false)}>{"Error in registration"}</Alert>
                     </Form>
                 </Row>
             </Container>

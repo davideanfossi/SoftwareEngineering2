@@ -1,22 +1,23 @@
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 import "./main.scss";
 import "react-range-slider-input/dist/style.css";
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router";
-import { Home } from "./components/home";
-import { Layout } from "./components/layout";
-import { LoginForm } from "./Components/Login"
+import { Home } from "./Components/home";
+import { Layout } from "./Components/layout";
+import { Login } from "./Components/Login"
 import { Register } from './Components/Register';
 
 function App() {
   return (
-    //<LoginForm />
     <>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="register" index element={<Register />} />
+        <Route path="login" index element={<Login />} />
         </Route>
       </Routes>
     </BrowserRouter>

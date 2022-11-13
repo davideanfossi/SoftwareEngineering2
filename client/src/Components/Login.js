@@ -1,35 +1,30 @@
 import { useState, React } from 'react';
-import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
+import { Button, Form, Container, Row, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Header } from './Header';
 
 function Checkbox() {
     return (
-        <Form.Group controlId='remember-me'>
-            <div className="mb-3">
+        <Form.Group className='mb-3' controlId='remember-me'>
                 <Form.Check
                     type={'checkbox'}
                     label={'Remember me'}
                 />
-            </div>
         </Form.Group>
     )
 }
 
 function Registration() {
     return(
-    <Form.Group controlId='click-here'>
-        <div className="mb-3">
-        If you are not already registered: {' '}
-        <Button variant='link' href='registration'>
+    <Form.Group className='mb-3' controlId='click-here'>
+        If not registered:
+        <Button variant='link' href='/register'>
             click here
         </Button>
-        </div>
     </Form.Group>
     );
 }
 
-function LoginForm(props) {
+function Login(props) {
 
     const navigate = useNavigate();
     
@@ -38,7 +33,7 @@ function LoginForm(props) {
 
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-
+    
     const handleLogin = (event) => {
         event.preventDefault();
         const credentials = { email, password };
@@ -49,13 +44,11 @@ function LoginForm(props) {
       });
     };
 
-    //Header a riga 55
     return (
         <>
-            
             <Container>
                 <Row className="justify-content-md-center">
-                        <Form onSubmit={handleLogin}>
+                        <Form>
                             <h1>Hike Tracker</h1>
                             <h3>Please insert your email and password:</h3>
                             <Form.Group className='mb-2' controlId='email'>
@@ -63,7 +56,7 @@ function LoginForm(props) {
                                 <Form.Control 
                                     type="email" 
                                     value={email} 
-                                    onChange={(ev) => setEmail(ev.targer.value)} 
+                                    onChange={(ev) => setEmail(ev.target.value)} 
                                     required={true} 
                                     placeholder="Enter email" />
                             </Form.Group>
@@ -72,7 +65,7 @@ function LoginForm(props) {
                                 <Form.Control 
                                     type='password' 
                                     value={password} 
-                                    onChange={(ev)=>setPassword(ev.targer.value)} 
+                                    onChange={(ev)=>setPassword(ev.target.value)} 
                                     required={true} 
                                     minLength={8} 
                                     placeholder="Password" />
@@ -98,5 +91,5 @@ function LoginForm(props) {
 
 }
 
-export { LoginForm };
+export { Login };
 
