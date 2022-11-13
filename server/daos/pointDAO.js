@@ -14,7 +14,7 @@ class PointDAO {
         try {
             const sql = "SELECT * FROM Points WHERE id = ?";
             const res = await this.dbManager.get(sql, [id], true);
-            return new Point(res.id, Number.parseFloat(res.latitude), Number.parseFloat(res.longitude), res.altitude, res.name, res.city, res.province, res.address);
+            return new Point(res.id, Number.parseFloat(res.latitude), Number.parseFloat(res.longitude), res.altitude, res.name, res.address);
         } catch (err) {
             throw err;
         }

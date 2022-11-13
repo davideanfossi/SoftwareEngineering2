@@ -19,11 +19,11 @@ const high = difficultyType.high;
 describe('Hike DAO unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
-        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, city, province, address) VALUES (?, ?, ?, ?, ?, ?, ?);";
-        let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", "Torino", "Piemonte", null]);
-        res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "Torino", "Piemonte", "address 2"]);
-        res = await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "Cuneo", "Piemonte", "address 3"]);
-        res = await dbManager.query(sql, ["47.574405", "8.455193", 300, "point 4", "Milano", "Lombardia", null]);
+        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
+        let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
+        res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
+        res = await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "address 3"]);
+        res = await dbManager.query(sql, ["47.574405", "8.455193", 300, "point 4", null]);
 
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         res = await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
@@ -53,10 +53,10 @@ describe('Hike DAO unit test', () => {
             .toThrow('pointDAO must be defined for hike service!');
     });
 
-    const point1 = new Point(1, 45.0703393, 7.686864, 200, "point 1", "Torino", "Piemonte", null);
-    const point2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "Torino", "Piemonte", "address 2");
-    const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "Cuneo", "Piemonte", "address 3");
-    const point4 = new Point(4, 47.574405, 8.455193, 300, "point 4", "Milano", "Lombardia", null);
+    const point1 = new Point(1, 45.0703393, 7.686864, 200, "point 1", null);
+    const point2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
+    const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
+    const point4 = new Point(4, 47.574405, 8.455193, 300, "point 4", null);
 
     const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, point1, point2, "description 1", [], null, 1);
     const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, point1, point4, "description 2", [point2, point3], null, 1);
@@ -93,11 +93,6 @@ describe('Hike DAO unit test', () => {
         {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike1, hike4]});
     testGetHikes("test get hikes radius", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 47.5715101, 8.456101, 10, undefined, undefined,
         {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4]});
-    testGetHikes("test get hikes city", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Milano", undefined,
-        {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4]});
-    testGetHikes("test get hikes province", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Lombardia",
-        {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4]});
-
 });
 
 
