@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Button, Col, Container, Form, FormControl, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, FormControl, Row, Alert} from "react-bootstrap";
 import API from "../../API";
 import Hike from "../../models/hike";
 
 function HikeForm (props) {
     // Form state
+    const [success, setSuccess] = useState('');
+
     const [title, setTitle] = useState('');
     const [length, setLength] = useState('');
     const [expectedTime, setExpectedTime] = useState('');
@@ -41,7 +43,12 @@ function HikeForm (props) {
         setStartPoint(''); 
         setEndPoint('');
         setFile(null);
-      });
+
+        setSuccess('yes');
+      })
+      .catch((e) => {
+        setSuccess('no');
+      })
 
       // reset form
       
@@ -70,6 +77,22 @@ function HikeForm (props) {
         <Row style={{"paddingLeft": "0.7rem"}}>
             <b style={{"fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem"}}>Insert Hike</b>
         </Row>
+
+        {
+          success == "yes" ? 
+          <Alert variant="success" onClose={() => setSuccess('')} dismissible>
+            <Alert.Heading>Hike inserted correctly!</Alert.Heading>
+          </Alert> 
+          : 
+          <>{
+            success == "no" ?
+            <Alert variant="danger" onClose={() => setSuccess('')} dismissible>
+              <Alert.Heading>Error not inserted!</Alert.Heading>
+            </Alert> : null
+          }</>
+        }
+        
+
         <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem"}}>
           <Form noValidate onSubmit={handleSubmit}>
             <Row className="mb-3">
