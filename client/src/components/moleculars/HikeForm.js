@@ -20,7 +20,13 @@ function HikeForm (props) {
     const handleSubmit = event => {
       event.preventDefault();
 
-      //const hike = new Hike(0, title, length, expectedTime, ascent, difficult, description, startPoint, endPoint, 0);
+      if (title == '') setTitle(null);
+      if (length == '' || !(parseInt(length)>0)) setLength(null);
+      if (expectedTime == '' || !(parseInt(expectedTime)>0)) setExpectedTime(null);
+      if (ascent == '' || !(parseInt(ascent)>0)) setAscent(null);
+      if (description == '') setDescription(null);
+      if (startPoint == '' || !(parseInt(startPoint)>0)) setStartPoint(null);
+      if (endPoint == '' || !(parseInt(endPoint)>0)) setEndPoint(null);
 
       const formData = new FormData();
       formData.append('trackingfile', file);
@@ -49,9 +55,6 @@ function HikeForm (props) {
       .catch((e) => {
         setSuccess('no');
       })
-
-      // reset form
-      
 
       /*
       //for errors display  
@@ -116,7 +119,7 @@ function HikeForm (props) {
                               value={length}
                               onChange={event => {setLength(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
-                  length cant be empty
+                  length needs to be a number greater than 0
                 </Form.Control.Feedback>
               </Form.Group>
 
@@ -128,7 +131,7 @@ function HikeForm (props) {
                               value={expectedTime}
                               onChange={event => {setExpectedTime(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
-                  Expected Time cant be empty
+                  Expected Time  needs to be a number greater than 0
                 </Form.Control.Feedback>
               </Form.Group>
   
@@ -140,7 +143,7 @@ function HikeForm (props) {
                               value={ascent}
                               onChange={event => {setAscent(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
-                  Ascent cant be empty
+                  Ascent  needs to be a number greater than 0
                 </Form.Control.Feedback>
               </Form.Group>
   
@@ -164,7 +167,7 @@ function HikeForm (props) {
                               value={startPoint}
                               onChange={event => {setStartPoint(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
-                  Start Point cant be empty
+                  Start Point needs to be a number greater than 0
                 </Form.Control.Feedback>
               </Form.Group>
 
@@ -176,19 +179,15 @@ function HikeForm (props) {
                               value={endPoint}
                               onChange={event => {setEndPoint(event.target.value);}}/>
                 <Form.Control.Feedback type="invalid">
-                End Point cant be empty
+                End Point needs to be a number greater than 0
                 </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Gpx File</Form.Label>
-                <Form.Control isInvalid={endPoint==null}
-                              type="file"
+                <Form.Control type="file"
                               placeholder="gpx file"
                               onChange={event => {setFile(event.target.files[0]);}}/>
-                <Form.Control.Feedback type="invalid">
-                End Point cant be empty
-                </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group as={Col} md="8" style={{"paddingTop": "12px"}}>
