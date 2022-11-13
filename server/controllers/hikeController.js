@@ -108,7 +108,7 @@ router.post('/hike',
                 trackingfile.mv(gpxPath, function (err) {
                     if (err) {
                         console.log(err)
-                        return res.status(500).send({ msg: "Error occured" });
+                        return res.status(500).send({ msg:err.message });
                     }
                 });
             }
