@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Circle, MapContainer, TileLayer } from "react-leaflet";
+import { Circle, MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 
-export const FilterMap = ({ radius, lat, lon,zoom, setLat, setLon, setZoom }) => {
+export const FilterMap = ({
+  radius,
+  lat,
+  lon,
+  zoom,
+  setLat,
+  setLon,
+  setZoom,
+}) => {
   const [map, setMap] = useState(null);
   const center = useMemo(() => [lat, lon], [lat, lon]);
   const setCenter = useCallback(
@@ -29,6 +37,11 @@ export const FilterMap = ({ radius, lat, lon,zoom, setLat, setLon, setZoom }) =>
     }
   }, [map, onMove]);
 
+  useEffect(() => {
+    if (map != null) {
+      map.setView(center);
+    }
+  }, [center, map]);
   return (
     <div style={{ width: "100%", padding: "1rem" }}>
       <MapContainer
@@ -38,6 +51,7 @@ export const FilterMap = ({ radius, lat, lon,zoom, setLat, setLon, setZoom }) =>
         ref={setMap}
         style={{ height: "50vh" }}
       >
+        <ZoomControl position="bottomright"  />
         <Circle center={center} radius={radius} />
         <Circle center={center} radius={0} />
         <TileLayer

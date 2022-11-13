@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
+import AutocompleteGeoInput from "./autocomplete-geo-input/autocomplete-geo-input";
 import { FilterMap } from "./filter-map/filter-map";
 
 export const MapModal = ({
@@ -16,6 +17,20 @@ export const MapModal = ({
   const [lon, setLon] = useState(startingLon);
   const [zoom, setZoom] = useState(startingZoom);
   const [useMap, setUseMap] = useState(startingRadius !== 0);
+  const [selectedPosition, setSelectedPosition] = useState(undefined);
+  const [update, setUpdate] = useState(true);
+
+  useEffect(() => {
+    if (selectedPosition !== undefined) {
+      setLat(selectedPosition.lat);
+      setLon(selectedPosition.lon);
+      setUpdate(true);
+    }
+  }, [selectedPosition]);
+
+  useEffect(() => {
+    if (update) setUpdate(false);
+  }, [update]);
 
   useEffect(() => {
     setRadius(useMap ? (startingRadius !== 0 ? startingRadius : 1000) : 0);
@@ -38,8 +53,16 @@ export const MapModal = ({
             <Col xs={11}>Use Map</Col>
           </Row>
 
-          {useMap && (
+          {useMap && !update && (
             <>
+              <Row>
+                <Col>
+                  <AutocompleteGeoInput
+                    selectedPosition={selectedPosition}
+                    setSelectPosition={setSelectedPosition}
+                  />
+                </Col>
+              </Row>
               <Row>
                 <Col>
                   <div>Radius</div>
