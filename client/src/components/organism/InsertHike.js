@@ -1,4 +1,4 @@
-import { HikeForm } from "./HikeForm";
+import {HikeForm} from "../moleculars/HikeForm"
 import { Row } from "react-bootstrap";
 
 function InsertHike(){

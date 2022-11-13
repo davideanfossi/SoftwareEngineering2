@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Col, Container, Form, FormControl, Row } from "react-bootstrap";
-import API from "../API";
-import Hike from "../models/hike";
+import API from "../../API";
+import Hike from "../../models/hike";
 
 function HikeForm (props) {
     // Form state

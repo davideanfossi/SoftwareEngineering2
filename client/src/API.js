@@ -78,6 +78,17 @@ const getFilteredHikes = async (
         headers: {
           "Content-Type": "application/json",
         },
+      }
+    );
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.json();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
 
 const newHike = async hike => {
   try {
