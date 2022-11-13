@@ -10,28 +10,32 @@ export const HikeRow = ({ hike, even }) => {
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
       <Col>
-        <Container>
+        <Container fluid>
           <Row>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={4}
+              xs={12}
+              sm={4}
               md={2}
             >
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col className="fw-bold">Title:</Col>
                 </Row>
                 <Row>
-                  <Col>{hike.title}</Col>
+                  <Col className={dropped ? "" : "text-truncate"}>
+                    {hike.title}
+                  </Col>
                 </Row>
               </Container>
             </Col>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={2}
+              xs={4}
+              sm={2}
               md={1}
             >
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col className="fw-bold">Length:</Col>
                 </Row>
@@ -42,10 +46,11 @@ export const HikeRow = ({ hike, even }) => {
             </Col>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={2}
+              xs={4}
+              sm={2}
               md={1}
             >
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col className="fw-bold">Time:</Col>
                 </Row>
@@ -56,10 +61,11 @@ export const HikeRow = ({ hike, even }) => {
             </Col>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={2}
+              xs={4}
+              sm={2}
               md={1}
             >
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col className="fw-bold">Ascent:</Col>
                 </Row>
@@ -70,35 +76,42 @@ export const HikeRow = ({ hike, even }) => {
             </Col>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={4}
+              xs={12}
+              sm={4}
               md={2}
             >
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col className="fw-bold">Difficulty:</Col>
                 </Row>
                 <Row>
-                  <Col>{hike.difficult}</Col>
+                  <Col className={dropped ? "" : "text-truncate"}>
+                    {hike.difficult}
+                  </Col>
                 </Row>
               </Container>
             </Col>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={6}
+              xs={12}
+              sm={6}
               md={4}
             >
-              <Container>
+              <Container fluid>
                 <Row>
                   <Col className="fw-bold">Description:</Col>
                 </Row>
                 <Row>
-                  <Col>{hike.description}</Col>
+                  <Col className={dropped ? "" : "text-truncate"}>
+                    {hike.description}
+                  </Col>
                 </Row>
               </Container>
             </Col>
             <Col
               className="d-flex justify-content-center align-items-center my-3"
-              xs={2}
+              xs={12}
+              sm={2}
               md={1}
             >
               {dropped ? (
