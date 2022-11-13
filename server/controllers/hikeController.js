@@ -97,7 +97,7 @@ router.post('/hike',
             const endPointId =  Number.parseInt(req.body.endPointId);
             const description=req.body.description;  
             
-            const userId=req.user? req.user.id : null;
+            const userId=req.user? req.user.id : 1;
 
             
             const trackingfile =req.files ? req.files.trackingfile : null;
