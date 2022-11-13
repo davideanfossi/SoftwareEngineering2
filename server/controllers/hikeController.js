@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query,body, validationResult} = require('express-validator');
+const {expressValidator, check, query, validationResult} = require('express-validator');
 const router = express.Router();
 
 const DbManager = require("../database/dbManager");
@@ -66,5 +66,6 @@ router.get('/hikes/limits',
             }
         }
 });
+
 
 module.exports = router;

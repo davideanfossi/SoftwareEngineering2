@@ -5,7 +5,6 @@ const cors = require('cors');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
-const fileUpload=require('express-fileupload');
 
 const DbManager = require("./database/dbManager");
 const hikeController = require('./controllers/hikeController');
@@ -19,10 +18,6 @@ app.set('query parser', 'simple');
 
 // set up the middlewares
 app.use(express.json());
-app.use(express.static('files')); //to access the files in public folder
-app.use(fileUpload({
-    createParentPath: true
-}));
 
 
 // set up and enable cors

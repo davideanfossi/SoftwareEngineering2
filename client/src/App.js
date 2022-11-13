@@ -3,11 +3,8 @@ import "./main.scss";
 import "react-range-slider-input/dist/style.css";
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router";
-
 import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
-import { InsertHike } from "./components/InsertHike";
-
 
 function App() {
   return (
@@ -16,7 +13,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path='insert' element={<InsertHike />} />
           </Route>
         </Routes>
       </BrowserRouter>

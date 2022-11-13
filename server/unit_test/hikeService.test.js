@@ -98,6 +98,7 @@ describe('Hike DAO unit test', () => {
     testGetHikes("test get hikes province", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Lombardia",
         {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4]});
 
+});
 
 
 
