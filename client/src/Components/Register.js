@@ -47,16 +47,31 @@ function Register() {
 
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [validated, setValidated] = useState(false);
+
+    const handleSubmit = event => {
+        const form=event.currentTarget;
+        if(form.checkValidity()===false) {
+            event.preventDefault();
+            event.stopPropagation();
+            <Alert style={{ marginTop:20 }} variant='danger' dismissible
+            show={showAlert}   onClose={() => setShowAlert(false)}>{"Error in registration"}</Alert>
+        } else {
+            <Alert style={{ marginTop:20 }} variant='success' dismissible
+            show={showAlert}   onClose={() => setShowAlert(false)}>You registered correctly!</Alert>
+            
+        }
+        setValidated(true);
+    };
 
     return(
         <>
             <Container>
                 <Row className="justify-content-md-center">
-                    <Form>
+                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <h1>Hike Tracker</h1>
                         <h3>Please compile the data down below:</h3>
-                        <li>Select your profile:
-                        </li>
+                        <li>Select your profile:</li>
                         <Form.Group className='check-line'>
                             <div key={'inline-radio'} classname="mb-3">
                                 <Form.Check
@@ -168,6 +183,11 @@ function Register() {
                                     maxLength={20}
                                     placeholder="Confirm your password" />
                         </Form.Group>
+                        {
+                            confPassword===password ? <Form.Control.Feedback>Correct.</Form.Control.Feedback>
+                            :
+                            <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
+                        }
                         <Form.Group className='mt-3'>
                                 <Button variant='warning' type='submit' size='lg' onSubmit={() => {setShowAlert(true)}}>
                                     Register
@@ -177,10 +197,6 @@ function Register() {
                                     Cancel
                                 </Button>
                             </Form.Group>
-                            <Alert style={{ marginTop:20 }} variant='success' dismissible
-                            show={showAlert}   onClose={() => setShowAlert(false)}>You registered correctly!</Alert>
-                            <Alert style={{ marginTop:20 }} variant='danger' dismissible
-                            show={showAlert}   onClose={() => setShowAlert(false)}>{"Error in registration"}</Alert>
                     </Form>
                 </Row>
             </Container>
