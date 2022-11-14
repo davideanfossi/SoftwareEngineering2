@@ -37,8 +37,8 @@ function Login(props) {
     const handleLogin = (event) => {
         event.preventDefault();
         const credentials = { email, password };
-        props.login(credentials)
-        .then( () => navigate('')  )
+        let user = props.login(credentials)
+        .then( () => {props.setUser(user.username); navigate('');} )
         .catch((err) => { 
             setErrorMessage(err); setShowAlert(true); 
       });
@@ -48,7 +48,7 @@ function Login(props) {
         <>
             <Container>
                 <Row className="justify-content-md-center">
-                        <Form>
+                        <Form onSubmit={handleLogin}>
                             <h1>Hike Tracker</h1>
                             <h3>Please insert your email and password:</h3>
                             <Form.Group className='mb-2' controlId='email'>

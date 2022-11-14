@@ -1,7 +1,7 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
 import { Register } from "./register"
-export const Layout = () => {
+export const Layout = (props) => {
   const navigate = useNavigate();
   const goHome = () => {
     navigate("/");
@@ -25,7 +25,7 @@ export const Layout = () => {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
-              Signed in as: { Register.username }
+              Signed in as: { props.user }
             </Navbar.Text>
           </Navbar.Collapse>
         </Container>

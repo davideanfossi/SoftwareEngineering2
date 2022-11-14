@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Container, Form, Button, Row, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import API from '../API'
 
 /*
 function CheckBoxLine(setData) {
@@ -36,8 +38,9 @@ function CheckBoxLine(setData) {
 }
 */
 
-function Register() {
+function Register(props) {
 
+    //API.getAllHikes;
     const [role, setRole] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -50,6 +53,8 @@ function Register() {
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [validated, setValidated] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = event => {
         const form=event.currentTarget;
@@ -66,17 +71,27 @@ function Register() {
         setValidated(true);
     };
 
+    const handleRegister = (event) => {
+        event.preventDefault();
+        const credentials = { email, password };
+        props.register(credentials)
+        .then( () => navigate('')  )
+        .catch((err) => { 
+            setShowAlert(true); 
+      });
+    };
+
     return(
         <>
             <Container>
                 <Row className="justify-content-md-center">
-                    <Row className='w-50' style={{"paddingTop": '20px', "paddingBottom": '50px', "backgroundColor": "white"}}/>
+                    <Row className='w-50' style={{"paddingTop": '20px', "paddingBottom": '50px', "backgroundColor": "white"}}>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <h1>Hike Tracker</h1>
                         <h3>Please compile the data down below:</h3>
                         <li>Select your profile:</li>
                         <Form.Group className='check-line'>
-                            <div key={'inline-radio'} classname="mb-3">
+                            <div key={'inline-radio'} className="mb-3">
                                 <Form.Check
                                     inline
                                     label="Hiker"
@@ -125,8 +140,7 @@ function Register() {
                                     placeholder="Your surname here" 
                                     maxLength={20}/>
                         </Form.Group>
-                        {() => setUsername(name + '_' + surname)} 
-                        {username}
+                        
                         <Form.Group className='mb-2' controlId='phone-number'>
                             <Form.Label>Phone number:</Form.Label>
                             <Form.Control 
@@ -194,7 +208,10 @@ function Register() {
                             <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
                         }
                         <Form.Group className='mt-3'>
-                                <Button variant='warning' type='submit' size='lg' onSubmit={() => {setShowAlert(true)}}>
+                                <Button variant='warning' type='submit' size='lg' onSubmit={() => {setShowAlert(true); handleRegister();
+                                                                                                    /*additionalData ? {setUsername({name} + '_' + surname);
+                                                                                                    console.log(username);} : {}*/
+                                                                                                    }}>
                                     Register
                                 </Button>
                                 {' '}

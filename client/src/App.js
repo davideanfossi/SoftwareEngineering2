@@ -8,16 +8,21 @@ import { Home } from "./Components/home";
 import { Layout } from "./Components/layout";
 import { Login } from "./Components/login"
 import { Register } from './Components/register';
+import { useState } from 'react';
+import API from './API'
 
 function App() {
+  const [user, setUser] = useState(undefined);
+
   return (
     <>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Layout user={user}/>}>
           <Route index element={<Home />} />
-          <Route path="register" index element={<Register />} />
-        <Route path="login" index element={<Login />} />
+          <Route path="register" index element={<Register register={undefined/*in realta api*/}/>} />
+        <Route path="login" index element={<Login setUser={setUser}/>} />
+        
         </Route>
       </Routes>
     </BrowserRouter>
