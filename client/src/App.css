@@ -1,38 +1,41 @@
-.App {
-  text-align: center;
+.leaflet-container {
+  width: 100%;
+}
+body {
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.85),
+      rgba(255, 255, 255, 0.85)
+    ),
+    url("bg.svg");
+  background-attachment: fixed;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.nav {
+  background-color: rgb(239, 208, 131);
+  box-shadow: 0px 5px 9px 0px rgb(29, 14, 11);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.hike-row {
+  background-color: rgb(243, 231, 201);
+  border: 0.4em solid rgb(239, 208, 131);
+  margin: 1em;
+}
+.hike-row-even {
+  background-color: rgb(238, 234, 223);
+  border: 0.4em solid rgb(239, 208, 131);
+  margin: 1em;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.hike-table-container {
+  padding: 1em;
 }
 
-.App-link {
-  color: #61dafb;
+.hike-filter-container {
+  background-color: rgb(239, 208, 131);
+  margin: 1em;
+  padding: 1em;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/*
+rgb(243, 231, 201)
+*/
