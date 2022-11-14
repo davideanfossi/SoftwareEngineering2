@@ -70,6 +70,7 @@ function Register() {
         <>
             <Container>
                 <Row className="justify-content-md-center">
+                    <Row className='w-50' style={{"paddingTop": '20px', "paddingBottom": '50px', "backgroundColor": "white"}}/>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <h1>Hike Tracker</h1>
                         <h3>Please compile the data down below:</h3>
@@ -202,6 +203,7 @@ function Register() {
                                 </Button>
                             </Form.Group>
                     </Form>
+                    </Row>
                 </Row>
             </Container>
         </>
