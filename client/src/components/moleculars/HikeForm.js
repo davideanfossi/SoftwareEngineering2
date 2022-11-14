@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
-import { Button, Col, Container, Form, FormControl, Row, Alert} from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Alert} from "react-bootstrap";
 import API from "../../API";
-import Hike from "../../models/hike";
 
 function HikeForm (props) {
     // Form state
@@ -22,13 +21,13 @@ function HikeForm (props) {
     const handleSubmit = event => {
       event.preventDefault();
 
-      if (title == '') setTitle(null);
-      if (length == '' || !(parseInt(length)>0)) setLength(null);
-      if (expectedTime == '' || !(parseInt(expectedTime)>0)) setExpectedTime(null);
-      if (ascent == '' || !(parseInt(ascent)>0)) setAscent(null);
-      if (description == '') setDescription(null);
-      if (startPoint == '' || !(parseInt(startPoint)>0)) setStartPoint(null);
-      if (endPoint == '' || !(parseInt(endPoint)>0)) setEndPoint(null);
+      if (title === '') setTitle(null);
+      if (length === '' || !(parseInt(length)>0)) setLength(null);
+      if (expectedTime === '' || !(parseInt(expectedTime)>0)) setExpectedTime(null);
+      if (ascent === '' || !(parseInt(ascent)>0)) setAscent(null);
+      if (description === '') setDescription(null);
+      if (startPoint === '' || !(parseInt(startPoint)>0)) setStartPoint(null);
+      if (endPoint === '' || !(parseInt(endPoint)>0)) setEndPoint(null);
 
       const formData = new FormData();
       formData.append('trackingfile', file);
@@ -66,13 +65,13 @@ function HikeForm (props) {
         </Row>
 
         {
-          success == "yes" ? 
+          success === "yes" ? 
           <Alert variant="success" onClose={() => setSuccess('')} dismissible>
             <Alert.Heading>Hike inserted correctly!</Alert.Heading>
           </Alert> 
           : 
           <>{
-            success == "no" ?
+            success === "no" ?
             <Alert variant="danger" onClose={() => setSuccess('')} dismissible>
               <Alert.Heading>Error not inserted!</Alert.Heading>
             </Alert> : null
@@ -85,7 +84,7 @@ function HikeForm (props) {
             <Row className="mb-3">
               <Form.Group>
                 <Form.Label>Title</Form.Label>
-                <Form.Control isInvalid={title==null}
+                <Form.Control isInvalid={title===null}
                               type="text"
                               placeholder="Title"
                               value={title}
@@ -97,7 +96,7 @@ function HikeForm (props) {
   
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>length</Form.Label>
-                <Form.Control isInvalid={length==null}
+                <Form.Control isInvalid={length===null}
                               type="text"
                               placeholder="length"
                               value={length}
@@ -109,7 +108,7 @@ function HikeForm (props) {
 
               <Form.Group>
                 <Form.Label>Expected Time</Form.Label>
-                <Form.Control isInvalid={expectedTime==null}
+                <Form.Control isInvalid={expectedTime===null}
                               type="text"
                               placeholder="Expected Time"
                               value={expectedTime}
@@ -121,7 +120,7 @@ function HikeForm (props) {
   
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Ascent</Form.Label>
-                <Form.Control isInvalid={ascent==null}
+                <Form.Control isInvalid={ascent===null}
                               type="text"
                               placeholder="Ascent"
                               value={ascent}
@@ -133,7 +132,7 @@ function HikeForm (props) {
   
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Description</Form.Label>
-                <Form.Control isInvalid={description==null}
+                <Form.Control isInvalid={description===null}
                               type="text"
                               placeholder="Description"
                               value={description}
@@ -145,7 +144,7 @@ function HikeForm (props) {
 
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Start Point</Form.Label>
-                <Form.Control isInvalid={startPoint==null}
+                <Form.Control isInvalid={startPoint===null}
                               type="text"
                               placeholder="Start Point"
                               value={startPoint}
@@ -157,7 +156,7 @@ function HikeForm (props) {
 
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>End Point</Form.Label>
-                <Form.Control isInvalid={endPoint==null}
+                <Form.Control isInvalid={endPoint===null}
                               type="text"
                               placeholder="End Point"
                               value={endPoint}
