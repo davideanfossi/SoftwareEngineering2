@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button, Col, Container, Form, FormControl, Row, Alert} from "react-bootstrap";
 import API from "../../API";
 import Hike from "../../models/hike";
@@ -15,7 +15,9 @@ function HikeForm (props) {
     const [description, setDescription] = useState('');
     const [startPoint, setStartPoint] = useState('');
     const [endPoint, setEndPoint] = useState('');
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState('');
+    
+    const ref = useRef();
 
     const handleSubmit = event => {
       event.preventDefault();
@@ -48,7 +50,7 @@ function HikeForm (props) {
         setDescription('');
         setStartPoint(''); 
         setEndPoint('');
-        setFile(null);
+        ref.current.value=null;
 
         setSuccess('yes');
       })
@@ -168,6 +170,7 @@ function HikeForm (props) {
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Gpx File</Form.Label>
                 <Form.Control type="file"
+                              ref={ref}
                               placeholder="gpx file"
                               onChange={event => {setFile(event.target.files[0]);}}/>
               </Form.Group>

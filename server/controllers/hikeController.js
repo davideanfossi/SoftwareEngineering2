@@ -4,6 +4,9 @@ const express = require('express');
 const {expressValidator, check, query,body, validationResult} = require('express-validator');
 const router = express.Router();
 
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+
 const DbManager = require("../database/dbManager");
 const HikeDAO = require('../daos/hikeDAO');
 const PointDAO = require("../daos/pointDAO");
@@ -116,7 +119,7 @@ router.post('/hike',
         } catch (err) {
             switch(err.returnCode){
                 default:
-                    return res.status(500).json(err.message);
+                    return res.status(500).send({ msg:err.message });
             }
         }
     });
