@@ -1,8 +1,9 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query, validationResult} = require('express-validator');
+const {expressValidator, check, query, body, validationResult} = require('express-validator');
 const router = express.Router();
+const fileUpload=require('express-fileupload');
 
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
@@ -66,7 +67,7 @@ router.get('/hikes/limits', express.json(),
         }
 });
 
-router.post('/hike',
+router.post('/hike', fileUpload({createParentPath: true}),
  [
     body('title').notEmpty().isString().trim(), 
     body('length').notEmpty().isInt({ min: 0}),
@@ -80,8 +81,9 @@ router.post('/hike',
 ],  
     async(req,res) => {
         try {
-              const errors = validationResult(req);
+            const errors = validationResult(req);
             if (!errors.isEmpty()) {
+                console.log(errors.array());
                 return res.status(400).end();
             }  
 
@@ -105,7 +107,7 @@ router.post('/hike',
                 trackingfile.mv(gpxPath, function (err) {
                     if (err) {
                         console.log(err)
-                        return res.status(500).send({ msg: "Error occured" });
+                        return res.status(500).send({ msg:err.message });
                     }
                 });
             }
@@ -115,9 +117,8 @@ router.post('/hike',
         } catch (err) {
             switch(err.returnCode){
                 default:
-                    return res.status(500).send({ msg:err.message });
+                    return res.status(500).json(err.message);
             }
         }
-    });
-    
+    });    
 module.exports = router;

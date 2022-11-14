@@ -76,6 +76,15 @@ class HikeService {
         }
     }
 
+    addHike = async (title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId) => {
+        try {
+            const res = await this.hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
 
 }
 
@@ -94,6 +103,8 @@ function computeDistance(lat1, lon1, lat2, lon2) {
         return km;
     }
 }
+
+
 
 /**
  * @param {*} baseLat latitude of the center of the circle

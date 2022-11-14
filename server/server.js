@@ -16,9 +16,7 @@ const port = 3001;
 // Only parse query parameters into strings, not objects
 app.set('query parser', 'simple');
 
-// set up the middlewares
-app.use(express.json());
-
+app.use(express.static('files')); //to access the files in public folder
 
 // set up and enable cors
 const corsOptions = {

@@ -111,6 +111,7 @@ const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
+  newHike
 };
 
 export default API;
