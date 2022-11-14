@@ -1,5 +1,6 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
+import { Register } from "./register"
 export const Layout = () => {
   const navigate = useNavigate();
   const goHome = () => {
@@ -22,6 +23,11 @@ export const Layout = () => {
             <Nav.Link onClick={goLogin}>Login</Nav.Link>
             <Nav.Link onClick={goRegister}>Register</Nav.Link>
           </Nav>
+          <Navbar.Collapse className="justify-content-end">
+            <Navbar.Text>
+              Signed in as: { Register.username }
+            </Navbar.Text>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
       <Outlet />

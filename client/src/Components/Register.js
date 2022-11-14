@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Container, Form, Button, Row, Alert } from 'react-bootstrap';
-import { Header } from './Header'
+
 /*
 function CheckBoxLine(setData) {
     return(
@@ -35,8 +35,10 @@ function CheckBoxLine(setData) {
     )
 }
 */
+
 function Register() {
 
+    const [role, setRole] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -80,7 +82,7 @@ function Register() {
                                     name='group1'
                                     type='radio'
                                     id='inline-radio-1'
-                                    onClick={() => setAdditionalData(false)}
+                                    onClick={() => {setAdditionalData(false); setRole('Hiker')}}
                                 />
                                 <Form.Check
                                     inline
@@ -88,7 +90,7 @@ function Register() {
                                     name='group1'
                                     type='radio'
                                     id='inline-radio-2'
-                                    onClick={() => setAdditionalData(true)}
+                                    onClick={() => {setAdditionalData(true); setRole('Local guide')}}
                                 />
                                 <Form.Check
                                     inline
@@ -96,7 +98,7 @@ function Register() {
                                     name='group1'
                                     type='radio'
                                     id='inline-radio-3'
-                                    onClick={() => setAdditionalData(true)}
+                                    onClick={() => {setAdditionalData(true); setRole('Hut worker')} }
                                 />
                             </div>
                         </Form.Group>
@@ -122,6 +124,8 @@ function Register() {
                                     placeholder="Your surname here" 
                                     maxLength={20}/>
                         </Form.Group>
+                        {() => setUsername(name + '_' + surname)} 
+                        {username}
                         <Form.Group className='mb-2' controlId='phone-number'>
                             <Form.Label>Phone number:</Form.Label>
                             <Form.Control 

@@ -6,8 +6,8 @@ import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router";
 import { Home } from "./Components/home";
 import { Layout } from "./Components/layout";
-import { Login } from "./Components/Login"
-import { Register } from './Components/Register';
+import { Login } from "./Components/login"
+import { Register } from './Components/register';
 
 function App() {
   return (
