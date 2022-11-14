@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query,body, validationResult} = require('express-validator');
+const {expressValidator, check, query, validationResult} = require('express-validator');
 const router = express.Router();
 
 const { v4: uuidv4 } = require('uuid');
@@ -18,14 +18,13 @@ const pointDAO = new PointDAO(dbManager);
 const hikeService = new HikeService(hikeDAO, pointDAO);
 
 
-router.get('/hikes', 
+router.get('/hikes', express.json(),
     [query('minLen').optional().isInt({ min: 0}), query('maxLen').optional().isInt({ min: 0}),
     query('minTime').optional().isInt({ min: 0}), query('maxTime').optional().isInt({ min: 0}),
     query('minAscent').optional().isInt({ min: 0}), query('maxAscent').optional().isInt({ min: 0}),
     query('difficulty').optional().isString().trim(),
     query('baseLat').optional().isNumeric(), query('baseLon').optional().isNumeric(), query('radius').optional().isInt({ min: 0}),
-    query('pageNumber').optional().isInt({min: 1}), query('pageSize').optional().isInt({min: 1}),
-    query('city').optional().isString().trim(), query('province').optional().isString().trim()],
+    query('pageNumber').optional().isInt({min: 1}), query('pageSize').optional().isInt({min: 1})],
     async (req, res) => {
         try {
             const errors = validationResult(req);
@@ -44,12 +43,9 @@ router.get('/hikes',
             const radius = req.query.radius ? Number.parseInt(req.query.radius) : undefined;
             const pageNumber = req.query.pageNumber ? Number.parseInt(req.query.pageNumber) : undefined;
             const pageSize = req.query.pageSize ? Number.parseInt(req.query.pageSize) : undefined;
-            const city = req.query.city ? req.query.city : undefined;
-            const province = req.query.province ? req.query.province : undefined;
-            const result = await hikeService.getHikes(pageNumber, pageSize, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius, city, province);
+            const result = await hikeService.getHikes(pageNumber, pageSize, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius);
             return res.status(200).json(result);
         } catch (err) {
-            console.log(err);
             switch(err.returnCode){
                 default:
                     return res.status(500).end();
@@ -57,7 +53,7 @@ router.get('/hikes',
         }
 });
 
-router.get('/hikes/limits', 
+router.get('/hikes/limits', express.json(),
     async (req, res) => {
         try {
             const result = await hikeService.getHikesLimits();

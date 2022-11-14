@@ -14,11 +14,11 @@ const high = difficultyType.high;
 describe('Hike DAO unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
-        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, city, province, address) VALUES (?, ?, ?, ?, ?, ?, ?);";
-        let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", "Torino", "Piemonte", null]);
-        res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "Torino", "Piemonte", "address 2"]);
-        res = await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "Cuneo", "Piemonte", "address 3"]);
-        res = await dbManager.query(sql, ["45.574405", "7.455193", 300, "point 4", "Milano", "Lombardia", null]);
+        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
+        let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
+        res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
+        res = await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "address 3"]);
+        res = await dbManager.query(sql, ["45.574405", "7.455193", 300, "point 4", null]);
 
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         res = await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
@@ -64,10 +64,6 @@ describe('Hike DAO unit test', () => {
 
     const expectedMaxData = {"maxLength": 2000, "maxExpectedTime": 180, "maxAscent": 500};
     testGetMaxData(expectedMaxData);
-
-    testInsertHike("title 5", 1000, 120, 300, mid, 1, 2, "description 5", null, 1);
-    testInsertHike("title 6", 2000, 220, 400, high, 3, 4, "description 6", null, 1);
-    testInsertHike("title 7", 3000, 320, 500, low, 1, 4, "description 7", null, 1);
 });
 
 
@@ -89,18 +85,6 @@ function testGetMaxData(expectedObj) {
     test('test get max data', async () => {
         const res = await hikeDAO.getMaxData();
         expect(res).toEqual(expectedObj);
-    });
-}
-
-function testInsertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId){
-    test('add new hike', async() => {
-
-        let lastID = await hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
-        expect(lastID).toBeTruthy();
-
-        var res = await hikeDAO.getHikes(undefined,undefined,undefined,undefined,undefined,undefined,difficulty);
-        expect(res.length).toBeGreaterThan(0);
-
     });
 }
 

@@ -20,7 +20,6 @@ const getHikesLimits = async () => {
     throw e;
   }
 };
-
 const getAllHikes = async () => {
   try {
     const response = await fetch(new URL("hikes", SERVER_BASE), {
@@ -101,7 +100,7 @@ const newHike = async (formData) => {
     if (response.ok) {
       return response.json();
     } else {
-      throw response.json(); 
+      throw response.json();
     }
   } catch (e) {
     throw e;
@@ -112,8 +111,6 @@ const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
-  newHike
 };
-
 
 export default API;

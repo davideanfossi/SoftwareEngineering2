@@ -4,8 +4,6 @@ CREATE TABLE "Points" (
 	"longitude" TEXT NOT NULL,
 	"altitude" INTEGER NOT NULL,
 	"name" TEXT NOT NULL,
-	"city" TEXT,
-	"province" TEXT,
 	"address" TEXT,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );

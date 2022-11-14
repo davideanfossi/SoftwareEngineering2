@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports.purgeAllTables = async function (db) {
     const queryGetTables = 'SELECT tbl_name as t_name FROM sqlite_master WHERE type = "table" and name NOT IN ("sqlite_sequence");';
 

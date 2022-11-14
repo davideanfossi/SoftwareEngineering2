@@ -76,15 +76,7 @@ class HikeService {
         }
     }
 
-    addHike = async (title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId) => {
-        try {
-            const res = await this.hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
-            return res;
-        } catch (err) {
-            throw err;
-        }
 
-    }
 }
 
 // compute the distance in kilometers between two points
