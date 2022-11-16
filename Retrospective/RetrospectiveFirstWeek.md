@@ -27,11 +27,11 @@ RETROSPECTIVE Sprint 1 (Team 16)
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
 - Hours per task average, standard deviation (estimate and actual): 
-avg = 90/21 = 4,3 h
-deviation: 1,538204 h
+avg = 4,3 h
+deviation = 0,3356 h
 
-- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1
-| (87 / 90) - 1 |= 0,03
+- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1:
+| (87 / 90) - 1 |= - 0,03 = 3%
 
 
   
