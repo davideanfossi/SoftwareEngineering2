@@ -19,12 +19,11 @@ RETROSPECTIVE Sprint 1 (Team 16)
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-| _#0_   |   3      |       |     18       |      16        |
-| 1      |   5      |    8    |    24h        |    22,5     |
-| 2      | 5        | 5       | 10h           | 19h         |
+| _#0_   |   3     |        |     18     |      16      |
+| _1_    |   5     |    8   |     24     |      22,5    |
+| _2_    |   5     |    5   |     10     |      19      |
+| _3_    |   8     |    8   |     24     |      26,5    |       
     
-
-> place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
 - Hours per task average, standard deviation (estimate and actual): 
 avg = 4,3 h
@@ -54,21 +53,27 @@ deviation = 0,3356 h
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
-We included in the sprint too many stories with large number of story points.
-We also underestimated the time needed to fully complete some tasks.
+
+      We included in the sprint too many stories with large number of story points.
+      We also underestimated the time needed to fully complete some tasks.
 
 - What lessons did you learn (both positive and negative) in this sprint?
-Without communication between members assigned to the same story the integration time increases a lot
+
+      Without communication between members assigned to the same story the integration time increases a lot
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
-We successfully divided and distibuted better the tasks between the members.
+
+      We successfully divided and distibuted better the tasks between the members.
   
 - Which ones you were not able to achieve? Why?
-The planning and the estimation.
+
+      The planning and the estimation.
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
-The members of the team working on the same story should communicate more frequently.
-Better planning and estimation 
+
+      The members of the team working on the same story should communicate more frequently.
+      Better planning and estimation 
 
 - One thing you are proud of as a Team!!
-We really like the outcome of the first story and the map feature
+
+      We really like the outcome of the first story and the map feature
