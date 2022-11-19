@@ -18,6 +18,7 @@ app.set('query parser', 'simple');
 
 // set up the middlewares
 app.use(express.json());
+app.use(express.static('files')); //to access the files in public folder
 
 
 // set up and enable cors

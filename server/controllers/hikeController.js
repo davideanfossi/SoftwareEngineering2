@@ -1,9 +1,9 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query, validationResult} = require('express-validator');
+const {expressValidator, check, query,body, validationResult} = require('express-validator');
 const router = express.Router();
-
+const fileUpload=require('express-fileupload');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
@@ -66,7 +66,7 @@ router.get('/hikes/limits', express.json(),
         }
 });
 
-router.post('/hike',
+router.post('/hike',fileUpload({createParentPath: true}),
  [
     body('title').notEmpty().isString().trim(), 
     body('length').notEmpty().isInt({ min: 0}),
