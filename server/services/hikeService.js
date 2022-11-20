@@ -76,10 +76,20 @@ class HikeService {
         }
     }
 
-    addHike = async (title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId) => {
+    addHike = async (title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress) => {
         try {
-            const res = await this.hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
-            return res;
+
+            //first insert startPoint and endPoint
+            const startPointId=await this.pointDAO.insertPoint(startLatitude,startLongitude,startAltitude,startPointLabel,startAddress)
+            const endPointId=await this.pointDAO.insertPoint(endLatitude,endLongitude,endAltitude,endPointLabel,endAddress)
+            if(startPointId & endPointId)
+            {
+                const res = await this.hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
+                return res;
+            }
+            else
+                return false;
+           
         } catch (err) {
             throw err;
         }
