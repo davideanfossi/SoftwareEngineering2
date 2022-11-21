@@ -59,7 +59,7 @@ passport.serializeUser((user, cb) => {
   //here we can decide which attribute serialize
   cb(null, {
     id: user.id,
-    user: user.user,
+    user: user.username,
   });
 });
 passport.deserializeUser((user, cb) => {
