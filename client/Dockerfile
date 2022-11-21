@@ -8,7 +8,7 @@ WORKDIR /client
 ENV PATH /client/node_modules/.bin:$PATH
 
 # install client dependencies
-COPY client/package.json ./
+COPY ./package.json ./
 RUN npm install --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 
