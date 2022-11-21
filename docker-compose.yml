@@ -1,13 +1,13 @@
 version: "3"
 services:
   hike-tracker-server:
-    image: riccardogiambra/hike-tracker-server:sprint-2
+    image: riccardogiambra/hike-tracker-server
     build:
       context: ./server
     ports:
       - "3001:3001"
   hike-tracker-client:
-    image: riccardogiambra/hike-tracker-client:sprint-2
+    image: riccardogiambra/hike-tracker-client
     build:
       context: ./client
     ports:
