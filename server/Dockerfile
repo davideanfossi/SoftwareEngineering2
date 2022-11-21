@@ -18,5 +18,5 @@ COPY . ./
 # start server
 CMD ["npm", "start"]
 
-#docker build -t hike-tracker-server:dev .
-#docker run -itd  --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3001 -e CHOKIDAR_USEPOLLING=true hike-tracker-server:dev
+#docker build -t riccardogiambra/hike-tracker-server:sprint-2 .
+#docker run riccardogiambra/hike-tracker-server:sprint-2

@@ -19,5 +19,5 @@ COPY . ./
 # start client
 CMD ["npm", "start"]
 
-#docker build -t hike-tracker-client:dev .
-#docker run -itd  --rm -v ${PWD}:/app -v /app/node_modules -p 3000:3000 -e CHOKIDAR_USEPOLLING=true hike-tracker-client:dev
+#docker build -t riccardogiambra/hike-tracker-client:sprint-2 .
+#docker run riccardogiambra/hike-tracker-client:sprint-2
