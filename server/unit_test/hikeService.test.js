@@ -93,6 +93,11 @@ describe('Hike DAO unit test', () => {
         {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike1, hike4]});
     testGetHikes("test get hikes radius", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 47.5715101, 8.456101, 10, undefined, undefined,
         {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4]});
+
+
+    testAddHike("title 5", 1000, 120, 300, mid, "description 5", undefined, 1,"40.714","65.714",1000,"p1","A1","48.412","98.714",1400,"p2","A2");
+    testAddHike("title 6", 2000, 220, 400, high, undefined, undefined, 1,"30.714","35.714",1000,"p1",undefined,"28.412","55.714",1400,"p2","A2");
+  
 });
 
 
@@ -111,4 +116,15 @@ function testGetHikesLimits(expectedObj) {
     });
 }
 
+ function testAddHike(title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress){
+    test('add new hike', async() => {
+
+        let lastID = await hikeService.addHike(title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress);
+        expect(lastID).toBeTruthy();
+
+        var res = await hikeService.getHikes(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, difficulty, undefined, undefined, undefined, undefined, undefined);
+        expect(res.pageItems.length).toBeGreaterThan(0);
+
+    })
+} 
 

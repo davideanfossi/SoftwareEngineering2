@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query, body, validationResult} = require('express-validator');
+const {expressValidator, check, query,body, validationResult} = require('express-validator');
 const router = express.Router();
 const fileUpload=require('express-fileupload');
 
@@ -67,37 +67,43 @@ router.get('/hikes/limits', express.json(),
         }
 });
 
-router.post('/hike', fileUpload({createParentPath: true}),
+
+router.post('/hike',fileUpload({createParentPath: true}),
+
  [
     body('title').notEmpty().isString().trim(), 
     body('length').notEmpty().isInt({ min: 0}),
     body('expectedTime').notEmpty().isInt({ min: 0}), 
     body('ascent').notEmpty().isInt({ min: 0}),
     body('difficulty').notEmpty().isString().trim(), 
-    body('startPointId').notEmpty().isInt({ min: 0}),
-    body('endPointId').notEmpty().isInt({ min: 0}),
     body('description').optional().isString().trim(),
-    check('trackingfile').optional()
+    check('trackingfile').optional(),
+
+    body('startLongitude').notEmpty().isString().trim(), 
+    body('startLatitude').notEmpty().isString().trim(), 
+    body('endLongitude').notEmpty().isString().trim(), 
+    body('endLatitude').notEmpty().isString().trim(), 
+    body('startAltitude').notEmpty().isString().trim(), 
+    body('endAltitude').notEmpty().isString().trim(), 
+    body('startPointLabel').notEmpty().isString().trim(), 
+    body('endPointLabel').notEmpty().isString().trim(), 
+    body('startAddress').optional().isString().trim(),
+    body('endAddress').optional().isString().trim()
 ],  
     async(req,res) => {
         try {
-            const errors = validationResult(req);
+              const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                console.log(errors.array());
                 return res.status(400).end();
             }  
 
+            //hike 
             const title=req.body.title;
             const length =  Number.parseInt(req.body.length);
             const expectedTime = Number.parseInt(req.body.expectedTime);
             const ascent =  Number.parseInt(req.body.ascent);
             const difficulty=req.body.difficulty;
-            const startPointId = Number.parseInt(req.body.startPointId);
-            const endPointId =  Number.parseInt(req.body.endPointId);
-            const description=req.body.description;  
-            
-            const userId=req.user? req.user.id : 1;
-
+            const description=req.body.description;
             
             const trackingfile =req.files ? req.files.trackingfile : null;
             const gpxPath=trackingfile ? './files/' + title+'-'+uuidv4() + path.extname(trackingfile.name) : null;
@@ -106,13 +112,30 @@ router.post('/hike', fileUpload({createParentPath: true}),
                 //  mv() method places the file inside public directory
                 trackingfile.mv(gpxPath, function (err) {
                     if (err) {
-                        console.log(err)
-                        return res.status(500).send({ msg:err.message });
+                        return res.status(500).json(err.message);
                     }
                 });
-            }
+            }  
+            const userId=req.user? req.user.id : 1;
+
+            //startPoint
+            const startLatitude=req.body.startLatitude;
+            const startLongitude=req.body.startLongitude;
+            const startAltitude=req.body.startAltitude;
+            const startPointLabel=req.body.startPointLabel;
+            const startAddress=req.body.startAddress;
+
+            //endPoint
+            const endLatitude=req.body.endLatitude;
+            const endLongitude=req.body.endLongitude;
+            const endAltitude=req.body.endAltitude;
+            const endPointLabel=req.body.endPointLabel;
+            const endAddress=req.body.endAddress;
             
-            const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description,gpxPath,userId);
+            
+            const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, description,gpxPath,userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress);
+            if(!result)
+                return res.status(500).end();
             return res.status(200).json(result);
         } catch (err) {
             switch(err.returnCode){
@@ -120,5 +143,6 @@ router.post('/hike', fileUpload({createParentPath: true}),
                     return res.status(500).json(err.message);
             }
         }
-    });    
+    });
+
 module.exports = router;
