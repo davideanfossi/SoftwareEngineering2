@@ -78,7 +78,6 @@ class HikeService {
 
     addHike = async (title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress) => {
         try {
-
             //TODO :  add transaction or delete points in catch when insertHike returns err
             //first insert startPoint and endPoint
             const startPointId=await this.pointDAO.insertPoint(startLatitude,startLongitude,startAltitude,startPointLabel,startAddress)
@@ -112,6 +111,8 @@ function computeDistance(lat1, lon1, lat2, lon2) {
         return km;
     }
 }
+
+
 
 /**
  * @param {*} baseLat latitude of the center of the circle

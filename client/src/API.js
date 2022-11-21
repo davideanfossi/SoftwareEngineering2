@@ -89,10 +89,29 @@ const getFilteredHikes = async (
   }
 };
 
+const newHike = async (formData) => {
+  try {
+    const response = await fetch(
+      new URL("hike", SERVER_BASE), {
+        method: "POST",
+        body: formData
+      }
+    );
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.json();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
+  newHike
 };
 
 export default API;

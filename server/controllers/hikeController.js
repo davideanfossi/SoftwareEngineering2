@@ -4,6 +4,7 @@ const express = require('express');
 const {expressValidator, check, query,body, validationResult} = require('express-validator');
 const router = express.Router();
 const fileUpload=require('express-fileupload');
+
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
@@ -66,7 +67,9 @@ router.get('/hikes/limits', express.json(),
         }
 });
 
+
 router.post('/hike',fileUpload({createParentPath: true}),
+
  [
     body('title').notEmpty().isString().trim(), 
     body('length').notEmpty().isInt({ min: 0}),
@@ -101,6 +104,7 @@ router.post('/hike',fileUpload({createParentPath: true}),
             const ascent =  Number.parseInt(req.body.ascent);
             const difficulty=req.body.difficulty;
             const description=req.body.description;
+            
             const trackingfile =req.files ? req.files.trackingfile : null;
             const gpxPath=trackingfile ? './files/' + title+'-'+uuidv4() + path.extname(trackingfile.name) : null;
             if(trackingfile)
@@ -140,5 +144,5 @@ router.post('/hike',fileUpload({createParentPath: true}),
             }
         }
     });
-    
+
 module.exports = router;
