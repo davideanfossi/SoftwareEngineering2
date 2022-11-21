@@ -8,8 +8,8 @@ WORKDIR /server
 ENV PATH /server/node_modules/.bin:$PATH
 
 # install server dependencies
-COPY package.json ./
-COPY package-lock.json ./
+COPY server/package.json ./
+COPY server/package-lock.json ./
 RUN npm install --silent
 
 # add server
