@@ -7,7 +7,6 @@ import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
 import { InsertHike } from "./components/organism/InsertHike";
 
-
 function App() {
   return (
     <>

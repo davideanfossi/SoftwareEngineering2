@@ -23,6 +23,8 @@ function HikeForm () {
     const [endLatitude, setEndLatitude] = useState('');
     const [startAltitude, setStartAltitude] = useState('');
     const [endAltitude, setEndAltitude] = useState('');
+    const [startAddress, setStartAddress] = useState('');
+    const [endAddress, setEndAddress] = useState('');
 
     const ref = useRef();
     
@@ -57,7 +59,9 @@ function HikeForm () {
       formData.append('startAltitude', startAltitude);
       formData.append('endAltitude', endAltitude);
       formData.append('startPointLabel', startPointLabel);
-      formData.append('endPointLabel',endPointLabel);
+      formData.append('endPointLabel', endPointLabel);
+      formData.append('startAddress', startAddress);
+      formData.append('endAddress', endAddress);
 
       API.newHike(formData)
       .then(() => {
@@ -74,6 +78,9 @@ function HikeForm () {
         setEndPointLabel('');
         setStartAltitude('');
         setEndAltitude('');
+        setStartAddress('');
+        setEndAddress('');
+        
         ref.current.value=null;
 
         setSuccess('yes');
@@ -187,6 +194,7 @@ function HikeForm () {
                                 setFile(event.target.files[0]);
 
                                 const handleFileLoad = async (event) => {
+                                  // get coordinates
                                   let [start, end] = parseGpx(event.target.result);
 
                                   setStartLongitude(start[0]);
@@ -196,6 +204,26 @@ function HikeForm () {
 
                                   setStartAltitude(start[2]);
                                   setEndAltitude(end[2]);
+
+                                  // reverse coordinates
+                                  let url = 'https://nominatim.openstreetmap.org/reverse?lat=' + start[1] + '&lon=' + start[0] + '&zoom=16';
+                                  let address = await fetch(url)
+                                    .then(response => response.text())
+                                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                                    .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
+                                    .catch(err => console.log(err));
+
+                                  setStartAddress(address);
+
+                                  url = 'https://nominatim.openstreetmap.org/reverse?lat=' + end[1] + '&lon=' + end[0] + '&zoom=16';
+                                  address = await fetch(url)
+                                    .then(response => response.text())
+                                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                                    .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
+                                    .catch(err => console.log(err));
+
+                                  setEndAddress(address);
+
                                 }
                             
                                 const reader = new FileReader()
@@ -212,7 +240,7 @@ function HikeForm () {
                   <Form.Group style={{"paddingTop": "12px"}}>
                     <Form.Label>Start Point</Form.Label>
                     <Form.Control type="text"
-                                  placeholder={startLongitude + "  " + startLatitude}
+                                  placeholder={startAddress}
                                   disabled="disabled"/>
                   </Form.Group>
                 </Col>
@@ -221,7 +249,7 @@ function HikeForm () {
                   <Form.Group style={{"paddingTop": "12px"}}>
                     <Form.Label>End Point</Form.Label>
                     <Form.Control type="text"
-                                  placeholder={endLongitude + "  " + endLatitude}
+                                  placeholder={endAddress}
                                   disabled="disabled"/>
                   </Form.Group>
                 </Col>
