@@ -9,12 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - 
-        shell: bash
-        env:
-            SUPER_SECRET: ${{ secrets.DOCKER_HUB_USERNAME   }}
-        run: |
-          echo $SUPER_SECRET
       -
         name: Checkout
         uses: actions/checkout@v3
