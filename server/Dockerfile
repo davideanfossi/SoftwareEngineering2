@@ -9,7 +9,6 @@ ENV PATH /server/node_modules/.bin:$PATH
 
 # install server dependencies
 COPY server/package.json ./
-COPY server/package-lock.json ./
 RUN npm install --silent
 
 # add server
