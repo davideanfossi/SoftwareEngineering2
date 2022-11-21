@@ -1,3 +1,4 @@
+import track from "./track_points.json";
 const SERVER_HOST = "http://localhost";
 const SERVER_PORT = 3001;
 
@@ -89,10 +90,51 @@ const getFilteredHikes = async (
   }
 };
 
+const getHikeDetails = async (hike) => {
+  try {
+    const response = await fetch(
+      new URL("hikes/details?id=" + hike.id, SERVER_BASE),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.ok) {
+      return response.json();
+    } else {
+      //throw response.json();
+      const coordinates = track.map((elem) => [
+        elem.geometry.coordinates[1],
+        elem.geometry.coordinates[0],
+      ]);
+      return {
+        startPoint: { type: undefined, coordinates: coordinates[0] },
+        endPoint: {
+          type: undefined,
+          coordinates: coordinates[coordinates.length - 1],
+        },
+        referencePoints: [
+          { type: undefined, coordinates: coordinates[200] },
+          { type: undefined, coordinates: coordinates[400] },
+          { type: undefined, coordinates: coordinates[600] },
+          { type: undefined, coordinates: coordinates[800] },
+          { type: undefined, coordinates: coordinates[1000] },
+          { type: undefined, coordinates: coordinates[1200] },
+        ],
+        track: coordinates,
+      };
+    }
+  } catch (e) {
+    throw e;
+  }
+};
 const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
+  getHikeDetails,
 };
 
 export default API;
