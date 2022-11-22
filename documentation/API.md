@@ -93,7 +93,7 @@
 ## GET hike track
 
 **`GET: /api/hikes/{id}/track`**
-- get start point, end point, reference points and track taken from the gpx file of the specific hike specified by the id
+- get track taken from the gpx file of the specific hike specified by the id
 - Authorization:  _hiker_
 - Request params:
     -  _id_: integer identifier of the hike
@@ -103,45 +103,17 @@
 - Response body: 
     ```
     {
-        "startpoint": {
-            "id": 4,
-            "latitude": 45.737089,
-            "longitude": 7.319665,
-            "altitude": 645,
-            "name": "Aosta",
-            "address": "Aosta, Valle d'Aosta"
-        },
-        "endPoint": {
-            "id": 1,
-            "latitude": 45.580187,
-            "longitude": 7.217462,
-            "altitude": 2361,
-            "name": "Parco Nazionale del Gran Paradiso",
-            "address": null
-        },
-        "referencePoints": [
+        "track": [
             {
-                "id": 2,
-                "latitude": 45.622523,
-                "longitude": 7.200738,
-                "altitude": 2284,
-                "name": "Strada regionale della Valsavarenche",
-                "address": "11010 Valsavarenche"
+                "lat": 45.177786,
+                "lon": 7.083372
+            },
+            {
+                "lat": 45.177913,
+                "lon": 7.083268
             },
             ...
-        ],
-        "track": [
-            [
-                7.083372,
-                45.177786,
-                2147.107666
-            ],
-            [
-                7.083268,
-                45.177913,
-                2148.453125
-            ],
-            ...  
+        ]
     }
     ```
 
