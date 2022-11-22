@@ -88,16 +88,10 @@ class HikeService {
             if(hike === undefined)
                 throw {returnCode: 404, message: "Hike not Found"};
             
-            // get points of hike
-            hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
-            hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
-            hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
-
             const hikeGpxFile = path.resolve(gpxDir, hike.gpxPath);
             const gpx = new DOMParser().parseFromString(fs.readFileSync(hikeGpxFile, 'utf8'));
             const geoJson = togeojson.gpx(gpx);
-            return {"startpoint": hike.startPoint, "endPoint": hike.endPoint,
-                "referencePoints": hike.referencePoints, "track": geoJson.features[0].geometry.coordinates};
+            return {"track": geoJson.features[0].geometry.coordinates.map(p => {return {"lat": p[1], "lon": p[0]}})};
         } catch (err) {
             throw err;
         }
