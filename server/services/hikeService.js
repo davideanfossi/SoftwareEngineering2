@@ -1,6 +1,12 @@
 'use strict';
 
+const togeojson = require ('togeojson');
+const fs = require ('fs');
+const DOMParser = require('xmldom').DOMParser;
+const path = require('path');
 const {difficultyType} = require("../models/hikeModel");
+
+const gpxDir = require("../config.json").gpxPath;
 
 class HikeService {
     constructor(hikeDAO, pointDAO) {
@@ -75,6 +81,20 @@ class HikeService {
             throw err;
         }
     }
+
+    getHikeGpx = async (hikeId) => {
+        try {
+            const hike = await this.hikeDAO.getHike(hikeId);
+            if(hike === undefined)
+                throw {returnCode: 404, message: "Hike not Found"};
+            const hikeGpxFile = path.resolve(gpxDir, hike.gpxPath);
+            const gpx = new DOMParser().parseFromString(fs.readFileSync(hikeGpxFile, 'utf8'));
+            const geoJson = togeojson.gpx(gpx);
+            return {track: geoJson.features[0].geometry.coordinates};
+        } catch (err) {
+            throw err;
+        }
+    };
 
 
 }

@@ -34,6 +34,16 @@ class HikeDAO {
         }
     };
 
+    getHike = async (id) => {
+        try {
+            const sql = "SELECT * FROM Hike WHERE id = ?";
+            const res = await this.dbManager.get(sql, [id], true);
+            return res ? new Hike(res.id, res.title, res.length, res.expectedTime, res.ascent, res.difficulty, res.startPointId, res.endPointId, res.description, [], res.gpxPath, res.userId) : undefined;
+        } catch (err) {
+            throw err;
+        }
+    };
+
     getMaxData = async () => {
         try {
             const sql = "SELECT max(length) AS maxLength, max(expectedTime) as maxExpectedTime, max(ascent) AS maxAscent FROM Hike";

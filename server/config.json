@@ -2,5 +2,6 @@
     "dbAddresses": {
         "PROD": "./database/hikeDB.db",
         "TEST": "./database/test.db"
-    }
+    },
+    "gpxPath": "files/gpx/"
 }
