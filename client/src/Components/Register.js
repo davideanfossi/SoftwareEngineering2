@@ -84,14 +84,17 @@ function Register(props) {
     return(
         <>
             <Container>
-                <Row className="justify-content-md-center">
-                    <Row className='w-50' style={{"paddingTop": '20px', "paddingBottom": '50px', "backgroundColor": "white"}}>
-                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                        <h1>Hike Tracker</h1>
-                        <h3>Please compile the data down below:</h3>
-                        <li>Select your profile:</li>
-                        <Form.Group className='check-line'>
-                            <div key={'inline-radio'} className="mb-3">
+                <Row style={{"paddingLeft": "0.7rem"}}>
+                    <b style={{"fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem"}}>Insert Hike</b>
+                </Row>
+                <Row style={{"paddingLeft": "0.7rem"}}>
+                            <b style={{"fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem"}}>Please compile the data down below:</b>
+                </Row>
+                    <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white"}}>
+                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                            <li>Select your profile:</li>
+                            <Form.Group className='check-line'>
+                                <div key={'inline-radio'} className="mb-3">
                                 <Form.Check
                                     inline
                                     label="Hiker"
@@ -116,34 +119,34 @@ function Register(props) {
                                     id='inline-radio-3'
                                     onClick={() => {setAdditionalData(true); setRole('Hut worker')} }
                                 />
-                            </div>
-                        </Form.Group>
-                        {additionalData ? 
-                        <>
-                        <Form.Group className='mb-2' controlId='name'>
-                            <Form.Label>Name:</Form.Label>
-                            <Form.Control 
+                                </div>
+                            </Form.Group>
+                            {additionalData ? 
+                            <>
+                            <Form.Group className='mb-2' controlId='name'>
+                                <Form.Label>Name:</Form.Label>
+                                <Form.Control 
                                     type="text" 
                                     value={name} 
                                     onChange={(ev) => setName(ev.target.value)} 
                                     required={true} 
                                     placeholder="Your name here"
                                     maxLength={20}/>
-                        </Form.Group>
-                        <Form.Group className='mb-2' controlId='surname'>
-                        <Form.Label>Surname:</Form.Label>
-                        <Form.Control 
+                            </Form.Group>
+                            <Form.Group className='mb-2' controlId='surname'>
+                                <Form.Label>Surname:</Form.Label>
+                                <Form.Control 
                                     type='text' 
                                     value={surname} 
                                     onChange={(ev) => setSurname(ev.target.value)} 
                                     required={true} 
                                     placeholder="Your surname here" 
                                     maxLength={20}/>
-                        </Form.Group>
+                            </Form.Group>
                         
-                        <Form.Group className='mb-2' controlId='phone-number'>
-                            <Form.Label>Phone number:</Form.Label>
-                            <Form.Control 
+                            <Form.Group className='mb-2' controlId='phone-number'>
+                                <Form.Label>Phone number:</Form.Label>
+                                <Form.Control 
                                     type="text" 
                                     value={phoneNumber} 
                                     onChange={(ev) => setPhoneNumber(ev.target.value)} 
@@ -151,34 +154,34 @@ function Register(props) {
                                     placeholder="Your phone number here"
                                     minLength={10}
                                     maxLength={13}/>
-                        </Form.Group>
-                        </> 
-                        : 
-                        <>
-                        <Form.Group className='mb-2' controlId='username'>
-                        <Form.Label>Username:</Form.Label>
-                        <Form.Control 
+                            </Form.Group>
+                            </> 
+                            : 
+                            <>
+                            <Form.Group className='mb-2' controlId='username'>
+                                <Form.Label>Username:</Form.Label>
+                                <Form.Control 
                                     type='text' 
                                     value={username} 
                                     onChange={(ev) => setUsername(ev.target.value)} 
                                     required={true} 
                                     placeholder="Create a fancy username"
                                     maxLength={20} />
-                        </Form.Group>
-                        </> }
-                        <Form.Group className='mb-2' controlId='email'>
-                        <Form.Label>Email:</Form.Label>
-                        <Form.Control 
+                            </Form.Group>
+                            </> }
+                            <Form.Group className='mb-2' controlId='email'>
+                                <Form.Label>Email:</Form.Label>
+                                <Form.Control 
                                     type='email' 
                                     value={email} 
                                     onChange={(ev) => setEmail(ev.target.value)} 
                                     required={true} 
                                     placeholder="Enter email"
                                     maxLength={40} />
-                        </Form.Group>
-                        <Form.Group className='mb-2' controlId='password'>
-                        <Form.Label>Password:</Form.Label>
-                        <Form.Control 
+                            </Form.Group>
+                            <Form.Group className='mb-2' controlId='password'>
+                                <Form.Label>Password:</Form.Label>
+                                <Form.Control 
                                     type='password' 
                                     value={password} 
                                     onChange={(ev) => setPassword(ev.target.value)} 
@@ -187,13 +190,13 @@ function Register(props) {
                                     maxLength={20}
                                     placeholder="Enter a password" 
                                     aria-describedby="passwordHelpBlock" />
-                        <Form.Text id="passwordHelpBlock" muted>
-                            Your password must be 8-20 characters long, contain letters and numbers.
-                        </Form.Text>
-                        </Form.Group>
-                        <Form.Group className='mb-2' controlId='conf-password'>
-                        <Form.Label>Confirm password:</Form.Label>
-                        <Form.Control 
+                            <Form.Text id="passwordHelpBlock" muted>
+                                Your password must be 8-20 characters long, contain letters and numbers.
+                            </Form.Text>
+                            </Form.Group>
+                            <Form.Group className='mb-2' controlId='conf-password'>
+                                <Form.Label>Confirm password:</Form.Label>
+                                <Form.Control 
                                     type='password' 
                                     value={confPassword} 
                                     onChange={(ev) => setConfPassword(ev.target.value)} 
@@ -201,13 +204,13 @@ function Register(props) {
                                     minLength={8}
                                     maxLength={20}
                                     placeholder="Confirm your password" />
-                        </Form.Group>
-                        {
-                            confPassword===password ? <Form.Control.Feedback>Correct.</Form.Control.Feedback>
-                            :
-                            <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
-                        }
-                        <Form.Group className='mt-3'>
+                            </Form.Group>
+                            {
+                                confPassword===password ? <Form.Control.Feedback>Correct.</Form.Control.Feedback>
+                                :
+                                <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
+                            }
+                            <Form.Group className='mt-3'>
                                 <Button variant='warning' type='submit' size='lg' onSubmit={() => {setShowAlert(true); handleRegister();
                                                                                                     /*additionalData ? {setUsername({name} + '_' + surname);
                                                                                                     console.log(username);} : {}*/
@@ -219,9 +222,8 @@ function Register(props) {
                                     Cancel
                                 </Button>
                             </Form.Group>
-                    </Form>
-                    </Row>
-                </Row>
+                        </Form>
+                    </Container>
             </Container>
         </>
     );

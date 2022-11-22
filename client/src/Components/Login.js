@@ -47,10 +47,14 @@ function Login(props) {
     return (
         <>
             <Container>
-                <Row className="justify-content-md-center">
+                <Row style={{"paddingLeft": "0.7rem"}}>
+                            <b style={{"fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem"}}>Insert Hike</b>
+                </Row>
+                <Row style={{"paddingLeft": "0.7rem"}}>
+                            <b style={{"fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem"}}>Please insert your email and password:</b>
+                </Row>
+                    <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white"}}>
                         <Form onSubmit={handleLogin}>
-                            <h1>Hike Tracker</h1>
-                            <h3>Please insert your email and password:</h3>
                             <Form.Group className='mb-2' controlId='email'>
                                 <Form.Label>Email:</Form.Label>
                                 <Form.Control 
@@ -84,7 +88,7 @@ function Login(props) {
                             <Alert style={{ marginTop:20 }} variant='danger' dismissible
                             show={showAlert}   onClose={() => setShowAlert(false)}>{errorMessage}</Alert>
                         </Form>
-                </Row>
+                    </Container>
             </Container>
         </>
     );
