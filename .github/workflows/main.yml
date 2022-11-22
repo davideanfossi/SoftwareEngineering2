@@ -25,7 +25,6 @@ jobs:
         name: Build and push server
         uses: docker/build-push-action@v3
         with:
-          working-directory: ./server
           file: ./server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hike-tracker-server:latest
@@ -33,7 +32,6 @@ jobs:
         name: Build and push client
         uses: docker/build-push-action@v3
         with:
-          working-directory: ./client
           file: ./client/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hike-tracker-client:latest
