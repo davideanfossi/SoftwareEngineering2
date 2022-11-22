@@ -56,8 +56,10 @@ function Register(props) {
 
     const navigate = useNavigate();
 
-    const handleSubmit = event => {
+    const handleRegister = event => {
         const form=event.currentTarget;
+
+        setShowAlert(true);
         if(form.checkValidity()===false) {
             event.preventDefault();
             event.stopPropagation();
@@ -65,20 +67,21 @@ function Register(props) {
             show={showAlert}   onClose={() => setShowAlert(false)}>{"Error in registration"}</Alert>
         } else {
             <Alert style={{ marginTop:20 }} variant='success' dismissible
-            show={showAlert}   onClose={() => setShowAlert(false)}>You registered correctly!</Alert>
+            show={showAlert}   onClose={() => setShowAlert(false)}>{"You registered correctly!"}</Alert>
+            navigate('/login');
             
         }
         setValidated(true);
     };
 
-    const handleRegister = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
         const credentials = { email, password };
         props.register(credentials)
         .then( () => navigate('')  )
         .catch((err) => { 
             setShowAlert(true); 
-      });
+        });
     };
 
     return(
@@ -91,10 +94,9 @@ function Register(props) {
                             <b style={{"fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem"}}>Please compile the data down below:</b>
                 </Row>
                     <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white"}}>
-                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                        <Form noValidate validated={validated} onSubmit={handleRegister}>
                             <li>Select your profile:</li>
                             <Form.Group className='check-line'>
-                                <div key={'inline-radio'} className="mb-3">
                                 <Form.Check
                                     inline
                                     label="Hiker"
@@ -119,7 +121,6 @@ function Register(props) {
                                     id='inline-radio-3'
                                     onClick={() => {setAdditionalData(true); setRole('Hut worker')} }
                                 />
-                                </div>
                             </Form.Group>
                             {additionalData ? 
                             <>
@@ -211,7 +212,7 @@ function Register(props) {
                                 <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
                             }
                             <Form.Group className='mt-3'>
-                                <Button variant='warning' type='submit' size='lg' onSubmit={() => {setShowAlert(true); handleRegister();
+                                <Button variant='warning' type='submit' size='lg' onSubmit={() => {setShowAlert(true); handleSubmit();
                                                                                                     /*additionalData ? {setUsername({name} + '_' + surname);
                                                                                                     console.log(username);} : {}*/
                                                                                                     }}>

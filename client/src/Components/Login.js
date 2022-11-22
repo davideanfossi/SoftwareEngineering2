@@ -1,6 +1,7 @@
 import { useState, React } from 'react';
 import { Button, Form, Container, Row, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import API from '../API'
 
 function Checkbox() {
     return (
@@ -36,13 +37,18 @@ function Login(props) {
     
     const handleLogin = (event) => {
         event.preventDefault();
+        navigate('/');
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
         const credentials = { email, password };
         let user = props.login(credentials)
         .then( () => {props.setUser(user.username); navigate('');} )
         .catch((err) => { 
             setErrorMessage(err); setShowAlert(true); 
-      });
-    };
+        });
+    }
 
     return (
         <>
@@ -77,7 +83,7 @@ function Login(props) {
                             <Checkbox />
                             <Registration />
                             <Form.Group>
-                                <Button variant='warning' type='submit' size='lg'>
+                                <Button variant='warning' type='submit' size='lg' onSubmit={() => {handleSubmit()}}>
                                     Login
                                 </Button>
                                 {' '}
