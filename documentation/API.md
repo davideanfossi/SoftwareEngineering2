@@ -3,12 +3,14 @@
 ## INDEX
 - [GET hikes](#get-hikes)
 - [GET hikes limits](#get-hikes-limits)
+- [GET hike track](#get-hike-track)
 
 --------------------------------------------------------------
 ## GET hikes
 
 **`GET: /api/hikes`**
 - get hikes information with filters and paging
+- Authorization: _None_
 - Request body: _None_
 - Request query:
     - `totalPages`: total number of pages with the given pageSize
@@ -70,6 +72,7 @@
 
 **`GET: /api/hikes/limits`**
 - get max length, max expected time, max ascent, and difficulty types of the hikes
+- Authorization: _None_
 - Request body: _None_
 - Response: `200 OK` (success), `500 Internal Server Error` (generic error).
 - Response body: 
@@ -83,6 +86,62 @@
             "Hiker",
             "Professional Hiker"
         ]
+    }
+    ```
+
+
+## GET hike track
+
+**`GET: /api/hikes/{id}/track`**
+- get start point, end point, reference points and track taken from the gpx file of the specific hike specified by the id
+- Authorization:  _hiker_
+- Request params:
+    -  _id_: integer identifier of the hike
+- Request body: _None_
+- Response: `200 OK` (success), `400 Bad Request` (id param not correct), `404 Not Found` (no hike related to the id),
+`401 Unauthorized` (user not authenticated), `403 Forbidden` (user logged in but not authorized) and `500 Internal Server Error` (generic error).
+- Response body: 
+    ```
+    {
+        "startpoint": {
+            "id": 4,
+            "latitude": 45.737089,
+            "longitude": 7.319665,
+            "altitude": 645,
+            "name": "Aosta",
+            "address": "Aosta, Valle d'Aosta"
+        },
+        "endPoint": {
+            "id": 1,
+            "latitude": 45.580187,
+            "longitude": 7.217462,
+            "altitude": 2361,
+            "name": "Parco Nazionale del Gran Paradiso",
+            "address": null
+        },
+        "referencePoints": [
+            {
+                "id": 2,
+                "latitude": 45.622523,
+                "longitude": 7.200738,
+                "altitude": 2284,
+                "name": "Strada regionale della Valsavarenche",
+                "address": "11010 Valsavarenche"
+            },
+            ...
+        ],
+        "track": [
+            [
+                7.083372,
+                45.177786,
+                2147.107666
+            ],
+            [
+                7.083268,
+                45.177913,
+                2148.453125
+            ],
+            ...  
     }
     ```
 
