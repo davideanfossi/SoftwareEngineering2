@@ -18,13 +18,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-   
       - 
         name: Docker-Compose Publish
         uses: pennsignals/publish_docker-compose@v0.1.1
         with:
           docker_compose: 'docker-compose.yml'
+      - 
+        name: Push server
+        run: |
+          docker push riccardogiambra/riccardogiambra/hike-tracker-server
+      - 
+        name: Push client
+        run: |
+          docker push riccardogiambra/riccardogiambra/hike-tracker-client
 
