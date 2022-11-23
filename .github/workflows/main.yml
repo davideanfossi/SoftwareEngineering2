@@ -21,17 +21,10 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Build and push server
-        uses: docker/build-push-action@v3
+   
+      - 
+        name: Docker-Compose Publish
+        uses: pennsignals/publish_docker-compose@v0.1.1
         with:
-          file: ./server/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hike-tracker-server:latest
-      -
-        name: Build and push client
-        uses: docker/build-push-action@v3
-        with:
-          file: ./client/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hike-tracker-client:latest
+          docker_compose: 'docker-compose.yml'
+
