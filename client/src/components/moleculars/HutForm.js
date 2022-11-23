@@ -137,7 +137,18 @@ function HutForm () {
                                 setFile(event.target.files[0]);
                               }}/>
               </Form.Group>
-  
+
+            {file !== '' ? 
+                <div style={{"paddingTop": "20px"}}>
+                    <div className="text-center" style={{"paddingBottom": "10px"}}>
+                        <img alt="Not found" width={"250px"} src={URL.createObjectURL(file)} />
+                        </div>
+                    <div className="text-center">
+                        <Button className="btn-danger" style={{"width": "250px"}} onClick={()=>{setFile(''); ref.current.value=null;}}>Remove</Button>
+                        </div>
+                </div> : null
+            }
+
             </Row>
             <Button type="submit"  style={{"marginTop": "12px", "backgroundColor": 'blue', "borderColor": 'blue'}}>Submit</Button>
           </Form>
