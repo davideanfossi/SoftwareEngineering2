@@ -29,9 +29,9 @@ jobs:
       - 
         name: Push server
         run: |
-          docker push riccardogiambra/riccardogiambra/hike-tracker-server
+          docker push riccardogiambra/hike-tracker-server
       - 
         name: Push client
         run: |
-          docker push riccardogiambra/riccardogiambra/hike-tracker-client
+          docker push riccardogiambra/hike-tracker-client
 
