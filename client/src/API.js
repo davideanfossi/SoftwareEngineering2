@@ -93,7 +93,7 @@ const getFilteredHikes = async (
 const getHikeDetails = async (hike) => {
   try {
     const response = await fetch(
-      new URL("hikes/details?id=" + hike.id, SERVER_BASE),
+      new URL("hikes/" + hike.id+"/track", SERVER_BASE),
       {
         method: "GET",
         headers: {
@@ -110,18 +110,55 @@ const getHikeDetails = async (hike) => {
         elem.geometry.coordinates[0],
       ]);
       return {
-        startPoint: { type: undefined, coordinates: coordinates[0] },
+        startPoint: {
+          type: undefined,
+          coordinates: coordinates[0],
+          name: "Torino",
+          address: "address 1",
+        },
         endPoint: {
           type: undefined,
           coordinates: coordinates[coordinates.length - 1],
+          name: "Torino",
+          address: "address 1",
         },
         referencePoints: [
-          { type: undefined, coordinates: coordinates[200] },
-          { type: undefined, coordinates: coordinates[400] },
-          { type: undefined, coordinates: coordinates[600] },
-          { type: undefined, coordinates: coordinates[800] },
-          { type: undefined, coordinates: coordinates[1000] },
-          { type: undefined, coordinates: coordinates[1200] },
+          {
+            type: undefined,
+            coordinates: coordinates[200],
+            name: "Torino",
+            address: "address 1",
+          },
+          {
+            type: undefined,
+            coordinates: coordinates[400],
+            name: "Torino",
+            address: "address 1",
+          },
+          {
+            type: undefined,
+            coordinates: coordinates[600],
+            name: "Torino",
+            address: "address 1",
+          },
+          {
+            type: undefined,
+            coordinates: coordinates[800],
+            name: "Torino",
+            address: "address 1",
+          },
+          {
+            type: undefined,
+            coordinates: coordinates[1000],
+            name: "Torino",
+            address: "address 1",
+          },
+          {
+            type: undefined,
+            coordinates: coordinates[1200],
+            name: "Torino",
+            address: "address 1",
+          },
         ],
         track: coordinates,
       };

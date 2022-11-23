@@ -36,6 +36,15 @@ body {
   padding: 1em;
 }
 
+.leaflet-popup-content-wrapper {
+  background-color: rgb(243, 231, 201);
+  border: 0.4em solid rgb(239, 208, 131);
+}
+
+.leaflet-popup-tip {
+  display: none;
+}
+
 /*
 rgb(243, 231, 201)
 */

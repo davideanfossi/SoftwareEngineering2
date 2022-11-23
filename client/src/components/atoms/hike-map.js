@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
+import { Col, Container, Form, Row } from "react-bootstrap";
+import { MapContainer, Polyline, TileLayer } from "react-leaflet";
+import { MarkerReferencePoint } from "./marker-reference-point";
 
 export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
+  const [showReferencePoints, setShowReferencePoints] = useState(false);
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
   const [map, setMap] = useState(undefined);
+
   useEffect(() => {
     if (startPoint !== undefined && endPoint !== undefined) {
       setCenter([
@@ -19,31 +23,54 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
     }
   }, [center, map]);
   return (
-    <div style={{ width: "100%", padding: "1rem" }}>
-      <MapContainer
-        center={center}
-        zoom={10}
-        scrollWheelZoom={false}
-        ref={setMap}
-        style={{ height: "50vh" }}
-      >
-        <Marker position={startPoint.coordinates} />
-        <Marker position={endPoint.coordinates} />
+    <Container>
+      <Row>
+        <Col>
+          <div style={{ width: "100%", padding: "1rem" }}>
+            <MapContainer
+              center={center}
+              zoom={10}
+              scrollWheelZoom={false}
+              ref={setMap}
+              style={{ height: "50vh" }}
+            >
+              <MarkerReferencePoint point={startPoint} />
+              <MarkerReferencePoint point={endPoint} />
 
-        {
-          //TODO:decide if keep or not
-          false &&
-            referencesPoints.map((point, index) => (
-              <Marker key={index} position={point.coordinates} opacity={0.5} />
-            ))
-        }
-        <Polyline positions={track} />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-      </MapContainer>
-    </div>
+              {
+                //TODO:decide if keep or not
+
+                showReferencePoints &&
+                  referencesPoints.map((point, index) => (
+                    <MarkerReferencePoint
+                      point={point}
+                      key={index}
+                      isReference={true}
+                    />
+                  ))
+              }
+              <Polyline positions={track} />
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+            </MapContainer>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col className="d-flex justify-content-center">
+          <Form.Check
+            type="checkbox"
+            label="Show reference points"
+            value={showReferencePoints}
+            onChange={(event) => {
+              setShowReferencePoints(event.target.checked);
+            }}
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 /*
