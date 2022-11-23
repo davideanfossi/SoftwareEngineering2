@@ -12,6 +12,7 @@ const DbManager = require("../database/dbManager");
 const HikeDAO = require('../daos/hikeDAO');
 const PointDAO = require("../daos/pointDAO");
 const HikeService = require("../services/hikeService");
+const config = require("../config.json");
 
 const dbManager = new DbManager("PROD");
 const hikeDAO = new HikeDAO(dbManager);
@@ -105,8 +106,17 @@ router.post('/hike',fileUpload({createParentPath: true}),
             const difficulty=req.body.difficulty;
             const description=req.body.description;
             
+            const rootPath=config.gpxPath;
+            if (!rootPath) {
+                return res.status(500).json("error in reading gpxPath from config");
+            }
             const trackingfile =req.files ? req.files.trackingfile : null;
-            const gpxPath=trackingfile ? './files/' + title+'-'+uuidv4() + path.extname(trackingfile.name) : null;
+            const gpxFileName=trackingfile ?  uuidv4()+'-'+trackingfile.name  : null;
+            const gpxPath=trackingfile ? rootPath + gpxFileName : null;
+
+            if(path.extname(trackingfile.name) != ".gpx")
+                return res.status(400).json("wrong file type");
+            
             if(trackingfile)
             {
                 //  mv() method places the file inside public directory
@@ -133,7 +143,7 @@ router.post('/hike',fileUpload({createParentPath: true}),
             const endAddress=req.body.endAddress;
             
             
-            const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, description,gpxPath,userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress);
+            const result = await hikeService.addHike(title, length, expectedTime, ascent, difficulty, description,gpxFileName,userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress);
             if(!result)
                 return res.status(500).end();
             return res.status(200).json(result);

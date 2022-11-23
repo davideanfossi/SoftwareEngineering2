@@ -91,6 +91,7 @@ const getFilteredHikes = async (
 
 const newHike = async (formData) => {
   try {
+    console.log(formData);
     const response = await fetch(
       new URL("hike", SERVER_BASE), {
         method: "POST",
