@@ -35,15 +35,13 @@ const userValidator = (req, res, next) => {
         validator.validate(req.body, userSchema.user, { throwError: true }); 
     } 
     catch (error) {   
-        console.log(error, req.body);
-        return res.status(401).send('Invalid user format: ' + error.message); 
+        return res.status(401).send('Invalid user format: ' + error.property + ' ' + error.message); 
     }  
     next();
 }
 
 router.post('/signup', userValidator, 
     async (req, res) => {
-        console.log(userSchema);
         let response = {};
         try {
             const { email, username, role, password, name, surname, phoneNumber } = req.body;
@@ -57,43 +55,6 @@ router.post('/signup', userValidator,
                 { email, username, role, name, surname, phoneNumber },
                 process.env.JWT_ACC_ACTIVATE,
                 { expiresIn: '20m' });
-
-            // let testAccount = await nodemailer.createTestAccount();
-            // let transporter = nodemailer.createTransport({
-            //     host: "smtp.ethereal.email",
-            //     port: 587,
-            //     secure: false, // true for 465, false for other ports
-            //     auth: {
-            //         user: testAccount.user, // generated ethereal user
-            //         pass: testAccount.pass, // generated ethereal password
-            //     },
-            // });
-
-            // //if user is not found in DB send email
-            // let info = await transporter.sendMail({
-            //     from: 'noreply@hello.com', // sender address
-            //     to: 'zanfardinodiego@gmail.com', // list of receivers
-            //     subject: "Account Activation Link ✔", // Subject line
-            //     html: `
-            //     <h2>Please click on followng button to activate your account!</h2>
-            //     <button onclick="${process.env.CLIENT_URL}/authentication/activate/${token}" type="button">
-            //         Click Here</button>
-            //     ` // html body
-            // });
-
-
-
-            // console.log("Message sent: %s", info.messageId);
-            // // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-            // // Preview only available when sending through an Ethereal account
-            // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-            // // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
-
-            // const receivers = [
-            //     email: email
-            // ];
 
             await tranEmailApi.sendTransacEmail({
                 sender: sender,
@@ -113,7 +74,6 @@ router.post('/signup', userValidator,
             return res.status(201).json({ "msg": "Registration request successful, to complete registration confirm email" }).end();
 
         } catch (err) {
-            console.log(err);
             switch (err.returncode) {
                 case 422:
                     return res.status(422).json(err.message);
