@@ -12,6 +12,9 @@ const authRoutes = require('./controllers/authController');
 const app = express();
 const port = 3001;
 
+// Only parse query parameters into strings, not objects
+app.set('query parser', 'simple');
+
 // set up the middlewares
 app.use(express.json());
 

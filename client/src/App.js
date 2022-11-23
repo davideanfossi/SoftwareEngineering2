@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
+import "./main.scss";
+import "react-range-slider-input/dist/style.css";
+import { BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router";
+import { Home } from "./Components/home";
+import { Layout } from "./Components/layout";
+import { Login } from "./Components/login"
+import { Register } from './Components/register';
+import { useState } from 'react';
+import API from './API'
 
 function App() {
+  const [user, setUser] = useState(undefined);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout user={user}/>}>
+          <Route index element={<Home />} />
+          <Route path="register" index element={<Register register={undefined/*in realta api*/}/>} />
+        <Route path="login" index element={<Login setUser={setUser}/>} />
+        
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  </>
   );
 }
 
