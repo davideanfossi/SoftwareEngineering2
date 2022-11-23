@@ -1,6 +1,6 @@
 # pull official base image
 FROM node:14-alpine
-
+LABEL name="server"
 # set working directory
 WORKDIR /server
 
