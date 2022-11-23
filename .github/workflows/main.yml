@@ -19,10 +19,9 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - 
-        name: Docker-Compose Publish
-        uses: pennsignals/publish_docker-compose@v0.1.1
-        with:
-          docker_compose: 'docker-compose.yml'
+        name: Docker-Compose Build
+        run: |
+          docker-compose build
       - 
         name: Push server
         run: |
