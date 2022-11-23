@@ -1,5 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button, Col, Container, Form, Row, Alert } from "react-bootstrap";
+import AutocompleteGeoInput from "../atoms/autocomplete-geo-input";
+import { FilterMap } from "../atoms/filter-map";
+import { MapModal } from "./map-modal";
 import API from "../../API";
 
 function ParkingForm() {
@@ -12,8 +15,40 @@ function ParkingForm() {
     const [freeSpot, setFreeSpot] = useState(false);
     const [description, setDescription] = useState('');
     const [file, setFile] = useState('');
+    const [update, setUpdate] = useState(true);
 
     const ref = useRef();
+
+
+    const [selectedPosition, setSelectedPosition] = useState(undefined);
+    const [radius, setRadius] = useState(1);
+    const [lat, setLat] = useState(45.0702899); //it is Turin!
+    const [lon, setLon] = useState(7.6348208);
+    const [zoom, setZoom] = useState(6);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const handleSave = (lat, lon, radius, zoom) => {
+        setLat(lat);
+        setLon(lon);
+        setRadius(radius);
+        setZoom(zoom);
+    };
+
+
+    useEffect(() => {
+        if (selectedPosition !== undefined) {
+          setLat(selectedPosition.lat);
+          setLon(selectedPosition.lon);
+          setRadius(1);
+          setZoom(10);
+          setUpdate(true);
+        }
+      }, [selectedPosition]);
+
+      useEffect(() => {
+        if (update) setUpdate(false);
+      }, [update]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -34,7 +69,7 @@ function ParkingForm() {
         formData.append('evCharge', evCharge);
         formData.append('freeSpot', freeSpot);
         formData.append('description', description);
-        
+
         /*
           API.newParking(formData)
           .then(() => {
@@ -51,6 +86,7 @@ function ParkingForm() {
           })
         */
     };
+
 
     return (
         <Container fluid style={{ "padding": "0", "margin": "0px" }}>
@@ -75,6 +111,30 @@ function ParkingForm() {
 
             <Container className="border border-4 rounded" style={{ "marginTop": "0.5rem", "padding": "1rem" }}>
                 <Form noValidate onSubmit={handleSubmit}>
+                    <Row>
+                        <Col>
+                            <AutocompleteGeoInput
+                                selectedPosition={selectedPosition}
+                                setSelectPosition={setSelectedPosition}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                <Col>
+                  <div className="d-flex justify-content-center align-items-center">
+                    <FilterMap
+                      radius={radius}
+                      lat={lat}
+                      lon={lon}
+                      zoom={zoom}
+                      setLat={setLat}
+                      setLon={setLon}
+                      setZoom={setZoom}
+                    />
+                  </div>
+                </Col>
+              </Row>
+
                     <Row className="mb-3">
                         <Form.Group>
                             <Form.Label>Name</Form.Label>
@@ -88,6 +148,18 @@ function ParkingForm() {
                             </Form.Control.Feedback>
                         </Form.Group>
 
+                        {/* <Form.Group>
+                            <MapModal
+                                show={show}
+                                handleClose={handleClose}
+                                handleSave={handleSave}
+                                startingLat={lat}
+                                startingLon={lon}
+                                startingRadius={radius}
+                                startingZoom={zoom}
+                            />
+                        </Form.Group> */}
+
                         <Row className="align-items-center pt-2">
                             <Col >
                                 <Form.Group>
@@ -98,7 +170,7 @@ function ParkingForm() {
                                         value={parkingSpot}
                                         onChange={event => { setParkingSpot(event.target.value); }} />
                                     <Form.Control.Feedback type="invalid">
-                                        Number of parkingSpot needs to be a number greater than 0
+                                        Number of parking Spot needs to be a number greater than 0
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
@@ -106,7 +178,7 @@ function ParkingForm() {
                             <Col md className="align-items-center">
                             </Col>
                         </Row>
-                        <Col  className="align-items-center pt-2">
+                        <Col className="align-items-center pt-2">
                             <Form.Group className="ms-3 mt-2">
                                 <Row >
                                     <Form.Check
