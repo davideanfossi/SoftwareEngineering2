@@ -8,6 +8,7 @@ import { Home } from "./Components/home";
 import { Layout } from "./Components/layout";
 import { Login } from "./Components/Login"
 import { Register } from './Components/Register';
+import { EmailActivate } from './Components/emailActivate';
 import { useState } from 'react';
 import API from './API'
 
@@ -22,7 +23,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="register" index element={<Register register={API.registerUser}/>} />
         <Route path="login" index element={<Login setUser={setUser}/>} />
-        
+        <Route path='authentication/activate/*' index element={<EmailActivate/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

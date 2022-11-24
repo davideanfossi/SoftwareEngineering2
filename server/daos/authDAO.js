@@ -8,7 +8,7 @@ class authDAO {
 
     getVerifiedUserbyEmail = async (email) => {
         try {
-            const sql = "SELECT * FROM User WHERE email = ? and isVerified='true';";
+            const sql = "SELECT * FROM User WHERE email = ? and isVerified='1';";
             const res = await this.dbManager.get(sql, [email], true);
             return res ? res.id : null;
         } catch (err) {
@@ -28,7 +28,7 @@ class authDAO {
 
     verifyUser = async (email) => {
         try {
-            const sql = "UPDATE User set isVerified = 'true'  WHERE email = ? and isVerified='false';";
+            const sql = "UPDATE User set isVerified = '1'  WHERE email = ? and isVerified='0';";
             const res = await this.dbManager.get(sql, [email], true);
             return res ? res.id : null;
         } catch (err) {
@@ -40,7 +40,7 @@ class authDAO {
         const query = 'INSERT INTO User (email, username,  role, password, salt, name, surname, phoneNumber, isVerified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         try {
-            const result = await this.dbManager.query(query, [email, username,  role, password, salt, name, surname, phoneNumber, 'false']);
+            const result = await this.dbManager.query(query, [email, username,  role, password, salt, name, surname, phoneNumber, '0']);
             return result;
         }
         catch (err) {

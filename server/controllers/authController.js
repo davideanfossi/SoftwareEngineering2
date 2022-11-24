@@ -35,7 +35,7 @@ const userValidator = (req, res, next) => {
         validator.validate(req.body, userSchema.user, { throwError: true }); 
     } 
     catch (error) {   
-        return res.status(401).send('Invalid user format: ' + error.property + ' ' + error.message); 
+        return res.status(401).json({error: 'Invalid user format: ' + error.property + ' ' + error.message}); 
     }  
     next();
 }

@@ -3,44 +3,9 @@ import { Container, Form, Button, Row, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import API from '../API'
 
-/*
-function CheckBoxLine(setData) {
-    return(
-        <Form.Group className='check-line'>
-            <div key={'inline-radio'} classname="mb-3">
-                <Form.Check
-                    inline
-                    label="Hiker"
-                    name='group1'
-                    type='radio'
-                    id='inline-radio-1'
-                    onClick={() => setData(false)}
-                />
-                <Form.Check
-                    inline
-                    label="Local guide"
-                    name='group1'
-                    type='radio'
-                    id='inline-radio-2'
-                    onClick={() => setData(true)}
-                />
-                <Form.Check
-                    inline
-                    label="Hut worker"
-                    name='group1'
-                    type='radio'
-                    id='inline-radio-3'
-                    onClick={() => setData(true)}
-                />
-            </div>
-        </Form.Group>
-    )
-}
-*/
 
 function Register(props) {
 
-    //API.getAllHikes;
     const [role, setRole] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -58,7 +23,6 @@ function Register(props) {
 
     const handleRegister = event => {
         const form = event.currentTarget;
-
         setShowAlert(true);
         if (form.checkValidity() === false) {
             event.preventDefault();
@@ -66,6 +30,7 @@ function Register(props) {
             <Alert style={{ marginTop: 20 }} variant='danger' dismissible
                 show={showAlert} onClose={() => setShowAlert(false)}>{"Error in registration"}</Alert>
         } else {
+            event.preventDefault();
             <Alert style={{ marginTop: 20 }} variant='success' dismissible
                 show={showAlert} onClose={() => setShowAlert(false)}>{"You registered correctly!"}</Alert>
             navigate('/login');
@@ -89,7 +54,7 @@ function Register(props) {
         }
         //const credentials = { email, username, role, password, name, surname, phoneNumber };
         props.register(formData)
-            .then(() => navigate(''))
+            .then(() => navigate('/'))
             .catch((err) => {
                 setShowAlert(true);
             });
@@ -105,7 +70,7 @@ function Register(props) {
                     <b style={{ "fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem" }}>Please compile the data down below:</b>
                 </Row>
                 <Container className="border border-4 rounded" style={{ "marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white" }}>
-                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                    <Form noValidate validated={validated} onSubmit={handleRegister}>
                         <li>Select your profile:</li>
                         <Form.Group className='check-line'>
                             <Form.Check
@@ -122,7 +87,7 @@ function Register(props) {
                                 name='group1'
                                 type='radio'
                                 id='inline-radio-2'
-                                onClick={() => { setAdditionalData(true); setRole('Local guide') }}
+                                onClick={() => { setAdditionalData(true); setRole('Local Guide') }}
                             />
                             <Form.Check
                                 inline
@@ -130,7 +95,7 @@ function Register(props) {
                                 name='group1'
                                 type='radio'
                                 id='inline-radio-3'
-                                onClick={() => { setAdditionalData(true); setRole('Hut worker') }}
+                                onClick={() => { setAdditionalData(true); setRole('Hut Worker') }}
                             />
                         </Form.Group>
                         {additionalData ?
