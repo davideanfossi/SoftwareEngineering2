@@ -5,6 +5,10 @@ export const Layout = () => {
   const goHome = () => {
     navigate("/");
   };
+
+  const goInsertHike = () => {
+    navigate("/insert-hike");
+  };
   return (
     <>
       <Navbar className="nav">
@@ -12,6 +16,7 @@ export const Layout = () => {
           <Navbar.Brand onClick={goHome}>Hike Tracker</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link onClick={goHome}>Home</Nav.Link>
+            <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
