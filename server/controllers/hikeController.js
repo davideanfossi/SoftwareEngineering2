@@ -114,6 +114,7 @@ router.post('/hike',fileUpload({createParentPath: true}),
             const gpxFileName=trackingfile ?  uuidv4()+'-'+trackingfile.name  : null;
             const gpxPath=trackingfile ? rootPath + gpxFileName : null;
 
+
             if(path.extname(trackingfile.name) != ".gpx")
                 return res.status(400).json("wrong file type");
             
