@@ -1,6 +1,6 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
-import { Register } from "./register"
+import { Register } from "./Register"
 export const Layout = (props) => {
   const navigate = useNavigate();
   const goHome = () => {

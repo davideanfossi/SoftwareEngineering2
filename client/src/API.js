@@ -20,6 +20,7 @@ const getHikesLimits = async () => {
     throw e;
   }
 };
+
 const getAllHikes = async () => {
   try {
     const response = await fetch(new URL("hikes", SERVER_BASE), {
@@ -89,10 +90,28 @@ const getFilteredHikes = async (
   }
 };
 
+const registerUser = async (formData) => {
+  try {
+    const response = await fetch(new URL("signup", SERVER_BASE), {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(formData)
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.json();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
+  registerUser
 };
 
 export default API;
