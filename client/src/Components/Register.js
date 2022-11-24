@@ -82,6 +82,22 @@ function Register(props) {
         .catch((err) => { 
             setShowAlert(true); 
         });
+
+        const form=event.currentTarget;
+
+        setShowAlert(true);
+        if(form.checkValidity()===false) {
+            event.preventDefault();
+            event.stopPropagation();
+            <Alert style={{ marginTop:20 }} variant='danger' dismissible
+            show={showAlert}   onClose={() => setShowAlert(false)}>{"Error in registration"}</Alert>
+        } else {
+            <Alert style={{ marginTop:20 }} variant='success' dismissible
+            show={showAlert}   onClose={() => setShowAlert(false)}>{"You registered correctly!"}</Alert>
+            navigate('/login');
+            
+        }
+        setValidated(true);
     };
 
     return(
@@ -94,7 +110,7 @@ function Register(props) {
                             <b style={{"fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem"}}>Please compile the data down below:</b>
                 </Row>
                     <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white"}}>
-                        <Form noValidate validated={validated} onSubmit={handleRegister}>
+                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
                             <li>Select your profile:</li>
                             <Form.Group className='check-line'>
                                 <Form.Check
