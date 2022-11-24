@@ -3,7 +3,7 @@ import { Button, Col, Container, Form, Row, Alert} from "react-bootstrap";
 import API from "../../API";
 import parseGpx from "../atoms/gpxParser";
 
-function HikeForm (props) {
+function HikeForm () {
     // Form state
     const [success, setSuccess] = useState('');
 
@@ -13,28 +13,35 @@ function HikeForm (props) {
     const [ascent, setAscent] = useState('');
     const [difficult, setDifficult] = useState('tourist');
     const [description, setDescription] = useState('');
-
-    const [startPoint, setStartPoint] = useState('');
-    const [endPoint, setEndPoint] = useState('');
     const [startPointLabel, setStartPointLabel] = useState('');
     const [endPointLabel, setEndPointLabel] = useState('');
+    const [file, setFile] = useState('');
+
+    const [startLongitude, setStartLongitude] = useState('');
+    const [startLatitude, setStartLatitude] = useState('');
+    const [endLongitude, setEndLongitude] = useState('');
+    const [endLatitude, setEndLatitude] = useState('');
     const [startAltitude, setStartAltitude] = useState('');
     const [endAltitude, setEndAltitude] = useState('');
+    const [startAddress, setStartAddress] = useState('');
+    const [endAddress, setEndAddress] = useState('');
 
-    const [file, setFile] = useState('');
-    
     const ref = useRef();
     
     const handleSubmit = (event) => {
       event.preventDefault();
+      let flag = false;
 
-      if (title === '') setTitle(null);
-      if (length === '' || !(parseInt(length)>0)) setLength(null);
-      if (expectedTime === '' || !(parseInt(expectedTime)>0)) setExpectedTime(null);
-      if (ascent === '' || !(parseInt(ascent)>0)) setAscent(null);
-      if (description === '') setDescription(null);
-      if (startPointLabel === '') setStartPointLabel(null);
-      if (endPointLabel === '') setEndPointLabel(null);
+      if (title === '') {setTitle(null); flag=true;}
+      if (length === '' || !(parseInt(length)>0)) {setLength(null); flag=true;}
+      if (expectedTime === '' || !(parseInt(expectedTime)>0)) {setExpectedTime(null); flag=true;}
+      if (ascent === '' || !(parseInt(ascent)>0)) {setAscent(null); flag=true;}
+      if (description === '') {setDescription(null); flag=true;}
+      if (startPointLabel === '') {setStartPointLabel(null); flag=true;}
+      if (endPointLabel === '') {setEndPointLabel(null); flag=true;}
+      if (file === '') {setFile(null); flag=true;}
+
+      if (flag) return;
 
       const formData = new FormData();
       formData.append('trackingfile', file);
@@ -45,12 +52,16 @@ function HikeForm (props) {
       formData.append('difficulty', difficult);
       formData.append('description', description);
 
-      formData.append('startPointId', startPoint); //longitude, latiture
-      formData.append('endPointId', endPoint); //longitude, latiture
+      formData.append('startLongitude', startLongitude);
+      formData.append('startLatitude', startLatitude); 
+      formData.append('endLongitude', endLongitude);
+      formData.append('endLatitude', endLatitude); 
       formData.append('startAltitude', startAltitude);
       formData.append('endAltitude', endAltitude);
       formData.append('startPointLabel', startPointLabel);
-      formData.append('endPointLabel',endPointLabel);
+      formData.append('endPointLabel', endPointLabel);
+      formData.append('startAddress', startAddress);
+      formData.append('endAddress', endAddress);
 
       API.newHike(formData)
       .then(() => {
@@ -59,8 +70,17 @@ function HikeForm (props) {
         setExpectedTime('');
         setAscent('');
         setDescription('');
-        setStartPoint(''); 
-        setEndPoint('');
+        setStartLongitude(''); 
+        setStartLatitude(''); 
+        setEndLongitude(''); 
+        setEndLatitude(''); 
+        setStartPointLabel('');
+        setEndPointLabel('');
+        setStartAltitude('');
+        setEndAltitude('');
+        setStartAddress('');
+        setEndAddress('');
+        
         ref.current.value=null;
 
         setSuccess('yes');
@@ -166,26 +186,53 @@ function HikeForm (props) {
 
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Gpx File</Form.Label>
-                <Form.Control type="file"
+                <Form.Control isInvalid={file===null}
+                              type="file"
                               ref={ref}
                               placeholder="gpx file"
                               onChange={event => {
                                 setFile(event.target.files[0]);
 
                                 const handleFileLoad = async (event) => {
+                                  // get coordinates
                                   let [start, end] = parseGpx(event.target.result);
 
-                                  setStartPoint(start[0] + ', ' + start[1]);
-                                  setEndPoint(end[0] + ', ' + end[1]);
+                                  setStartLongitude(start[0]);
+                                  setStartLatitude(start[1]);
+                                  setEndLongitude(end[0]);
+                                  setEndLatitude(end[1]);
 
                                   setStartAltitude(start[2]);
                                   setEndAltitude(end[2]);
+
+                                  // reverse coordinates
+                                  let url = 'https://nominatim.openstreetmap.org/reverse?lat=' + start[1] + '&lon=' + start[0] + '&zoom=16';
+                                  let address = await fetch(url)
+                                    .then(response => response.text())
+                                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                                    .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
+                                    .catch(err => console.log(err));
+
+                                  setStartAddress(address);
+
+                                  url = 'https://nominatim.openstreetmap.org/reverse?lat=' + end[1] + '&lon=' + end[0] + '&zoom=16';
+                                  address = await fetch(url)
+                                    .then(response => response.text())
+                                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                                    .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
+                                    .catch(err => console.log(err));
+
+                                  setEndAddress(address);
+
                                 }
                             
                                 const reader = new FileReader()
                                 reader.onload = handleFileLoad;
                                 reader.readAsText(event.target.files[0]);
                               }}/>
+                <Form.Control.Feedback type="invalid">
+                  You need to select a gpx file
+                </Form.Control.Feedback>
               </Form.Group>
 
               <Row>
@@ -193,7 +240,7 @@ function HikeForm (props) {
                   <Form.Group style={{"paddingTop": "12px"}}>
                     <Form.Label>Start Point</Form.Label>
                     <Form.Control type="text"
-                                  placeholder={startPoint}
+                                  placeholder={startAddress}
                                   disabled="disabled"/>
                   </Form.Group>
                 </Col>
@@ -202,7 +249,7 @@ function HikeForm (props) {
                   <Form.Group style={{"paddingTop": "12px"}}>
                     <Form.Label>End Point</Form.Label>
                     <Form.Control type="text"
-                                  placeholder={endPoint}
+                                  placeholder={endAddress}
                                   disabled="disabled"/>
                   </Form.Group>
                 </Col>
