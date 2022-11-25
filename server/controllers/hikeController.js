@@ -46,6 +46,14 @@ router.get('/hikes', express.json(),
             const pageNumber = req.query.pageNumber ? Number.parseInt(req.query.pageNumber) : undefined;
             const pageSize = req.query.pageSize ? Number.parseInt(req.query.pageSize) : undefined;
             const result = await hikeService.getHikes(pageNumber, pageSize, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius);
+            // remove additional data
+            result.pageItems.map(hike => {
+                delete hike.startPoint;
+                delete hike.endPoint;
+                delete hike.referencePoints;
+                delete hike.gpxPath;
+                delete hike.userId;
+            });
             return res.status(200).json(result);
         } catch (err) {
             switch(err.returnCode){

@@ -63,13 +63,6 @@ class HikeService {
 
             // take only page requested
             returnedHikes = hikes.slice(offset, offset + pageSize);
-            returnedHikes.map(hike => {
-                delete hike.startPoint;
-                delete hike.endPoint;
-                delete hike.referencePoints;
-                delete hike.gpxPath;
-                delete hike.userId;
-            });
 
             const totalPages = Math.ceil(hikes.length / pageSize);
 
@@ -117,11 +110,15 @@ class HikeService {
             hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
             hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
             hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
-
+            if(hike.gpxPath === null)
+                throw {returnCode: 500, message: "Gpx file does not exist"};
             const hikeGpxFile = path.resolve(config.gpxPath, hike.gpxPath);
+            if(!fs.existsSync(hikeGpxFile))
+                throw {returnCode: 500, message: "Gpx file does not exist"};
+
             const gpx = new DOMParser().parseFromString(fs.readFileSync(hikeGpxFile, 'utf8'));
             const geoJson = togeojson.gpx(gpx);
-            return {"startpoint": hike.startPoint, "endPoint": hike.endPoint,
+            return {"startPoint": hike.startPoint, "endPoint": hike.endPoint,
                 "referencePoints": hike.referencePoints,
                 "track": geoJson.features[0].geometry.coordinates.map(p => {return {"lat": p[1], "lon": p[0]}})};
         } catch (err) {
