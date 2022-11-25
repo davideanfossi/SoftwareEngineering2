@@ -1,6 +1,6 @@
 'use strict';
 
-const hut=require(".../models/hutModel");
+const hut=require("../models/hutModel");
 
 class HutDAO {
 

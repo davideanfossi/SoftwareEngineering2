@@ -8,6 +8,7 @@ const session = require('express-session');
 
 const DbManager = require("./database/dbManager");
 const hikeController = require('./controllers/hikeController');
+const hutController=require('./Controllers/hutController')
 
 // init express
 const app = express();
@@ -35,6 +36,7 @@ dbManager.openConnection()
 
 /********* APIs *********/
 app.use("/api", hikeController);
+app.use("/api", hutController);
 
 // activate the server
 app.listen(port, () => console.log(`Server started at http://localhost:${port}.`));
