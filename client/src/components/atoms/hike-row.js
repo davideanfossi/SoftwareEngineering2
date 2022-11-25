@@ -10,7 +10,7 @@ export const HikeRow = ({ hike, even }) => {
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
       <Col>
-        <Container fluid>
+        <Container fluid onClick={toggleDrop} style={{cursor:'pointer'}}>
           <Row>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
