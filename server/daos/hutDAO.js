@@ -6,7 +6,7 @@ class HutDAO {
 
     constructor(dbManager) {
         if (!dbManager)
-            throw 'DBManager must be defined for Point dao!';
+            throw 'DBManager must be defined for hutdao!';
         this.dbManager = dbManager;
     }
 
