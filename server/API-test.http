@@ -1,0 +1,40 @@
+POST http://localhost:3001/api/signup
+content-type: application/json
+
+{
+    "email": "newUser@gmail.com",
+    "username": "die",
+    "role": "Local Guide",
+    "password": "admasdn",
+    "name": "Mario",
+    "surname": "semprefino",
+    "phoneNumber": "2342342344"
+}
+
+### wrong POST
+POST http://localhost:3001/api/signup
+content-type: application/json
+
+{
+    "email": "newUser@gmail.com",
+    "username": "die",
+    "role": "Local Guide",
+    "password": "admin",
+    "name": "Mario",
+    "surname": "semprefino",
+    "phoneNumber": "2342342344"
+}
+
+#user provided with an email with a link linke the following: http://localhost:3000/authentication/activate/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbmZhcmRpbm9kaWVnb0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImRpZSIsInJvbGUiOiJMb2NhbCBHdWlkZSIsIm5hbWUiOiJNYXJpbyIsInN1cm5hbWUiOiJzZW1wcmVmaW5vIiwicGhvbmVOdW1iZXIiOiIyMzQyMzQyMzQ0IiwiaWF0IjoxNjY5MjM5ODg3LCJleHAiOjE2NjkyNDEwODd9.QhjzdRT5CdMobzf07RioocMZIjQAtM3n3z6BnusYC3c where the ast part is an ad hoc crafted token
+
+### to activate profile
+### Raise an error wheter the token is invalid or expired
+POST http://localhost:3001/api/email-activate
+content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbmZhcmRpbm9kaWVnb0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImRpZSIsInJvbGUiOiJMb2NhbCBHdWlkZSIsIm5hbWUiOiJNYXJpbyIsInN1cm5hbWUiOiJzZW1wcmVmaW5vIiwicGhvbmVOdW1iZXIiOiIyMzQyMzQyMzQ0IiwiaWF0IjoxNjY5MjM5ODg3LCJleHAiOjE2NjkyNDEwODd9.QhjzdRT5CdMobzf07RioocMZIjQAtM3n3z6BnusYC3c"
+} 
+
+### get the list of available roles
+GET http://localhost:3001/api/roles
