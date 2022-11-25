@@ -35,11 +35,10 @@ function Register(props) {
         }
         //const credentials = { email, username, role, password, name, surname, phoneNumber };
         props.register(formData)
-            .then(() => navigate('/login'))
+            .then(() => {setShowAlert('success'); navigate('/login')} )
             .catch((err) => {
                 setShowAlert('error');
             });
-            setShowAlert('success');
             setValidated(true);
         
     };
@@ -51,7 +50,17 @@ function Register(props) {
                     <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Insert Hike</b>
                 </Row>
                 {
-
+                    showAlert === "success" ? 
+                    <Alert variant="success" onClose={() => setShowAlert('')} dismissible>
+                    <Alert.Heading>Registration has been successful!</Alert.Heading>
+                    </Alert> 
+                    : 
+                    <>{
+                    showAlert === "error" ?
+                    <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
+                    <Alert.Heading>Registration occurred with errors!</Alert.Heading>
+                    </Alert> : null
+                    }</>
                 }
                 <Row style={{ "paddingLeft": "0.7rem" }}>
                     <b style={{ "fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem" }}>Please compile the data down below:</b>
@@ -175,11 +184,7 @@ function Register(props) {
                                 <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
                         }
                         <Form.Group className='mt-3'>
-                            <Button variant='warning' type='submit' size='lg' onSubmit={() => {
-                                /*setShowAlert(true);*/ handleSubmit();
-                                /*additionalData ? {setUsername({name} + '_' + surname);
-                                console.log(username);} : {}*/
-                            }}>
+                            <Button variant='warning' type='submit' size='lg' onSubmit={() => { handleSubmit() }}>
                                 Register
                             </Button>
                             {' '}

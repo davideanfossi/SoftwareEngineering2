@@ -33,20 +33,14 @@ function Login(props) {
     const [password, setPassword] = useState('');
 
     const [showAlert, setShowAlert] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    
-    const handleLogin = (event) => {
-        event.preventDefault();
-        navigate('/');
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const credentials = { email, password };
         let user = props.login(credentials)
-        .then( () => {props.setUser(user.username); navigate('');} )
+        .then( () => {props.setUser(user.username); navigate('/');} )
         .catch((err) => { 
-            setErrorMessage(err); setShowAlert(true); 
+            setShowAlert(true); 
         });
     }
 
@@ -56,11 +50,17 @@ function Login(props) {
                 <Row style={{"paddingLeft": "0.7rem"}}>
                             <b style={{"fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem"}}>Insert Hike</b>
                 </Row>
+                {
+                    showAlert === true ? 
+                    <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
+                    <Alert.Heading>Registration occurred with errors!</Alert.Heading>
+                    </Alert> : null
+                }
                 <Row style={{"paddingLeft": "0.7rem"}}>
                             <b style={{"fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem"}}>Please insert your email and password:</b>
                 </Row>
                     <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white"}}>
-                        <Form onSubmit={handleLogin}>
+                        <Form onSubmit={handleSubmit}>
                             <Form.Group className='mb-2' controlId='email'>
                                 <Form.Label>Email:</Form.Label>
                                 <Form.Control 
@@ -91,8 +91,6 @@ function Login(props) {
                                     Cancel
                                 </Button>
                             </Form.Group>
-                            <Alert style={{ marginTop:20 }} variant='danger' dismissible
-                            show={showAlert}   onClose={() => setShowAlert(false)}>{errorMessage}</Alert>
                         </Form>
                     </Container>
             </Container>
