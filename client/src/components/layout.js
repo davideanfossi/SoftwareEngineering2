@@ -13,6 +13,10 @@ export const Layout = (props) => {
     navigate("/register");
   }
 
+  const handleLogout = () => {
+    console.log("TODO logout");
+  }
+
   return (
     <>
       <Navbar className="nav">
@@ -24,18 +28,16 @@ export const Layout = (props) => {
             <Nav.Link onClick={goRegister}>Register</Nav.Link>
           </Nav>
           <Navbar.Collapse className="justify-content-end">
+            <img 
+            src="user.svg" 
+            alt="" 
+            width="32" 
+            height="32"
+            />
             <NavDropdown title="User" id="basic-nav-dropdown">
               <NavDropdown.Item>Signed in as: { props.user }</NavDropdown.Item>
-              <NavDropdown.Item>Logout</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => { handleLogout(); }}>Logout</NavDropdown.Item>
             </NavDropdown>
-              <Navbar.Brand href="#user">
-                <img
-                  src="client\src\user.svg"
-                  width="30"
-                  height="30"
-                  className="justify-content-end"
-                />
-              </Navbar.Brand>
           </Navbar.Collapse>
         </Container>
       </Navbar>
