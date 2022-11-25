@@ -44,18 +44,7 @@ export const MapModal = ({
       </Modal.Header>
       <Modal.Body>
         <Container fluid>
-          <Row>
-            <Col xs={1}>
-              <Form.Check
-                type="switch"
-                checked={useMap}
-                onChange={() => setUseMap((old) => !old)}
-              />
-            </Col>
-            <Col xs={11}>Use Map</Col>
-          </Row>
-
-          {useMap && !update && (
+          {!update && (
             <>
               <Row>
                 <Col>
