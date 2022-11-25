@@ -36,7 +36,6 @@ function HikeForm () {
       if (length === '' || !(parseInt(length)>0)) {setLength(null); flag=true;}
       if (expectedTime === '' || !(parseInt(expectedTime)>0)) {setExpectedTime(null); flag=true;}
       if (ascent === '' || !(parseInt(ascent)>0)) {setAscent(null); flag=true;}
-      if (description === '') {setDescription(null); flag=true;}
       if (startPointLabel === '') {setStartPointLabel(null); flag=true;}
       if (endPointLabel === '') {setEndPointLabel(null); flag=true;}
       if (file === '') {setFile(null); flag=true;}
@@ -262,6 +261,7 @@ function HikeForm () {
                     <Form.Control isInvalid={startPointLabel===null}
                                   type="text"
                                   placeholder="Start Point Label"
+                                  value={startPointLabel}
                                   onChange={event => {setStartPointLabel(event.target.value);}}/>
                     <Form.Control.Feedback type="invalid">
                       Start Point Label cant be empty
@@ -275,6 +275,7 @@ function HikeForm () {
                     <Form.Control isInvalid={endPointLabel===null}
                                   type="text"
                                   placeholder="End Point Label"
+                                  value={endPointLabel}
                                   onChange={event => {setEndPointLabel(event.target.value);}}/>
                     <Form.Control.Feedback type="invalid">
                       End Point Label cant be empty

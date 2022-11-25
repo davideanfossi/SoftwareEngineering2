@@ -1,0 +1,15 @@
+version: "3"
+services:
+  hike-tracker-server:
+    image: riccardogiambra/hike-tracker-server
+    build:
+      context: ./server
+    ports:
+      - "3001:3001"
+  hike-tracker-client:
+    image: riccardogiambra/hike-tracker-client
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+#docker-compose up

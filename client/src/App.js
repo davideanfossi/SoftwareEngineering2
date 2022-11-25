@@ -15,8 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="inserthike" element={<InsertHike/>} />
             <Route path="inserthut" element={<InsertHut/>} />
+            <Route path="insert-hike" element={<InsertHike/>} />
           </Route>
         </Routes>
       </BrowserRouter>
