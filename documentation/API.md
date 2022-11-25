@@ -45,22 +45,7 @@
                 "expectedTime": 120,
                 "ascent": 300,
                 "difficulty": "Professional Hiker",
-                "startPoint": {
-                    "id": 1,
-                    "latitude": 48.856614,
-                    "longitude": 2.3522219,
-                    "name": "Torino",
-                    "address": "address 1"
-                },
-                "endPoint": {
-                    "id": 4,
-                    "latitude": 45.574405,
-                    "longitude": 7.455193,
-                    "name": "point 4",
-                    "address": null
-                },
-                "description": "description of the hike",
-                "referencePoints": []
+                "description": "description of the hike"
             },
             ...
         ]
@@ -110,6 +95,33 @@
 - Response body: 
     ```
     {
+        "startpoint": {
+            "id": 4,
+            "latitude": 45.737089,
+            "longitude": 7.319665,
+            "altitude": 645,
+            "name": "Aosta",
+            "address": "Aosta, Valle d'Aosta"
+        },
+        "endPoint": {
+            "id": 1,
+            "latitude": 45.580187,
+            "longitude": 7.217462,
+            "altitude": 2361,
+            "name": "Parco Nazionale del Gran Paradiso",
+            "address": null
+        },
+        "referencePoints": [
+            {
+                "id": 2,
+                "latitude": 45.622523,
+                "longitude": 7.200738,
+                "altitude": 2284,
+                "name": "Strada regionale della Valsavarenche",
+                "address": "11010 Valsavarenche"
+            },
+            ...
+        ],
         "track": [
             {
                 "lat": 45.177786,

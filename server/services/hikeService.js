@@ -6,7 +6,7 @@ const DOMParser = require('xmldom').DOMParser;
 const path = require('path');
 const {difficultyType} = require("../models/hikeModel");
 
-const gpxDir = require("../config.json").gpxPath;
+const config = require("../config.json");
 
 class HikeService {
     constructor(hikeDAO, pointDAO) {
@@ -63,7 +63,14 @@ class HikeService {
 
             // take only page requested
             returnedHikes = hikes.slice(offset, offset + pageSize);
-                        
+            returnedHikes.map(hike => {
+                delete hike.startPoint;
+                delete hike.endPoint;
+                delete hike.referencePoints;
+                delete hike.gpxPath;
+                delete hike.userId;
+            });
+
             const totalPages = Math.ceil(hikes.length / pageSize);
 
             return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes};
@@ -107,10 +114,16 @@ class HikeService {
             if(hike === undefined)
                 throw {returnCode: 404, message: "Hike not Found"};
             
-            const hikeGpxFile = path.resolve(gpxDir, hike.gpxPath);
+            hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+            hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
+            hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
+
+            const hikeGpxFile = path.resolve(config.gpxPath, hike.gpxPath);
             const gpx = new DOMParser().parseFromString(fs.readFileSync(hikeGpxFile, 'utf8'));
             const geoJson = togeojson.gpx(gpx);
-            return {"track": geoJson.features[0].geometry.coordinates.map(p => {return {"lat": p[1], "lon": p[0]}})};
+            return {"startpoint": hike.startPoint, "endPoint": hike.endPoint,
+                "referencePoints": hike.referencePoints,
+                "track": geoJson.features[0].geometry.coordinates.map(p => {return {"lat": p[1], "lon": p[0]}})};
         } catch (err) {
             throw err;
         }
@@ -148,21 +161,5 @@ function isWithinCircle(baseLat, baseLng, lat, lng, radius){
     return computeDistance(baseLat, baseLng, lat, lng) <= radius;
 }
 
-
-/** TODO: check if it works.
- * compute the ascent of the hike in meters
- * @param {*} pointsList list of points (start + reference + end)
- * @returns the ascent computed as the sum of positive delta between points altitudes
- */
-function computeHikeAscent(pointsList){
-    const ascent = 0;
-    pointsList.forEach((point, idx) => {
-        if(idx+1 <= pointsList.length - 1){
-            const delta = pointsList[idx+1].altitude - point.altitude;
-            ascent += delta > 0 ? delta : 0; 
-        }
-    });
-    return ascent;
-}
 
 module.exports = HikeService;
