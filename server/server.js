@@ -5,10 +5,9 @@ const { expressValidator, check, validationResult } = require('express-validator
 const cors = require('cors');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const session = require('express-session');
 const DBManager = require("./database/dbManager");
 const LoginController = require("./controllers/loginController");
-const UserDAO = require("./daos/userDAO");
-const session = require('express-session');
 
 
 // init express
@@ -68,11 +67,15 @@ passport.deserializeUser((user, cb) => {
 
 app.use(passport.authenticate("session"));
 
+const auth = new Auth(dbManager);
+
 //Middleware to check if a user is logged
 const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) return next();
+  if (req.isAuthenticated()) 
+    return next();
   return res.status(401).send("Not authenticated");
 };
+
 
 app.post("/login", passport.authenticate("local"), (req, res) => {
   res.json({ user: req.user.user,id: req.user.id, });
