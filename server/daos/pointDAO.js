@@ -29,6 +29,17 @@ class PointDAO {
             throw err;
         }
     };
+
+    insertPoint=async (latitude,longitude,altitude,name,address) =>{
+        try{
+            const sql="insert into Points(latitude,longitude,altitude,name,address) values(?,?,?,?,?)";
+            const res = await this.dbManager.query(sql, [latitude,longitude,altitude,name,address]);
+            return res;
+        }
+        catch(err){
+            throw err;
+        }
+    }
     
 }
 

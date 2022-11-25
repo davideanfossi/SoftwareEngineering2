@@ -18,22 +18,20 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Build and push server
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./server/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hike-tracker-server:latest
-      -
-        name: Build and push client
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./client/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/hike-tracker-client:latest
+      - 
+        name: Docker-Compose Build
+        run: |
+          docker-compose build
+      - 
+        name: list images
+        run: |
+          docker images
+      - 
+        name: Push server
+        run: |
+          docker push riccardogiambra/hike-tracker-server
+      - 
+        name: Push client
+        run: |
+          docker push riccardogiambra/hike-tracker-client
+

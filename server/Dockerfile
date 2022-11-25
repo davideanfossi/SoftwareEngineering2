@@ -1,6 +1,6 @@
 # pull official base image
 FROM node:14-alpine
-
+LABEL name="server"
 # set working directory
 WORKDIR /server
 
@@ -8,7 +8,7 @@ WORKDIR /server
 ENV PATH /server/node_modules/.bin:$PATH
 
 # install server dependencies
-COPY ./package.json ./
+COPY package.json ./
 RUN npm install --silent
 
 # add server

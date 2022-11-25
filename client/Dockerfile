@@ -1,6 +1,6 @@
 # pull official base image
 FROM node:14-alpine
-
+LABEL name="client"
 # set working directory
 WORKDIR /client
 
@@ -8,7 +8,7 @@ WORKDIR /client
 ENV PATH /client/node_modules/.bin:$PATH
 
 # install client dependencies
-COPY ./package.json ./
+COPY package.json ./
 RUN npm install --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 

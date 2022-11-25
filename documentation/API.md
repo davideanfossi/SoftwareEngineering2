@@ -3,6 +3,7 @@
 ## INDEX
 - [GET hikes](#get-hikes)
 - [GET hikes limits](#get-hikes-limits)
+- [ADD new hike](#add-new-hike)
 - [GET hike track](#get-hike-track)
 
 --------------------------------------------------------------
@@ -88,6 +89,12 @@
         ]
     }
     ```
+
+## ADD new hike
+**`POST: /api/hike`**
+- add new hike
+- Request body: form-data format (title,length,expectedTime,ascent,difficulty,startPointId,endPointId,description,trackingfile)
+- Response: `200 OK` (success), `500 Internal Server Error` (generic error).
 
 
 ## GET hike track
