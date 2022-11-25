@@ -1,8 +1,16 @@
 import { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Button } from "react-bootstrap";
 import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
 export const HikeRow = ({ hike, even }) => {
   const [dropped, setDropped] = useState(false);
+
+  function LogInRedirect() {
+    return(
+        <Button variant='link' href='/login'>
+            Log in
+        </Button>
+    );
+}
 
   const toggleDrop = () => {
     setDropped((prev) => !prev);
@@ -10,8 +18,8 @@ export const HikeRow = ({ hike, even }) => {
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
       <Col>
-        <Container fluid onClick={toggleDrop} style={{cursor:'pointer'}}>
-          <Row>
+        <Container fluid onClick={toggleDrop}>
+          <Row style={{cursor:'pointer'}}>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={12}
@@ -127,7 +135,7 @@ export const HikeRow = ({ hike, even }) => {
                 className="d-flex justify-content-center align-items-center my-3"
                 xs={12}
               >
-                Log in to see more info
+                <LogInRedirect />to see more info
               </Col>
             </Row>
           )}
