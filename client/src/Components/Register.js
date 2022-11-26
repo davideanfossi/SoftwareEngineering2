@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Container, Form, Button, Row, Alert } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import API from '../API'
+import API from '../API';
 
 
 function Register(props) {
 
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState('Hiker');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -17,21 +17,35 @@ function Register(props) {
 
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState('');
-    const [validated, setValidated] = useState(false);
 
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        let flag = false;
+
+        if(username === ''){setUsername(null); flag=true;}
+        if(password === ''){setPassword(null); flag=true;}
+        if(confPassword === ''){setConfPassword(null); flag=true;}
+        if(password !== confPassword){setPassword(null); setConfPassword(null); flag=true;}
+
+        if(role !== 'Hiker'){
+            if(name === ''){setName(null); flag=true;}
+            if(surname === ''){setSurname(null); flag=true;}
+            if(phoneNumber === ''){setPhoneNumber(null); flag=true;}
+        }
+
+        if(flag) return;
+
         let formData =
         {
             'email': email,
-            'username': username,
+            'username': username ? username : "",
             'role': role,
             'password': password,
-            'name': name,
-            'surname': surname,
-            'phoneNumber': phoneNumber
+            'name': name ? name : "",
+            'surname': surname ? surname : "",
+            'phoneNumber': phoneNumber ? phoneNumber : ""
         }
         //const credentials = { email, username, role, password, name, surname, phoneNumber };
         props.register(formData)
@@ -39,7 +53,6 @@ function Register(props) {
             .catch((err) => {
                 setShowAlert('error');
             });
-            setValidated(true);
         
     };
 
@@ -51,23 +64,24 @@ function Register(props) {
                 </Row>
                 {
                     showAlert === "success" ? 
-                    <Alert variant="success" onClose={() => setShowAlert('')} dismissible>
-                    <Alert.Heading>Registration has been successful!</Alert.Heading>
-                    </Alert> 
-                    : 
-                    <>{
-                    showAlert === "error" ?
-                    <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
-                    <Alert.Heading>Registration occurred with errors!</Alert.Heading>
-                    </Alert> : null
-                    }</>
+                        <Alert variant="success" onClose={() => setShowAlert('')} dismissible>
+                            <Alert.Heading>Registration has been successful!</Alert.Heading>
+                        </Alert> 
+                        : 
+                        <>{
+                            showAlert === "error" ?
+                                <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
+                                    <Alert.Heading>Registration occurred with errors!</Alert.Heading>
+                                </Alert> 
+                                : <></>
+                        }</>
                 }
                 <Row style={{ "paddingLeft": "0.7rem" }}>
                     <b style={{ "fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem" }}>Please compile the data down below:</b>
                 </Row>
                     <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white"}}>
-                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                            <li>Select your profile:</li>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Label>Select your profile:</Form.Label> 
                             <Form.Group className='check-line'>
                                 <Form.Check
                                     inline
@@ -75,7 +89,8 @@ function Register(props) {
                                     name='group1'
                                     type='radio'
                                     id='inline-radio-1'
-                                    onClick={() => {setAdditionalData(false); setRole('Hiker')}}
+                                    defaultChecked
+                                    onClick={() => {setAdditionalData(false); setRole('Hiker'); setName(""); setSurname(""); setPhoneNumber("")}}
                                 />
                                 <Form.Check
                                     inline
@@ -100,6 +115,7 @@ function Register(props) {
                                     <Form.Label>Name:</Form.Label>
                                     <Form.Control
                                         type="text"
+                                        minLength={1}
                                         value={name}
                                         onChange={(ev) => setName(ev.target.value)}
                                         required={true}
@@ -110,6 +126,7 @@ function Register(props) {
                                     <Form.Label>Surname:</Form.Label>
                                     <Form.Control
                                         type='text'
+                                        minLength={1}
                                         value={surname}
                                         onChange={(ev) => setSurname(ev.target.value)}
                                         required={true}
@@ -121,12 +138,14 @@ function Register(props) {
                                     <Form.Label>Phone number:</Form.Label>
                                     <Form.Control
                                         type="text"
+                                        isInvalid={phoneNumber && isNaN(Number.parseInt(phoneNumber))}
                                         value={phoneNumber}
                                         onChange={(ev) => setPhoneNumber(ev.target.value)}
                                         required={true}
                                         placeholder="Your phone number here"
                                         minLength={10}
-                                        maxLength={13} />
+                                        maxLength={10} />
+                                    <Form.Control.Feedback type="invalid">Please insert a valid phone number</Form.Control.Feedback>
                                 </Form.Group>
                             </>
                             :
@@ -136,21 +155,22 @@ function Register(props) {
                                     <Form.Control
                                         type='text'
                                         value={username}
+                                        minLength={1}
                                         onChange={(ev) => setUsername(ev.target.value)}
                                         required={true}
                                         placeholder="Create a fancy username"
-                                        maxLength={20} />
+                                        maxLength={30} />
                                 </Form.Group>
                             </>}
                         <Form.Group className='mb-2' controlId='email'>
                             <Form.Label>Email:</Form.Label>
                             <Form.Control
                                 type='email'
+                                placeholder="name@example.com"
                                 value={email}
                                 onChange={(ev) => setEmail(ev.target.value)}
                                 required={true}
-                                placeholder="Enter email"
-                                maxLength={40} />
+                                maxLength={50} />
                         </Form.Group>
                         <Form.Group className='mb-2' controlId='password'>
                             <Form.Label>Password:</Form.Label>
@@ -159,38 +179,35 @@ function Register(props) {
                                 value={password}
                                 onChange={(ev) => setPassword(ev.target.value)}
                                 required={true}
-                                minLength={8}
-                                maxLength={20}
+                                minLength={6}
+                                maxLength={15}
                                 placeholder="Enter a password"
                                 aria-describedby="passwordHelpBlock" />
                             <Form.Text id="passwordHelpBlock" muted>
-                                Your password must be 8-20 characters long, contain letters and numbers.
+                                Your password must be 6-15 characters long, contain letters and numbers.
                             </Form.Text>
                         </Form.Group>
                         <Form.Group className='mb-2' controlId='conf-password'>
                             <Form.Label>Confirm password:</Form.Label>
                             <Form.Control
                                 type='password'
+                                isInvalid={confPassword && confPassword !== password}
                                 value={confPassword}
                                 onChange={(ev) => setConfPassword(ev.target.value)}
                                 required={true}
-                                minLength={8}
-                                maxLength={20}
+                                minLength={6}
+                                maxLength={15}
                                 placeholder="Confirm your password" />
+                            <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
                         </Form.Group>
-                        {
-                            confPassword === password ? <Form.Control.Feedback>Correct.</Form.Control.Feedback>
-                                :
-                                <Form.Control.Feedback type="invalid">passwords do not match</Form.Control.Feedback>
-                        }
                         <Form.Group className='mt-3'>
-                            <Button variant='warning' type='submit' size='lg' onSubmit={() => { handleSubmit() }}>
-                                Register
-                            </Button>
-                            {' '}
-                            <Button variant='light' type='reset' size='lg'>
-                                Cancel
-                            </Button>
+                            <Row xs="auto">
+                                <Col>
+                                    <Button variant="warning" type="submit" size='lg'>Register</Button> 
+                                    &ensp; &ensp;
+                                    <Button variant='light' size='lg'>Cancel</Button>
+                                </Col>         
+                            </Row>
                         </Form.Group>
                     </Form>
                 </Container>
