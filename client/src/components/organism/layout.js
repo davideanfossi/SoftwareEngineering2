@@ -1,8 +1,11 @@
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
+import { useContext } from "react";
+import { UserContext } from "../../context/user-context";
 
 export const Layout = (props) => {
   const navigate = useNavigate();
+  const userContext = useContext(UserContext);
   const goHome = () => {
     navigate("/");
   };
@@ -28,7 +31,9 @@ export const Layout = (props) => {
           <Navbar.Brand onClick={goHome}>Hike Tracker</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link onClick={goHome}>Home</Nav.Link>
-            <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
+            {["local-guide"].includes(userContext.user.role) && (
+              <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
+            )}
             <Nav.Link onClick={goLogin}>Login</Nav.Link>
             <Nav.Link onClick={goRegister}>Register</Nav.Link>
           </Nav>
