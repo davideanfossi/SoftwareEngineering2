@@ -56,12 +56,9 @@ class UserDAO {
 }
 
 async function verifyPassword(passwordStored, saltStored, password) {
-  const salt = Buffer.from(saltStored, "hex"); // convert saltStored (hex string) to bytes
-  const hash = crypto.createHash("sha256");
-  hash.update(password); // generate digest as SHA-256(password | salt)
-  hash.update(salt);
-  const pwd = hash.digest("hex");
-  if (pwd === passwordStored)
+  let salt = Buffer.from(saltStored, "hex"); // convert saltStored (hex string) to bytes
+  let encryptedPass = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
+  if (encryptedPass === passwordStored)
     // check if digest stored in the DB is equal to digest computed above
     return true;
   return false;
