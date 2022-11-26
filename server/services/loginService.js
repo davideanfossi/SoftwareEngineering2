@@ -3,7 +3,7 @@
 class LoginService {
     constructor(userDAO) {
         if (!userDAO)
-            throw 'userDAO must be defined for counter service!';
+            throw 'userDAO must be defined for service!';
 
         this.userDAO = userDAO;
     }

@@ -31,6 +31,17 @@ class LoginController {
         return response;
     }    
 
+
+    getPermission = (authorizedRoles) => {
+        return async (req, res, next) => {
+            const userId = req.user.id;
+            const user = await userDAO.getUserById(userId);
+            authorizedRoles.include(user.role)
+                ? next()
+                : res.status(401).send("unauthorized");
+        }
+    };
+
 }
 
 module.exports = LoginController;

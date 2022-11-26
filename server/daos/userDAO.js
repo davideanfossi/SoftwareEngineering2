@@ -11,7 +11,7 @@ class UserDAO {
         this.dbManager = dbManager;
     }
 
-    async getUser(email) {
+    async getUserByEmail(email) {
         const query = "SELECT * FROM User WHERE email = ?";
         try {
             const result = await this.dbManager.get(query, [email], true);
@@ -20,6 +20,16 @@ class UserDAO {
             throw err;
         }
     }
+
+    async getUserById(userId) {
+      const query = "SELECT * FROM User WHERE id = ?";
+      try {
+          const result = await this.dbManager.get(query, [userId], true);
+          return new User(result.id, result.username, result.role);    
+      } catch (err) {
+          throw err;
+      }
+  }
 
   async insertUser(email, password) {    
     let query = "INSERT INTO User (email, hash, salt) VALUES (?, ?, ?)";
