@@ -37,6 +37,7 @@ function Login(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         const credentials = { email, password };
+        
         let user = props.login(credentials)
         .then( () => {props.setUser(user.username); navigate('/');} )
         .catch((err) => { 

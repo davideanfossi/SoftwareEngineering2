@@ -124,12 +124,30 @@ const activateEmail = async (formData) => {
   }
 };
 
+const login = async (credentials) =>  {
+  try{
+    const response = await fetch(new URL("login", SERVER_BASE), {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(credentials)
+    });
+    if (response.ok) {
+    return response.json();
+  } else {
+    throw response.json();
+  }
+}catch(e){
+  throw e;
+}
+}
+
 const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
   registerUser,
-  activateEmail
+  activateEmail,
+  login
 };
 
 export default API;

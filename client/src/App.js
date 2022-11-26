@@ -22,7 +22,7 @@ function App() {
         <Route path="/" element={<Layout user={user}/>}>
           <Route index element={<Home />} />
           <Route path="register" index element={<Register register={API.registerUser}/>} />
-        <Route path="login" index element={<Login setUser={setUser}/>} />
+        <Route path="login" index element={<Login login={API.login} setUser={setUser}/>} />
         <Route path='authentication/activate/*' index element={<EmailActivate/>}/>
         </Route>
       </Routes>

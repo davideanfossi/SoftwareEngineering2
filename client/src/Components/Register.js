@@ -24,15 +24,15 @@ function Register(props) {
         event.preventDefault();
         let flag = false;
 
-        if(username === ''){setUsername(null); flag=true;}
-        if(password === ''){setPassword(null); flag=true;}
-        if(confPassword === ''){setConfPassword(null); flag=true;}
-        if(password !== confPassword){setPassword(null); setConfPassword(null); flag=true;}
+        if(username === ''){setUsername(''); flag=true;}
+        if(password === ''){setPassword(''); flag=true;}
+        if(confPassword === ''){setConfPassword(''); flag=true;}
+        if(password !== confPassword){setPassword(''); setConfPassword(''); flag=true;}
 
         if(role !== 'Hiker'){
-            if(name === ''){setName(null); flag=true;}
-            if(surname === ''){setSurname(null); flag=true;}
-            if(phoneNumber === ''){setPhoneNumber(null); flag=true;}
+            if(name === ''){setName(''); flag=true;}
+            if(surname === ''){setSurname(''); flag=true;}
+            if(phoneNumber === ''){setPhoneNumber(''); flag=true;}
         }
 
         if(flag) return;
@@ -49,7 +49,7 @@ function Register(props) {
         }
         //const credentials = { email, username, role, password, name, surname, phoneNumber };
         props.register(formData)
-            .then(() => {setShowAlert('success'); navigate('/login')} )
+            .then(() => {setShowAlert('success');} )
             .catch((err) => {
                 setShowAlert('error');
             });
