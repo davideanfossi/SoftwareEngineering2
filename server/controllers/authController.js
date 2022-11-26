@@ -71,7 +71,7 @@ router.post('/signup', userValidator,
 
             await authService.addUser(email, username, role, password, name, surname, phoneNumber);
 
-            return res.status(201).json({ "msg": "Registration request successful, to complete registration confirm email" }).end();
+            return res.status(201).json({ "msg": "Registration request successful, to complete registration confirm email" });
 
         } catch (err) {
             switch (err.returncode) {
