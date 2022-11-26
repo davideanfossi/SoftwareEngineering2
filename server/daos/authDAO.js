@@ -47,7 +47,7 @@ class authDAO {
             throw err;
         }
     }
-
+    
 }
 
 module.exports = authDAO;

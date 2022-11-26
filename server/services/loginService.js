@@ -11,10 +11,9 @@ class LoginService {
     async login(email, password) {
         try {
             // get user
+            console.log(email, password);
             const user = await this.userDAO.loginUser(email, password);
-            if(user === undefined)
-                throw {returnCode: 4, message: "User not found"};
-                return user;
+            return user;
         } catch (err) {
             throw err;
          }

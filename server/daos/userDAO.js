@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('../controllers/schemas/userSchema');
+const User = require('../models/userModel');
 const crypto = require("crypto");
 
 class UserDAO {
@@ -31,53 +31,28 @@ class UserDAO {
       }
   }
 
-  async insertUser(email, password) {    
-    let query = "INSERT INTO User (email, hash, salt) VALUES (?, ?, ?)";
-    try {
-      const output = await generateSecurePassword(password);
-      const userId = await this.dbManager.query(query, [
-        email,
-        output[0],
-        output[1]
-      ]);
-
-      return userId;
-    } catch (err) {
-      throw err;
-    }
-  }
-
   async loginUser(email, password) {
     try {
+      console.log(email, password);
       const sql = "SELECT * FROM User WHERE email = ? ";
-      const user = await this.dbManager.get(sql, [email]);
-      if (user === undefined || user[0] === undefined) {
+      const user = await this.dbManager.get(sql, [email],true);
+      if (user === undefined) {
         // user does not exist
-        throw { err: 401, msg: "User not found" };
+        throw { err: 401, msg: "Incorrect username and/or password." };
       }
       const login = await verifyPassword(
-        user[0].hash,
-        user[0].salt,
+        user.password,
+        user.salt,
         password
       );
-      if (!login) throw { err: 401, msg: "Invalid password" };
-      return new User(user[0].id, user[0].user);
+      if (!login) 
+        throw { err: 401, msg: "Incorrect username and/or password." };
+      return new User(user[0].id, user[0].username);
     } catch (err) {
       throw err;
     }
   }
-}
-
-//let encryptedPass = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
-
-async function generateSecurePassword(password) {
-  const buf = crypto.randomBytes(128); // generate random bytes
-  const salt = buf.toString("hex"); // convert bytes to hex string (to store in the DB)
-  const hash = crypto.createHash("sha256");
-  hash.update(password); // generate digest as SHA-256(password | salt)
-  hash.update(buf);
-  const pwd = hash.digest("hex");
-  return [pwd, salt];
+  
 }
 
 async function verifyPassword(passwordStored, saltStored, password) {
@@ -91,4 +66,5 @@ async function verifyPassword(passwordStored, saltStored, password) {
     return true;
   return false;
 }
+
 module.exports = UserDAO;

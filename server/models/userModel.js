@@ -1,6 +1,6 @@
 'use strict'
 
-class userDTO {
+class User {
     constructor(id, username, email, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) {
        this.id = id;
        this.username = username;
@@ -16,3 +16,5 @@ class userDTO {
        this.tokenExpires = tokenExpires;
     }
 }
+
+module.exports = User;

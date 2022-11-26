@@ -9,7 +9,7 @@ const LocalStrategy = require('passport-local');
 const session = require('express-session');
 const DbManager = require("./database/dbManager");
 const hikeController = require('./controllers/hikeController');
-const LoginController = require('./controllers/loginController');
+const {login, getPermission} = require('./controllers/loginController');
 const authRoutes = require('./controllers/authController');
 const UserDAO = require("./daos/userDAO");
 // init express
@@ -28,32 +28,28 @@ app.use(
       resave: false,
       saveUninitialized: false,
     })
-  );
+);
   
+// set up and enable cors
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200,
+    credentials: true,
+};
+app.use(cors(corsOptions));
   
-  //Controllers
-  
-  // set up and enable cors
-  const corsOptions = {
-      origin: 'http://localhost:3000',
-      optionsSuccessStatus: 200,
-      credentials: true,
-  };
-  app.use(cors(corsOptions));
-  
-  passport.use(
-      new LocalStrategy(async function verify(email, password, callback) {
-          const user = await loginController.login(email, password); 
-          if (!user)
-      return callback(null, false, {
-        message: "Incorrect username and/or password.",
-      });
-    return callback(null, user.body);
-  })
+passport.use(
+    new LocalStrategy(async function verify(email, password, callback) {
+        const user = await login(email, password);
+        if (!user)
+            return callback(null, false, {
+                message: "Incorrect username and/or password.",
+            });
+        return callback(null, user.body);
+    })
 );
 
 passport.serializeUser((user, cb) => {
-  //here we can decide which attribute serialize
   cb(null, {
     id: user.id,
     user: user.username,
@@ -67,18 +63,8 @@ passport.deserializeUser((user, cb) => {
 
 app.use(passport.authenticate("session"));
 
-/*
-//Middleware to check if a user is logged
-const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) 
-    return next();
-  return res.status(401).send("Not authenticated");
-};
-*/
-
-
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
-  res.json({ user: req.user.user,id: req.user.id, });
+  res.json({ user: req.user.user, id: req.user.id });
 });
 
 app.post("/api/logout", (req, res) => {
@@ -93,7 +79,6 @@ app.post("/api/logout", (req, res) => {
 // connection DB
 const dbManager = new DbManager("PROD");
 dbManager.openConnection()
-const loginController = new LoginController(dbManager);
 
 /********* APIs *********/
 app.use("/api", hikeController);
@@ -102,5 +87,3 @@ app.use("/api", authRoutes);
 
 // activate the server
 app.listen(port, () => console.log(`Server started at http://localhost:${port}.`));
-
-

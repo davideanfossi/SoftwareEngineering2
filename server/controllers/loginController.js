@@ -1,47 +1,33 @@
 'use strict'
 
+const DbManager = require("../database/dbManager");
 const UserDAO = require('../daos/userDAO');
 const LoginService = require("../services/loginService");
 
-class LoginController {
-    constructor(dbManager) {
-        const userDAO = new UserDAO(dbManager);
-        this.service = new LoginService(userDAO);
+const dbManager = new DbManager("PROD");
+const userDAO = new UserDAO(dbManager);
+const loginService = new LoginService(userDAO);
+
+
+const login = async (email, password) => {
+    try {
+        console.log(email, password);
+        const user = await loginService.login(email, password);
+        return user;
     }
+    catch (err) {
+        return undefined;
+    }
+};  
 
-    async login(email, password) {
-        const genericFailureStatus = 500;
-        const genericFailureMessage = "generic failure status";
-        let response = {};
-        try {
-            response.body = await this.service.login(email, password);
-            response.returnCode = 200;
-        } catch (err) {
-            console.log(err);
-            switch(err.returnCode){
-                case 4:
-                    response.returnCode = 404;
-                    response.body = err.message;
-                    break
-                default:
-                    response.returnCode = genericFailureStatus;
-                    response.body = genericFailureMessage;
-            }
-        }
-        return response;
-    }    
+const getPermission = (authorizedRoles) => {
+    return async (req, res, next) => {
+        const userId = req.user.id;
+        const user = await userDAO.getUserById(userId);
+        authorizedRoles.include(user.role)
+            ? next()
+            : res.status(401).send("unauthorized");
+    }
+};
 
-
-    getPermission = (authorizedRoles) => {
-        return async (req, res, next) => {
-            const userId = req.user.id;
-            const user = await userDAO.getUserById(userId);
-            authorizedRoles.include(user.role)
-                ? next()
-                : res.status(401).send("unauthorized");
-        }
-    };
-
-}
-
-module.exports = LoginController;
+module.exports = {getPermission, login};

@@ -126,6 +126,7 @@ const activateEmail = async (formData) => {
 
 const login = async (credentials) =>  {
   try{
+    console.log(credentials);
     const response = await fetch(new URL("login", SERVER_BASE), {
       method: "POST",
       headers: {"Content-Type": "application/json"},
