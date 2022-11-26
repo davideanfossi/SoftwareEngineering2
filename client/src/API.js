@@ -126,20 +126,40 @@ const activateEmail = async (formData) => {
 
 const login = async (credentials) =>  {
   try{
-    console.log(credentials);
-    const response = await fetch(new URL("login", SERVER_BASE), {
+    const response = await fetch(new URL("sessions", SERVER_BASE), {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(credentials)
     });
     if (response.ok) {
-    return response.json();
-  } else {
-    throw response.json();
+      return response.json();
+    } else {
+      throw response.json();
+    }
+  }catch(e){
+    throw e;
   }
-}catch(e){
-  throw e;
 }
+
+const getUserInfo = async () => {
+  const response = await fetch(SERVER_BASE + 'sessions/current', {
+    credentials: 'include',
+  });
+  const user = await response.json();
+  if (response.ok) {
+    return user;
+  } else {
+    throw user;
+  }
+};
+
+const logout = async () => {
+  const response = await fetch(SERVER_BASE + 'sessions/current', {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+  if (response.ok)
+    return null;
 }
 
 const API = {
@@ -148,7 +168,9 @@ const API = {
   getFilteredHikes,
   registerUser,
   activateEmail,
-  login
+  login,
+  logout,
+  getUserInfo
 };
 
 export default API;

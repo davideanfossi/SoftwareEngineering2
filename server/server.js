@@ -1,7 +1,6 @@
 'use strict';
 require('dotenv').config();
 const express = require('express');
-const { expressValidator, check, validationResult } = require('express-validator');
 const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
@@ -22,14 +21,6 @@ app.use(morgan('dev'));
 // set up the middlewares
 app.use(express.json());
 
-app.use(
-    session({
-        secret: "with great powers comes great responsabilities",
-        resave: false,
-        saveUninitialized: false,
-    })
-);
-
 // set up and enable cors
 const corsOptions = {
     origin: 'http://localhost:3000',
@@ -38,43 +29,59 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-passport.use(
-    new LocalStrategy(async function verify(email, password, callback) {
-        const user = await login(email, password);
-        console.log(user);
-        if (user.err === 401)
-            return callback(null, false, {
-                message: "Incorrect username and/or password.",
-            });
-        return callback(null, user);
-    })
+passport.use(new LocalStrategy(async function verify(email, password, callback) {
+    const user = await login(email, password);
+    if (!user || user.err === 401)
+        return callback(null, false, {
+            message: "Incorrect username and/or password.",
+        });
+    return callback(null, user);
+  })
 );
 
 passport.serializeUser((user, cb) => {
-    cb(null, {
-        id: user.id,
-        user: user.username,
-        role: user.role,
-        email: user.email,
-    });
+    cb(null, {id: user.id, email: user.email, username: user.username, role: user.role});
 });
 
 passport.deserializeUser((user, cb) => {
     return cb(null, user);
 });
 
-app.use(passport.authenticate("session"));
 
-app.post("/api/login", passport.authenticate("local"), (req, res) => {
-    res.json({ user: req.user.user, id: req.user.id });
+app.use(session({
+      secret: "with great powers comes great responsabilities",
+      resave: false,
+      saveUninitialized: false,
+  })
+);
+app.use(passport.authenticate('session'));
+
+// Login
+app.post("/api/sessions", passport.authenticate('local'), (req, res) => {
+    res.status(201).json(req.user);
 });
 
-app.post("/api/logout", (req, res) => {
+// GET /api/sessions/current
+app.get('/api/sessions/current', (req, res) => {
+    console.log("User: " + req.user);
     if (req.isAuthenticated())
-        req.logout(() => {
-            res.end();
-        });
-    else res.end();
+      return res.status(200).json(req.user);
+    else
+      return res.status(401).json({ error: 'Not authenticated' });
+});
+
+// DELETE /api/session/current
+app.delete('/api/sessions/current', (req, res) => {
+  try {
+    if (req.isAuthenticated())
+      req.logout(() => {
+        res.status(200).end();
+      });
+    else
+      return res.end();
+  } catch (err) {
+    return res.status(503).end();
+  }
 });
 
 

@@ -1,7 +1,7 @@
 import { useState, React } from 'react';
 import { Button, Form, Container, Row, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import API from '../API'
+import API from '../API';
 
 function Checkbox() {
     return (
@@ -39,7 +39,7 @@ function Login(props) {
         const credentials = {"username": email, "password": password };
         
         let user = props.login(credentials)
-        .then( () => {props.setUser(user.username); navigate('/');} )
+        .then( () => { navigate('/');} )
         .catch((err) => { 
             setShowAlert(true); 
         });

@@ -47,7 +47,7 @@ class UserDAO {
             );
             if (!login)
                 throw { err: 401, msg: "Incorrect username and/or password." };
-            return new User(user.id, user.username, user.email, user.role);
+            return {"id": user.id, "username": user.username, "email": user.email, "role": user.role};
         } catch (err) {
             throw err;
         }
