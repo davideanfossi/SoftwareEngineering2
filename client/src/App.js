@@ -13,61 +13,32 @@ import { EmailActivate } from './components/emailActivate';
 import { useState, useEffect } from 'react';
 import API from './API'
 
+import { UserContext } from "./context/user-context";
+import { useState } from "react";
 
 function App() {
-  const [user, setUser] = useState(undefined);
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  // use effect: get userInfo
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await API.getUserInfo();
-        setLoggedIn(true);
-      } catch (error) {
-        setLoggedIn(false);
-      }
-    };
-    checkAuth();
-  }, []);
-
-  // login
-  const handleLogin = async (credentials) => {
-    try {
-      const user = await API.login(credentials);
-      setLoggedIn(true);
-      console.log(user);
-      setUser(user);
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // logout
-  const handleLogout = async () => {
-    try {
-      await API.logout();
-      setLoggedIn(false);
-      setUser(undefined);
-    } catch (err) {
-        throw err;
-    }
-  };
-
+  const [user, setUser] = useState({
+    id: undefined,
+    role: undefined,
+    user: undefined,
+  });
+  const value = { user, setUser };
   return (
-    <>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout user={user}/>}>
-          <Route index element={<Home />} />
-          <Route path="register" index element={<Register register={API.registerUser}/>} />
-          <Route path="login" index element={<Login login={handleLogin}/>} />
-          <Route path='authentication/activate/*' index element={<EmailActivate/>}/>
-          <Route path="insert-hike" element={<InsertHike/>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </>
+    <UserContext.Provider value={value}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            {["local-guide"].includes(user.role) && (
+              <Route path="insert-hike" element={<InsertHike />} />
+            )}
+            <Route path="register" index element={<Register register={API.registerUser}/>} />
+            <Route path="login" index element={<Login login={handleLogin}/>} />
+            <Route path='authentication/activate/*' index element={<EmailActivate/>}/>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </UserContext.Provider>
   );
 }
 
