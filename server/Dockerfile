@@ -11,6 +11,8 @@ ENV PATH /server/node_modules/.bin:$PATH
 COPY package.json ./
 RUN npm install --silent
 
+EXPOSE 3001
+
 # add server
 COPY . ./
 
