@@ -14,7 +14,7 @@ const high = difficultyType.high;
 describe('Hike DAO unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
-        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?,);";
+        let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
         let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
         res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
         res = await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "address 3"]);
@@ -64,6 +64,10 @@ describe('Hike DAO unit test', () => {
 
     const expectedMaxData = {"maxLength": 2000, "maxExpectedTime": 180, "maxAscent": 500};
     testGetMaxData(expectedMaxData);
+
+    testInsertHike("title 5", 1000, 120, 300, mid, 1, 2, "description 5", null, 1);
+    testInsertHike("title 6", 2000, 220, 400, high, 3, 4, null, null, 1);
+    testInsertHike("title 7", 3000, 320, 500, low, 1, 4, "description 7", null, 1);
 });
 
 
@@ -88,4 +92,17 @@ function testGetMaxData(expectedObj) {
     });
 }
 
+function testInsertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId){
+    test('add new hike', async() => {
 
+        let lastID = await hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
+        expect(lastID).toBeTruthy();
+
+        const hike = new Hike(lastID,title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, [], gpxPath, userId);
+
+        var res = await hikeDAO.getAllHikes();
+        expect(res.length).toBeGreaterThan(0);
+        expect(res).toEqual(expect.arrayContaining([hike]));
+
+    })
+}

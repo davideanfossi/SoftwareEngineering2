@@ -89,11 +89,10 @@ const getFilteredHikes = async (
     throw e;
   }
 };
-
 const getHikeDetails = async (hike) => {
   try {
     const response = await fetch(
-      new URL("hikes/" + hike.id+"/track", SERVER_BASE),
+      new URL("hikes/" + hike.id + "/track", SERVER_BASE),
       {
         method: "GET",
         headers: {
@@ -167,11 +166,30 @@ const getHikeDetails = async (hike) => {
     throw e;
   }
 };
+
+const newHike = async (formData) => {
+  try {
+    console.log(formData);
+    const response = await fetch(new URL("hike", SERVER_BASE), {
+      method: "POST",
+      body: formData,
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.json();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
   getHikeDetails,
+  newHike,
 };
 
 export default API;

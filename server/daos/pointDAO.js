@@ -24,11 +24,22 @@ class PointDAO {
         try {
             const sql = "SELECT * FROM Points P, ReferencePoints RP WHERE P.id = RP.pointId AND RP.hikeId = ?";
             const res = await this.dbManager.get(sql, [hikeId]);
-            return res.map(r => new Point(r.id, Number.parseFloat(r.latitude), Number.parseFloat(r.longitude), r.altitude, r.name, r.city, r.province, r.address));
+            return res.map(r => new Point(r.id, Number.parseFloat(r.latitude), Number.parseFloat(r.longitude), r.altitude, r.name, r.address));
         } catch (err) {
             throw err;
         }
     };
+
+    insertPoint=async (latitude,longitude,altitude,name,address) =>{
+        try{
+            const sql="insert into Points(latitude,longitude,altitude,name,address) values(?,?,?,?,?)";
+            const res = await this.dbManager.query(sql, [latitude,longitude,altitude,name,address]);
+            return res;
+        }
+        catch(err){
+            throw err;
+        }
+    }
     
 }
 
