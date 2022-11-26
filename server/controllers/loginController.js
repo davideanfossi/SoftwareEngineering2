@@ -11,12 +11,11 @@ const loginService = new LoginService(userDAO);
 
 const login = async (email, password) => {
     try {
-        console.log(email, password);
         const user = await loginService.login(email, password);
         return user;
     }
     catch (err) {
-        return undefined;
+        return err;
     }
 };  
 

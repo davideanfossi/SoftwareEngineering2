@@ -11,7 +11,6 @@ class LoginService {
     async login(email, password) {
         try {
             // get user
-            console.log(email, password);
             const user = await this.userDAO.loginUser(email, password);
             return user;
         } catch (err) {
