@@ -59,22 +59,24 @@ passport.serializeUser((user, cb) => {
   cb(null, {
     id: user.id,
     user: user.username,
+    role: user.role,
   });
 });
+
 passport.deserializeUser((user, cb) => {
   return cb(null, user);
 });
 
 app.use(passport.authenticate("session"));
 
-const auth = new Auth(dbManager);
-
+/*
 //Middleware to check if a user is logged
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) 
     return next();
   return res.status(401).send("Not authenticated");
 };
+*/
 
 
 app.post("/login", passport.authenticate("local"), (req, res) => {
