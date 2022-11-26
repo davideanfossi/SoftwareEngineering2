@@ -9,10 +9,12 @@ const parseGpx = (file) => {
         const coordinates = geoJson.features[0].geometry.coordinates;
         const start = coordinates[0];
         const end = coordinates[coordinates.length-1];
-        return [start, end];
+        const name = geoJson.features[0].properties.name;
+        const desc = geoJson.features[0].properties.desc;
+        return {start, end, name, desc};
     } catch(err) {
         console.log(err);
     }
-;}
+}
 
 module.exports = parseGpx;
