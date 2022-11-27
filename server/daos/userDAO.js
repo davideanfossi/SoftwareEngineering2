@@ -25,7 +25,7 @@ class UserDAO {
         const query = "SELECT * FROM User WHERE id = ?";
         try {
             const result = await this.dbManager.get(query, [userId], true);
-            return new User(result.id, result.username, result.role);
+            return new User(result.id, result.username, result.email, result.role);
         } catch (err) {
             throw err;
         }
