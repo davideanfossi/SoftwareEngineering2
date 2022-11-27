@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import AutocompleteGeoInput from "./autocomplete-geo-input/autocomplete-geo-input";
-import { FilterMap } from "./filter-map/filter-map";
+import AutocompleteGeoInput from "../atoms/autocomplete-geo-input";
+import { FilterMap } from "../atoms/filter-map";
 
 export const MapModal = ({
   show,
@@ -24,6 +24,8 @@ export const MapModal = ({
     if (selectedPosition !== undefined) {
       setLat(selectedPosition.lat);
       setLon(selectedPosition.lon);
+      setRadius(10000);
+      setZoom(10);
       setUpdate(true);
     }
   }, [selectedPosition]);

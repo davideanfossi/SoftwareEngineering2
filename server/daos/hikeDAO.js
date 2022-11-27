@@ -14,7 +14,7 @@ class HikeDAO {
         try {
             const sql = "SELECT * FROM Hike ORDER BY id;";
             const res = await this.dbManager.get(sql, []);
-            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r. endPointId, r.description));
+            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r.endPointId, r.description, [], r.gpxPath, r.userId));
         } catch (err) {
             throw err;
         }
@@ -28,7 +28,7 @@ class HikeDAO {
             const res = difficulty ? 
                 await this.dbManager.get(sql, [minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty]) :
                 await this.dbManager.get(sql, [minLen, maxLen, minTime, maxTime, minAscent, maxAscent]);
-            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r. endPointId, r.description));
+            return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.startPointId, r. endPointId, r.description, [], r.gpxPath, r.userId));
         } catch (err) {
             throw err;
         }
@@ -43,6 +43,16 @@ class HikeDAO {
             
         }
     }
+
+    insertHike = async (title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId ) => {
+        try {
+            const sql="insert into Hike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId) values(?,?,?,?,?,?,?,?,?,?)";
+            const res = await this.dbManager.query(sql, [title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId]);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    };
     
 }
 

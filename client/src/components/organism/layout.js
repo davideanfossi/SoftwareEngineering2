@@ -17,6 +17,10 @@ export const Layout = (props) => {
     console.log("TODO logout");
   }
 
+
+  const goInsertHike = () => {
+    navigate("/insert-hike");
+  };
   return (
     <>
       <Navbar className="nav">
@@ -24,6 +28,7 @@ export const Layout = (props) => {
           <Navbar.Brand onClick={goHome}>Hike Tracker</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link onClick={goHome}>Home</Nav.Link>
+            <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
             <Nav.Link onClick={goLogin}>Login</Nav.Link>
             <Nav.Link onClick={goRegister}>Register</Nav.Link>
           </Nav>

@@ -4,6 +4,7 @@
 - [GET hikes](#get-hikes)
 - [GET hikes limits](#get-hikes-limits)
 - [POST registration](#post-registration)
+- [ADD new hike](#add-new-hike)
 
 --------------------------------------------------------------
 ## GET hikes
@@ -25,7 +26,9 @@
     - `baseLat`: latitude of the center of the searched area (decimal number)
     - `baseLon`: longitude of the center of the searched area (decimal number)
     - `radius`: radius of the searched area expressed in `kilometers`
-- Example: `/api/hikes?minLen=500&maxLen=1500&difficulty=Hiker`
+    - `city`: string of the city
+    - `province`: string of the province
+- Example: `/api/hikes?page=1&pageSize=5&minLen=500&maxLen=1500&difficulty=Hiker`
 - Response: `200 OK` (success), `400 Bad Request` (query params not correct) or `500 Internal Server Error` (generic error).
 - Response body: 
     ```
@@ -139,6 +142,11 @@ In order to complete  the registration process the user must be redirect to a cu
 }  
 ```
 
+## ADD new hike
+**`POST: /api/hike`**
+- add new hike
+- Request body: form-data format (title,length,expectedTime,ascent,difficulty,startPointId,endPointId,description,trackingfile)
+- Response: `200 OK` (success), `500 Internal Server Error` (generic error).
 
 **`GET: /api/roles`**
 - Return the list of all available roles for registration purposes

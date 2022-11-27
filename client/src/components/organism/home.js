@@ -1,8 +1,8 @@
-import Hike from "../models/hike";
-import { HikeTable } from "./hike-table";
+import Hike from "../../models/hike";
+import { HikeTable } from "../moleculars/hike-table";
 import { useState } from "react";
-import { HikeFilter } from "./hike-filter";
-import { Paging } from "./paging";
+import { HikeFilter } from "../moleculars/hike-filter";
+import { Paging } from "../atoms/paging";
 
 export const Home = () => {
   const [hikeList, setHikeList] = useState([]);
