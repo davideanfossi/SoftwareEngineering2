@@ -31,7 +31,7 @@ router.get('/hikes', express.json(),
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return res.status(400).end();
+                return res.status(400).send();
             }
             const minLen = req.query.minLen ? Number.parseInt(req.query.minLen) : undefined;
             const maxLen = req.query.maxLen ? Number.parseInt(req.query.maxLen) : undefined;
@@ -58,7 +58,7 @@ router.get('/hikes', express.json(),
         } catch (err) {
             switch(err.returnCode){
                 default:
-                    return res.status(500).end();
+                    return res.status(500).send();
             }
         }
 });
@@ -71,7 +71,7 @@ router.get('/hikes/limits', express.json(),
         } catch (err) {
             switch(err.returnCode){
                 default: 
-                    return res.status(500).end();
+                    return res.status(500).send();
             }
         }
 });

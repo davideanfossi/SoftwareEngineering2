@@ -45,6 +45,9 @@ body {
   display: none;
 }
 
+.dropdown-toggle::after {
+  display: none !important;
+}
 /*
 rgb(243, 231, 201)
 */

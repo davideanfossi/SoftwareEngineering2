@@ -3,6 +3,7 @@
 ## INDEX
 - [GET hikes](#get-hikes)
 - [GET hikes limits](#get-hikes-limits)
+- [POST registration](#post-registration)
 - [ADD new hike](#add-new-hike)
 - [GET hike track](#get-hike-track)
 
@@ -75,6 +76,60 @@
     }
     ```
 
+## POST registration
+
+**`POST: /api/signup`**
+- Insert user information in DB with ```isVerified``` field to false, waiting for user to verify his email. 
+    - Email should be unique for each user
+    - Role should be one of ["Hiker", "Local Guide", "Hut Worker"] 
+    - Password must be between 6 and 15 character long
+    - phonenumber must be composed of 10 digitis between 0 and 9 
+
+
+In order to complete  the registration process the user must be redirect to a custom crafted link that includes his token. The path for the verification should be as follows: ``` http://{CLIENT_URL}/authentication/activate/{token} ```
+- Request body: 
+```
+{
+    "email": "email@email.com",
+    "username": "username",
+    "role": "Local Guide",
+    "password": "password",
+    "name": "Name",
+    "surname": "Surname",
+    "phoneNumber": "1234567899"
+}
+```
+- Response: `201 OK` (success), `400 User already exists`, `401 Validation Error`, `500 Internal Server Error` (generic error).
+- Response body: 
+```
+{
+"msg": "Registration request successful, to complete registration confirm email"
+}   
+```
+
+**`POST: /api/email-activate`**
+- Perform user's mail verification. Successful if token provided is correct.
+- Request body: 
+```
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJlbWFpbCI6InphbmZhcmRpbm9kaWVnb0BnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImRpZSIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJkaWVnbyIsInN1cm5hbWUiOiJ6YW5mYSIsInBob25lTnVtYmVyIjozNDU2NTQzMjIzLCJpYXQiOjE2NjgyMDQyMzEsImV4cCI6MTY2ODIwNTQzMX0.a1BjfmLiU81ZHNELqSCZKpXvuCl9mcP61IVkcxPBb7U"
+}
+```
+- Response: `201 OK` (success), `400 Incorrect or expired link` (verification failure), `500 Internal Server Error` (generic error).
+- Response body: 
+```
+{
+    "id": 2,
+    "email": "zanfardinodiego@gmail.com",
+    "username": "die",
+    "role": "Local Guide",
+    "name": "Mario",
+    "surname": "semprefino",
+    "phoneNumber": "2342342344",
+    "isVerified": "true"
+}  
+```
+
 ## ADD new hike
 **`POST: /api/hike`**
 - add new hike
@@ -136,3 +191,18 @@
     }
     ```
 
+**`GET: /api/roles`**
+- Return the list of all available roles for registration purposes
+- Request body: 
+```
+empty
+```
+- Response: `200 OK` (success)
+- Response body: 
+```
+    [
+    "Hiker",
+    "Local Guide",
+    "Hut Worker"
+    ]
+```
