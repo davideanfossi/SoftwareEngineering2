@@ -94,8 +94,8 @@ const registerUser = async (formData) => {
   try {
     const response = await fetch(new URL("signup", SERVER_BASE), {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(formData)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
     });
     if (response.ok) {
       return response.json();
@@ -111,9 +111,30 @@ const activateEmail = async (formData) => {
   try {
     const response = await fetch(new URL("email-activate", SERVER_BASE), {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(formData)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
     });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+const getHikeDetails = async (hike) => {
+  try {
+    const response = await fetch(
+      new URL("hikes/" + hike.id + "/track", SERVER_BASE),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     if (response.ok) {
       return response.json();
     } else {
@@ -126,71 +147,68 @@ const activateEmail = async (formData) => {
 
 const newHike = async (formData) => {
   try {
-    const response = await fetch(
-      new URL("hike", SERVER_BASE), {
-        method: "POST",
-        body: formData
-      }
-    );
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw response.json();
-    }
-  } catch (e) {
-    throw e;
-  }
-};
-
-const login = async (credentials) =>  {
-  try{
-    const response = await fetch(new URL("sessions", SERVER_BASE), {
+    const response = await fetch(new URL("hike", SERVER_BASE), {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      credentials: 'include',
-      body: JSON.stringify(credentials)
+      body: formData,
     });
     if (response.ok) {
       return response.json();
     } else {
       throw response.text();
     }
-  }catch(e){
+  } catch (e) {
     throw e;
   }
-}
+};
+
+const login = async (credentials) => {
+  try {
+    const response = await fetch(new URL("sessions", SERVER_BASE), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(credentials),
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
 
 const getUserInfo = async () => {
-  const response = await fetch(SERVER_BASE + 'sessions/current', {
-    credentials: 'include',
+  const response = await fetch(SERVER_BASE + "sessions/current", {
+    credentials: "include",
   });
-  const user = await response.json();
   if (response.ok) {
-    return user;
+    return response.json();
   } else {
-    throw user;
+    throw response.text();
   }
 };
 
 const logout = async () => {
-  const response = await fetch(SERVER_BASE + 'sessions/current', {
-    method: 'DELETE',
-    credentials: 'include'
+  const response = await fetch(SERVER_BASE + "sessions/current", {
+    method: "DELETE",
+    credentials: "include",
   });
-  if (response.ok)
-    return null;
-}
+  if (response.ok) return null;
+};
 
 const API = {
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,
+  getHikeDetails,
+  newHike,
   registerUser,
   activateEmail,
   login,
   logout,
   getUserInfo,
-  newHike
 };
 
 export default API;

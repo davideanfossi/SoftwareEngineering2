@@ -5,6 +5,11 @@ const Point = require('../models/pointModel');
 const {Hike, difficultyType} = require('../models/hikeModel');
 const HikeService = require("../services/hikeService");
 const { purgeAllTables } = require('./purgeUtils');
+const togeojson = require ('togeojson');
+const fs = require ('fs');
+const DOMParser = require('xmldom').DOMParser;
+const path = require('path');
+const config = require("../config.json");
 
 const dbManager = new DBManager("TEST");
 dbManager.openConnection();
@@ -15,6 +20,10 @@ const hikeService = new HikeService(hikeDAO, pointDAO);
 const low = difficultyType.low;
 const mid = difficultyType.mid;
 const high = difficultyType.high;
+
+const testFileBasename = "testgpx.gpx";
+const testFileName = path.resolve("unit_test/files/", testFileBasename);
+
 
 describe('Hike DAO unit test', () => {
     beforeAll(async () => {
@@ -29,7 +38,7 @@ describe('Hike DAO unit test', () => {
         res = await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
 
         sql = "INSERT INTO Hike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        res = await dbManager.query(sql, ["title 1", 1000, 120, 300, mid, 1, 2, "description 1", null, 1]);
+        res = await dbManager.query(sql, ["title 1", 1000, 120, 300, mid, 1, 2, "description 1", testFileBasename, 1]);
         res = await dbManager.query(sql, ["title 2", 2000, 180, 500, high, 1, 4, "description 2", null, 1]);
         res = await dbManager.query(sql, ["title 3", 1500, 100, 200, low, 3, 4, "description 3", null, 1]);
         res = await dbManager.query(sql, ["title 4", 1600, 120, 350, mid, 2, 4, "description 4", null, 1]);
@@ -39,10 +48,19 @@ describe('Hike DAO unit test', () => {
         res = await dbManager.query(sql, [2, 3]);
         res = await dbManager.query(sql, [3, 2]);
         res = await dbManager.query(sql, [4, 3]);
+
+        try {
+            fs.copyFile(testFileName, path.resolve(config.gpxPath, testFileBasename), (err) => {
+                if (err) throw err;
+            });
+        } catch (err) {/*foo*/}
     });
 
     afterAll(async () => {
-        try { dbManager.closeConnection(); }
+        try { 
+            dbManager.closeConnection(); 
+            fs.unlinkSync(path.resolve(config.gpxPath, testFileBasename)); // remove file
+        }
         catch (err) {/*foo*/ }
     });
     
@@ -58,7 +76,7 @@ describe('Hike DAO unit test', () => {
     const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
     const point4 = new Point(4, 47.574405, 8.455193, 300, "point 4", null);
 
-    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, point1, point2, "description 1", [], null, 1);
+    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, point1, point2, "description 1", [], testFileBasename, 1);
     const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, point1, point4, "description 2", [point2, point3], null, 1);
     const hike3 = new Hike(3, "title 3", 1500, 100, 200, low, point3, point4, "description 3", [point2], null, 1);
     const hike4 = new Hike(4, "title 4", 1600, 120, 350, mid, point2, point4, "description 4", [point3], null, 1);
@@ -98,6 +116,11 @@ describe('Hike DAO unit test', () => {
     testAddHike("title 5", 1000, 120, 300, mid, "description 5", undefined, 1,"40.714","65.714",1000,"p1","A1","48.412","98.714",1400,"p2","A2");
     testAddHike("title 6", 2000, 220, 400, high, undefined, undefined, 1,"30.714","35.714",1000,"p1",undefined,"28.412","55.714",1400,"p2","A2");
   
+    const gpx = new DOMParser().parseFromString(fs.readFileSync(testFileName, 'utf8'));
+    const expectedTrack = togeojson.gpx(gpx).features[0].geometry.coordinates.map(p => {return {"lat": p[1], "lon": p[0]}});
+    testGetHikeGpx(1, {"startPoint": hike1.startPoint, "endPoint": hike1.endPoint, "referencePoints": hike1.referencePoints, "track": expectedTrack});
+    testGetHikeGpxError("test get hike gpx error 404", 100, {returnCode: 404, message: "Hike not Found"});
+    testGetHikeGpxError("test get hike gpx error no gpx file", 2, {returnCode: 500, message: "Gpx file does not exist"});
 });
 
 
@@ -116,7 +139,7 @@ function testGetHikesLimits(expectedObj) {
     });
 }
 
- function testAddHike(title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress){
+function testAddHike(title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress){
     test('add new hike', async() => {
 
         let lastID = await hikeService.addHike(title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress);
@@ -126,5 +149,21 @@ function testGetHikesLimits(expectedObj) {
         expect(res.pageItems.length).toBeGreaterThan(0);
 
     })
-} 
+}
+
+function testGetHikeGpx(hikeId, expectedObj){
+    test('test get hikes gpx', async () => {
+        const res = await hikeService.getHikeGpx(hikeId);
+        expect(res).toEqual(expectedObj);
+    });
+}
+
+function testGetHikeGpxError(testMsg, hikeId, expectedError) {
+    test(testMsg, async () => {
+        async function invalidgetHikeGpx(){
+            await hikeService.getHikeGpx(hikeId);
+        }
+        await expect(invalidgetHikeGpx).rejects.toEqual(expectedError);
+    })
+}
 

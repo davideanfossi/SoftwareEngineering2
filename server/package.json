@@ -32,6 +32,7 @@
     "passport-local": "^1.0.0",
     "sib-api-v3-sdk": "^8.4.2",
     "sqlite3": "^5.1.2",
+    "togeojson": "^0.16.0",
     "uuid": "^9.0.0"
   }
 }

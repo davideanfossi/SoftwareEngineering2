@@ -1,12 +1,41 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
+import API from "../../API";
+import { UserContext } from "../../context/user-context";
+import { HikeMap } from "./hike-map";
+
 export const HikeRow = ({ hike, even }) => {
+  const userContext = useContext(UserContext);
+  const isLogged = ["Hiker", "Local Guide"].includes(userContext.user.role);
   const [dropped, setDropped] = useState(false);
+  const [startPoint, setStartPoint] = useState({
+    latitude: 45.0702899,
+    longitude: 7.6348208,
+  });
+  const [endPoint, setEndPoint] = useState({
+    latitude: 45.0702899,
+    longitude: 7.6348208,
+  });
+  const [referencesPoints, setReferencePoints] = useState([]);
+  const [track, setTrack] = useState([]);
 
   const toggleDrop = () => {
     setDropped((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (isLogged && dropped) {
+      API.getHikeDetails(hike).then((elem) => {
+        console.log(elem);
+        setStartPoint(elem.startPoint);
+        setEndPoint(elem.endPoint);
+        setReferencePoints(elem.referencePoints);
+        setTrack(elem.track);
+      });
+    }
+  }, [dropped, hike, isLogged]);
+
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
       <Col>
@@ -122,12 +151,21 @@ export const HikeRow = ({ hike, even }) => {
             </Col>
           </Row>
           {dropped && (
-            <Row style={{ height: 100 }}>
+            <Row>
               <Col
                 className="d-flex justify-content-center align-items-center my-3"
                 xs={12}
               >
-                Log in to see more info
+                {isLogged ? (
+                  <HikeMap
+                    startPoint={startPoint}
+                    endPoint={endPoint}
+                    referencesPoints={referencesPoints}
+                    track={track}
+                  />
+                ) : (
+                  "Log in to see more info"
+                )}
               </Col>
             </Row>
           )}
