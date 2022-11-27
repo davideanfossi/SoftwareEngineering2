@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query,body, validationResult} = require('express-validator');
+const {expressValidator, check, query,body, param, validationResult} = require('express-validator');
 const router = express.Router();
 const fileUpload=require('express-fileupload');
 
@@ -46,6 +46,14 @@ router.get('/hikes', express.json(),
             const pageNumber = req.query.pageNumber ? Number.parseInt(req.query.pageNumber) : undefined;
             const pageSize = req.query.pageSize ? Number.parseInt(req.query.pageSize) : undefined;
             const result = await hikeService.getHikes(pageNumber, pageSize, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius);
+            // remove additional data
+            result.pageItems.map(hike => {
+                delete hike.startPoint;
+                delete hike.endPoint;
+                delete hike.referencePoints;
+                delete hike.gpxPath;
+                delete hike.userId;
+            });
             return res.status(200).json(result);
         } catch (err) {
             switch(err.returnCode){
@@ -155,5 +163,26 @@ router.post('/hike',fileUpload({createParentPath: true}),
             }
         }
     });
+
+    
+router.get('/hikes/:id/track', [param('id').exists().isInt({min: 1})],
+async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).end();
+        }
+        const result = await hikeService.getHikeGpx(req.params.id);
+        return res.status(200).json(result);
+    } catch (err) {
+        console.log(err);
+        switch(err.returnCode){
+            case 404:
+                return res.status(404).send(err.message);
+            default:
+                return res.status(500).end();
+        }
+    }
+});
 
 module.exports = router;
