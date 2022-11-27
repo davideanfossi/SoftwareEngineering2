@@ -22,19 +22,19 @@ function Register(props) {
         console.log(username, password, confPassword, name, surname, phoneNumber);
         let flag = false;
 
-        if(username === ''){setUsername(''); flag=true;}
-        if(password === ''){setPassword(''); flag=true;}
-        if(confPassword === ''){setConfPassword(''); flag=true;}
-        if(password !== confPassword){setPassword(''); setConfPassword(''); flag=true;}
+        if (username === '') { setUsername(''); flag = true; }
+        if (password === '') { setPassword(''); flag = true; }
+        if (confPassword === '') { setConfPassword(''); flag = true; }
+        if (password !== confPassword) { setPassword(''); setConfPassword(''); flag = true; }
 
         console.log(flag);
-        if(role !== 'Hiker'){
-            if(name === ''){setName(''); flag=true;}
-            if(surname === ''){setSurname(''); flag=true;}
-            if(phoneNumber === ''){setPhoneNumber(''); flag=true;}
+        if (role !== 'Hiker') {
+            if (name === '') { setName(''); flag = true; }
+            if (surname === '') { setSurname(''); flag = true; }
+            if (phoneNumber === '') { setPhoneNumber(''); flag = true; }
         }
-        
-        if(flag) return;
+
+        if (flag) return;
 
         let formData =
         {
@@ -47,69 +47,66 @@ function Register(props) {
             'phoneNumber': phoneNumber ? phoneNumber : ""
         }
         //const credentials = { email, username, role, password, name, surname, phoneNumber };
-        
+
         API.registerUser(formData)
-            .then(() => {setShowAlert('success');} )
+            .then(() => { setShowAlert('success'); })
             .catch((err) => {
                 setShowAlert('error');
             });
-        
+
     };
 
     return (
         <>
-            <Container>
-                <Row style={{ "paddingLeft": "0.7rem" }}>
-                    <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Insert Hike</b>
+            <Container className='mt-3'>
+                <Row>
+                    <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Register</b>
                 </Row>
                 {
-                    showAlert === "success" ? 
+                    showAlert === "success" ?
                         <Alert variant="success" onClose={() => setShowAlert('')} dismissible>
                             <Alert.Heading>Registration has been successful!</Alert.Heading>
-                        </Alert> 
-                        : 
+                        </Alert>
+                        :
                         <>{
                             showAlert === "error" ?
                                 <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
                                     <Alert.Heading>Registration occurred with errors!</Alert.Heading>
-                                </Alert> 
+                                </Alert>
                                 : <></>
                         }</>
                 }
-                <Row style={{ "paddingLeft": "0.7rem" }}>
-                    <b style={{ "fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem" }}>Please compile the data down below:</b>
-                </Row>
-                    <Container className="border border-4 rounded" style={{"marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white"}}>
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Label>Select your profile:</Form.Label> 
-                            <Form.Group className='check-line'>
-                                <Form.Check
-                                    inline
-                                    label="Hiker"
-                                    name='group1'
-                                    type='radio'
-                                    id='inline-radio-1'
-                                    defaultChecked
-                                    onClick={() => {setAdditionalData(false); setRole('Hiker'); setName(""); setSurname(""); setPhoneNumber("")}}
-                                />
-                                <Form.Check
-                                    inline
-                                    label="Local guide"
-                                    name='group1'
-                                    type='radio'
-                                    id='inline-radio-2'
-                                    onClick={() => {setAdditionalData(true); setRole('Local Guide')}}
-                                />
-                                <Form.Check
-                                    inline
-                                    label="Hut worker"
-                                    name='group1'
-                                    type='radio'
-                                    id='inline-radio-3'
-                                    onClick={() => {setAdditionalData(true); setRole('Hut Worker')} }
-                                />
-                            </Form.Group>
-                            {additionalData ? 
+                <Container className="border border-4 rounded" style={{ "marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white" }}>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Label>Select your profile:</Form.Label>
+                        <Form.Group className='check-line'>
+                            <Form.Check
+                                inline
+                                label="Hiker"
+                                name='group1'
+                                type='radio'
+                                id='inline-radio-1'
+                                defaultChecked
+                                onClick={() => { setAdditionalData(false); setRole('Hiker'); setName(""); setSurname(""); setPhoneNumber("") }}
+                            />
+                            <Form.Check
+                                inline
+                                label="Local guide"
+                                name='group1'
+                                type='radio'
+                                id='inline-radio-2'
+                                onClick={() => { setAdditionalData(true); setRole('Local Guide') }}
+                            />
+                            <Form.Check
+                                inline
+                                label="Hut worker"
+                                name='group1'
+                                type='radio'
+                                id='inline-radio-3'
+                                onClick={() => { setAdditionalData(true); setRole('Hut Worker') }}
+                            />
+                        </Form.Group>
+                        {additionalData ?
                             <>
                                 <Form.Group className='mb-2' controlId='name'>
                                     <Form.Label>Name:</Form.Label>
@@ -202,10 +199,10 @@ function Register(props) {
                         <Form.Group className='mt-3'>
                             <Row xs="auto">
                                 <Col>
-                                    <Button variant="warning" type="submit" size='lg'>Register</Button> 
+                                    <Button variant="warning" type="submit" size='lg'>Register</Button>
                                     &ensp; &ensp;
                                     <Button variant='light' size='lg'>Cancel</Button>
-                                </Col>         
+                                </Col>
                             </Row>
                         </Form.Group>
                     </Form>
