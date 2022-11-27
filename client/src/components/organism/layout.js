@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown} from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
 import { useContext } from "react";
 import { UserContext } from "../../context/user-context";
@@ -38,23 +38,13 @@ export const Layout = (props) => {
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">
         <Container fluid>
+          <Navbar.Toggle className="me-2" />
           <Navbar.Brand onClick={goHome}>Hike Tracker</Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse>
-            <Nav className="me-auto">
-              <Nav.Link onClick={goHome}>Home</Nav.Link>
-              {["Local Guide"].includes(userContext.user.role) && (
-                <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
-              )}
-              {userContext.user.id === undefined && (
-                <>
-                  <Nav.Link onClick={goLogin}>Login</Nav.Link>
-                  <Nav.Link onClick={goRegister}>Register</Nav.Link>
-                </>
-              )}
-            </Nav>
-            {userContext.user.id !== undefined && (
+          {userContext.user.id !== undefined && (
+            <div className="d-flex justify-content-end">
               <NavDropdown
+                align="end"
+                className="dropdown-menu-left"
                 title={
                   <div className="d-flex align-items-center">
                     <PersonCircle />
@@ -71,7 +61,21 @@ export const Layout = (props) => {
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>
-            )}
+            </div>
+          )}
+          <Navbar.Collapse>
+            <Nav className="me-auto">
+              <Nav.Link onClick={goHome}>Home</Nav.Link>
+              {["Local Guide"].includes(userContext.user.role) && (
+                <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
+              )}
+              {userContext.user.id === undefined && (
+                <>
+                  <Nav.Link onClick={goLogin}>Login</Nav.Link>
+                  <Nav.Link onClick={goRegister}>Register</Nav.Link>
+                </>
+              )}
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
