@@ -1,6 +1,7 @@
-import { useState, React } from 'react';
+import { useState, React, useContext } from 'react';
 import { Button, Form, Container, Row, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from "../context/user-context";
 import API from '../API';
 
 function Checkbox() {
@@ -25,8 +26,8 @@ function Registration() {
     );
 }
 
-function Login(props) {
-
+function Login() {
+    const userContext = useContext(UserContext);
     const navigate = useNavigate();
     
     const [email, setEmail] = useState('');
@@ -38,9 +39,20 @@ function Login(props) {
         event.preventDefault();
         const credentials = {"username": email, "password": password };
         
-        let user = props.login(credentials)
-        .then( () => { navigate('/');} )
-        .catch((err) => { 
+        API.login(credentials)
+        .then( (user) => { 
+            userContext.setUser({
+                id: user.id,
+                role: user.role,
+                user: user.username
+            });
+            navigate('/');} )
+        .catch((err) => {
+            userContext.setUser({
+                id: undefined,
+                role: undefined,
+                user: undefined,
+              });
             setShowAlert(true); 
         });
     }

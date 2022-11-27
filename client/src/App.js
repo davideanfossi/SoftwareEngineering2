@@ -10,11 +10,10 @@ import { InsertHike } from "./components/organism/InsertHike";
 import { Login } from "./components/Login";
 import {Register} from "./components/Register";
 import { EmailActivate } from './components/emailActivate';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 import API from './API'
 
 import { UserContext } from "./context/user-context";
-import { useState } from "react";
 
 function App() {
   const [user, setUser] = useState({
@@ -22,6 +21,25 @@ function App() {
     role: undefined,
     user: undefined,
   });
+
+  useEffect(() => {
+    API.getUserInfo()
+    .then((user) => { 
+      setUser({
+          id: user.id,
+          role: user.role,
+          user: user.username
+      });
+    })
+    .catch((err) => {
+      setUser({
+          id: undefined,
+          role: undefined,
+          user: undefined,
+        });
+    })
+  }, []);
+
   const value = { user, setUser };
   return (
     <UserContext.Provider value={value}>
@@ -29,11 +47,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            {["local-guide"].includes(user.role) && (
+            {["Local Guide"].includes(user.role) && (
               <Route path="insert-hike" element={<InsertHike />} />
             )}
             <Route path="register" index element={<Register register={API.registerUser}/>} />
-            <Route path="login" index element={<Login login={handleLogin}/>} />
+            <Route path="login" index element={<Login/>} />
             <Route path='authentication/activate/*' index element={<EmailActivate/>}/>
           </Route>
         </Routes>

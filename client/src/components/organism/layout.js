@@ -1,7 +1,9 @@
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown, Row, Col } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
 import { useContext } from "react";
 import { UserContext } from "../../context/user-context";
+import { PersonCircle } from "react-bootstrap-icons";
+import API from "../../API";
 
 export const Layout = (props) => {
   const navigate = useNavigate();
@@ -11,13 +13,23 @@ export const Layout = (props) => {
   };
   const goLogin = () => {
     navigate("/login");
-  }
+  };
   const goRegister = () => {
     navigate("/register");
-  }
+  };
 
   const handleLogout = () => {
-    console.log("TODO logout");
+    API.logout().then(
+      (res) => {
+        userContext.setUser({
+          id: undefined,
+          role: undefined,
+          user: undefined,
+        })
+        navigate("/");
+      }
+    )
+      .catch((err) => console.log(err));
   }
 
 
@@ -26,28 +38,39 @@ export const Layout = (props) => {
   };
   return (
     <>
-      <Navbar className="nav">
-        <Container>
+      <Navbar collapseOnSelect expand="lg" className="nav">
+        <Container fluid>
           <Navbar.Brand onClick={goHome}>Hike Tracker</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link onClick={goHome}>Home</Nav.Link>
-            {["local-guide"].includes(userContext.user.role) && (
-              <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
-            )}
-            <Nav.Link onClick={goLogin}>Login</Nav.Link>
-            <Nav.Link onClick={goRegister}>Register</Nav.Link>
-          </Nav>
-          <Navbar.Collapse className="justify-content-end">
-            <img 
-            src="user.svg" 
-            alt="" 
-            width="32" 
-            height="32"
-            />
-            <NavDropdown title="User" id="basic-nav-dropdown">
-              <NavDropdown.Item>Signed in as: { props.user }</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => { handleLogout(); }}>Logout</NavDropdown.Item>
-            </NavDropdown>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse>
+            <Nav className="me-auto">
+              <Nav.Link onClick={goHome}>Home</Nav.Link>
+              {["Local Guide"].includes(userContext.user.role) && (
+                <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
+              )}
+              {userContext.user.id === undefined &&
+                <>
+                  <Nav.Link onClick={goLogin}>Login</Nav.Link>
+                  <Nav.Link onClick={goRegister}>Register</Nav.Link>
+                </>
+              }
+            </Nav>
+            {userContext.user.id !== undefined &&
+              <Container fluid>
+                <Row >
+                  <Col xs={1}>
+                    <PersonCircle />
+                  </Col>
+                  <Col xs={1} >
+                    <NavDropdown title={userContext.user.user} id="basic-nav-dropdown">
+                      <NavDropdown.Item onClick={() => { handleLogout(); }}>
+                        Logout
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </Col>
+                </Row>
+              </Container>
+            }
           </Navbar.Collapse>
         </Container>
       </Navbar>

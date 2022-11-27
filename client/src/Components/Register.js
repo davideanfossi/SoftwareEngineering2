@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import API from '../API';
 
 
@@ -18,10 +17,9 @@ function Register(props) {
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState('');
 
-    const navigate = useNavigate();
-
     const handleSubmit = (event) => {
         event.preventDefault();
+        console.log(username, password, confPassword, name, surname, phoneNumber);
         let flag = false;
 
         if(username === ''){setUsername(''); flag=true;}
@@ -29,12 +27,13 @@ function Register(props) {
         if(confPassword === ''){setConfPassword(''); flag=true;}
         if(password !== confPassword){setPassword(''); setConfPassword(''); flag=true;}
 
+        console.log(flag);
         if(role !== 'Hiker'){
             if(name === ''){setName(''); flag=true;}
             if(surname === ''){setSurname(''); flag=true;}
             if(phoneNumber === ''){setPhoneNumber(''); flag=true;}
         }
-
+        
         if(flag) return;
 
         let formData =
@@ -48,7 +47,8 @@ function Register(props) {
             'phoneNumber': phoneNumber ? phoneNumber : ""
         }
         //const credentials = { email, username, role, password, name, surname, phoneNumber };
-        props.register(formData)
+        
+        API.registerUser(formData)
             .then(() => {setShowAlert('success');} )
             .catch((err) => {
                 setShowAlert('error');
@@ -98,7 +98,7 @@ function Register(props) {
                                     name='group1'
                                     type='radio'
                                     id='inline-radio-2'
-                                    onClick={() => {setAdditionalData(true); setRole('Local guide')}}
+                                    onClick={() => {setAdditionalData(true); setRole('Local Guide')}}
                                 />
                                 <Form.Check
                                     inline
@@ -106,7 +106,7 @@ function Register(props) {
                                     name='group1'
                                     type='radio'
                                     id='inline-radio-3'
-                                    onClick={() => {setAdditionalData(true); setRole('Hut worker')} }
+                                    onClick={() => {setAdditionalData(true); setRole('Hut Worker')} }
                                 />
                             </Form.Group>
                             {additionalData ? 
@@ -149,19 +149,18 @@ function Register(props) {
                                 </Form.Group>
                             </>
                             :
-                            <>
-                                <Form.Group className='mb-2' controlId='username'>
-                                    <Form.Label>Username:</Form.Label>
-                                    <Form.Control
-                                        type='text'
-                                        value={username}
-                                        minLength={1}
-                                        onChange={(ev) => setUsername(ev.target.value)}
-                                        required={true}
-                                        placeholder="Create a fancy username"
-                                        maxLength={30} />
-                                </Form.Group>
-                            </>}
+                            <></>}
+                        <Form.Group className='mb-2' controlId='username'>
+                            <Form.Label>Username:</Form.Label>
+                            <Form.Control
+                                type='text'
+                                value={username}
+                                minLength={1}
+                                onChange={(ev) => setUsername(ev.target.value)}
+                                required={true}
+                                placeholder="Create a fancy username"
+                                maxLength={30} />
+                        </Form.Group>
                         <Form.Group className='mb-2' controlId='email'>
                             <Form.Label>Email:</Form.Label>
                             <Form.Control
