@@ -10,7 +10,7 @@ const DbManager = require("./database/dbManager");
 const hikeController = require('./controllers/hikeController');
 const { login, getPermission } = require('./controllers/loginController');
 const authRoutes = require('./controllers/authController');
-const UserDAO = require("./daos/userDAO");
+
 // init express
 const app = express();
 const port = 3001;

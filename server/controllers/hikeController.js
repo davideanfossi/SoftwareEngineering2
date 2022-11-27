@@ -42,7 +42,7 @@ router.get('/hikes',
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return res.status(400).end();
+                return res.status(400).send();
             }
             const minLen = req.query.minLen ? Number.parseInt(req.query.minLen) : undefined;
             const maxLen = req.query.maxLen ? Number.parseInt(req.query.maxLen) : undefined;
@@ -61,7 +61,7 @@ router.get('/hikes',
         } catch (err) {
             switch(err.returnCode){
                 default:
-                    return res.status(500).end();
+                    return res.status(500).send();
             }
         }
 });
@@ -74,25 +74,10 @@ router.get('/hikes/limits',
         } catch (err) {
             switch(err.returnCode){
                 default: 
-                    return res.status(500).end();
+                    return res.status(500).send();
             }
         }
 });
-
-
-// test json validator
-router.post('/validator', hikeValidator,
-    async (req, res) => {
-        try {
-            return res.status(200).send("good!");
-        } catch (err) {
-            switch(err.returnCode){
-                default:
-                    return res.status(500).end();
-            }
-        }
-});
-
 
 
 module.exports = router;

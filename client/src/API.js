@@ -14,7 +14,7 @@ const getHikesLimits = async () => {
     if (response.ok) {
       return response.json();
     } else {
-      throw response.json();
+      throw response.text();
     }
   } catch (e) {
     throw e;
@@ -32,7 +32,7 @@ const getAllHikes = async () => {
     if (response.ok) {
       return response.json();
     } else {
-      throw response.json();
+      throw response.text();
     }
   } catch (e) {
     throw e;
@@ -83,7 +83,7 @@ const getFilteredHikes = async (
     if (response.ok) {
       return response.json();
     } else {
-      throw response.json();
+      throw response.text();
     }
   } catch (e) {
     throw e;
@@ -100,7 +100,7 @@ const registerUser = async (formData) => {
     if (response.ok) {
       return response.json();
     } else {
-      throw response.json();
+      throw response.text();
     }
   } catch (e) {
     throw e;
@@ -117,7 +117,7 @@ const activateEmail = async (formData) => {
     if (response.ok) {
       return response.json();
     } else {
-      throw response.json();
+      throw response.text();
     }
   } catch (e) {
     throw e;
@@ -129,12 +129,13 @@ const login = async (credentials) =>  {
     const response = await fetch(new URL("sessions", SERVER_BASE), {
       method: "POST",
       headers: {"Content-Type": "application/json"},
+      credentials: 'include',
       body: JSON.stringify(credentials)
     });
     if (response.ok) {
       return response.json();
     } else {
-      throw response.json();
+      throw response.text();
     }
   }catch(e){
     throw e;

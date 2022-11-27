@@ -78,7 +78,7 @@ router.post('/signup', userValidator,
                 case 422:
                     return res.status(422).json(err.message);
                 default:
-                    return res.status(500).end();
+                    return res.status(500).send();
             }
         }
     }
@@ -101,14 +101,14 @@ router.post('/email-activate',
                     }
                     user = await authService.getUser(email);
                     await authService.verifyUser(email);
-                    return res.status(201).json(new User(user, email, username, role, name, surname, phoneNumber, 'true')).end();
+                    return res.status(201).json(new User(user, email, username, role, name, surname, phoneNumber, 'true'));
                 })
             } else {
                 return res.json({ error: "Something went wrong during verification process!" });
             }
         }
         catch (err) {
-            return res.status(500).end();
+            return res.status(500).send();
         }
     }
 );
