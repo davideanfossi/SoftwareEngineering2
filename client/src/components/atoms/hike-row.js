@@ -1,16 +1,21 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
 import API from "../../API";
+import { UserContext } from "../../context/user-context";
 import { HikeMap } from "./hike-map";
 
-export const HikeRow = ({ hike, even, isLogged = true }) => {
+export const HikeRow = ({ hike, even }) => {
+  const userContext = useContext(UserContext);
+  const isLogged = ["Hiker", "Local Guide"].includes(userContext.user.role);
   const [dropped, setDropped] = useState(false);
   const [startPoint, setStartPoint] = useState({
-    coordinates: [45.0702899, 7.6348208],
+    latitude: 45.0702899,
+    longitude: 7.6348208,
   });
   const [endPoint, setEndPoint] = useState({
-    coordinates: [45.0702899, 7.6348208],
+    latitude: 45.0702899,
+    longitude: 7.6348208,
   });
   const [referencesPoints, setReferencePoints] = useState([]);
   const [track, setTrack] = useState([]);
@@ -21,14 +26,15 @@ export const HikeRow = ({ hike, even, isLogged = true }) => {
 
   useEffect(() => {
     if (isLogged && dropped) {
-      API.getHikeDetails(hike.id).then((elem) => {
+      API.getHikeDetails(hike).then((elem) => {
+        console.log(elem);
         setStartPoint(elem.startPoint);
         setEndPoint(elem.endPoint);
         setReferencePoints(elem.referencePoints);
         setTrack(elem.track);
       });
     }
-  }, [dropped, hike.id, isLogged]);
+  }, [dropped, hike, isLogged]);
 
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>

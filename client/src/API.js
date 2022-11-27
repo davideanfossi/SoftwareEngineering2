@@ -1,4 +1,3 @@
-import track from "./track_points.json";
 const SERVER_HOST = "http://localhost";
 const SERVER_PORT = 3001;
 
@@ -95,8 +94,8 @@ const registerUser = async (formData) => {
   try {
     const response = await fetch(new URL("signup", SERVER_BASE), {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(formData)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
     });
     if (response.ok) {
       return response.json();
@@ -112,8 +111,8 @@ const activateEmail = async (formData) => {
   try {
     const response = await fetch(new URL("email-activate", SERVER_BASE), {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(formData)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
     });
     if (response.ok) {
       return response.json();
@@ -133,69 +132,13 @@ const getHikeDetails = async (hike) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
       }
     );
     if (response.ok) {
       return response.json();
     } else {
-      //throw response.json();
-      const coordinates = track.map((elem) => [
-        elem.geometry.coordinates[1],
-        elem.geometry.coordinates[0],
-      ]);
-      return {
-        startPoint: {
-          type: undefined,
-          coordinates: coordinates[0],
-          name: "Torino",
-          address: "address 1",
-        },
-        endPoint: {
-          type: undefined,
-          coordinates: coordinates[coordinates.length - 1],
-          name: "Torino",
-          address: "address 1",
-        },
-        referencePoints: [
-          {
-            type: undefined,
-            coordinates: coordinates[200],
-            name: "Torino",
-            address: "address 1",
-          },
-          {
-            type: undefined,
-            coordinates: coordinates[400],
-            name: "Torino",
-            address: "address 1",
-          },
-          {
-            type: undefined,
-            coordinates: coordinates[600],
-            name: "Torino",
-            address: "address 1",
-          },
-          {
-            type: undefined,
-            coordinates: coordinates[800],
-            name: "Torino",
-            address: "address 1",
-          },
-          {
-            type: undefined,
-            coordinates: coordinates[1000],
-            name: "Torino",
-            address: "address 1",
-          },
-          {
-            type: undefined,
-            coordinates: coordinates[1200],
-            name: "Torino",
-            address: "address 1",
-          },
-        ],
-        track: coordinates,
-      };
+      throw response.text();
     }
   } catch (e) {
     throw e;
@@ -204,60 +147,56 @@ const getHikeDetails = async (hike) => {
 
 const newHike = async (formData) => {
   try {
-    const response = await fetch(
-      new URL("hike", SERVER_BASE), {
-        method: "POST",
-        body: formData
-      }
-    );
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw response.json();
-    }
-  } catch (e) {
-    throw e;
-  }
-};
-
-const login = async (credentials) =>  {
-  try{
-    const response = await fetch(new URL("sessions", SERVER_BASE), {
+    const response = await fetch(new URL("hike", SERVER_BASE), {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      credentials: 'include',
-      body: JSON.stringify(credentials)
+      body: formData,
     });
     if (response.ok) {
       return response.json();
     } else {
       throw response.text();
     }
-  }catch(e){
+  } catch (e) {
     throw e;
   }
-}
+};
+
+const login = async (credentials) => {
+  try {
+    const response = await fetch(new URL("sessions", SERVER_BASE), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(credentials),
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
 
 const getUserInfo = async () => {
-  const response = await fetch(SERVER_BASE + 'sessions/current', {
-    credentials: 'include',
+  const response = await fetch(SERVER_BASE + "sessions/current", {
+    credentials: "include",
   });
-  const user = await response.json();
   if (response.ok) {
-    return user;
+    return response.json();
   } else {
-    throw user;
+    throw response.text();
   }
 };
 
 const logout = async () => {
-  const response = await fetch(SERVER_BASE + 'sessions/current', {
-    method: 'DELETE',
-    credentials: 'include'
+  const response = await fetch(SERVER_BASE + "sessions/current", {
+    method: "DELETE",
+    credentials: "include",
   });
-  if (response.ok)
-    return null;
-}
+  if (response.ok) return null;
+};
 
 const API = {
   getHikesLimits,
@@ -269,7 +208,7 @@ const API = {
   activateEmail,
   login,
   logout,
-  getUserInfo
+  getUserInfo,
 };
 
 export default API;

@@ -7,7 +7,7 @@ import { Paging } from "../atoms/paging";
 export const Home = () => {
   const [hikeList, setHikeList] = useState([]);
   const [pageNumber, setPageNumer] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const handleServerResponse = (hikes) => {
     setPageNumer(1);

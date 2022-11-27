@@ -2,8 +2,11 @@ import { Marker, Popup } from "react-leaflet";
 import { Container, Row, Col } from "react-bootstrap";
 export const MarkerReferencePoint = ({ point, isReference }) => {
   return (
-    <Marker position={point.coordinates} opacity={isReference ? 0.7 : 1}>
-      <Popup style={{ borderRadius: 0 }} >
+    <Marker
+      position={[point.latitude, point.longitude]}
+      opacity={isReference ? 0.7 : 1}
+    >
+      <Popup style={{ borderRadius: 0 }}>
         <Container>
           <Row>
             <Col className="text-center fw-bold">Name:</Col>

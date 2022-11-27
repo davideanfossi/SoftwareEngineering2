@@ -8,11 +8,12 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
   const [map, setMap] = useState(undefined);
 
+  console.log(center);
   useEffect(() => {
     if (startPoint !== undefined && endPoint !== undefined) {
       setCenter([
-        (startPoint.coordinates[0] + endPoint.coordinates[0]) / 2,
-        (startPoint.coordinates[1] + endPoint.coordinates[1]) / 2,
+        (startPoint.latitude + endPoint.latitude) / 2,
+        (startPoint.longitude + endPoint.longitude) / 2,
       ]);
     }
   }, [endPoint, startPoint]);
@@ -29,7 +30,7 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
           <div style={{ width: "100%", padding: "1rem" }}>
             <MapContainer
               center={center}
-              zoom={10}
+              zoom={13}
               scrollWheelZoom={false}
               ref={setMap}
               style={{ height: "50vh" }}
