@@ -7,9 +7,9 @@ import { Routes, Route } from "react-router";
 import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
 import { InsertHike } from "./components/organism/InsertHike";
-import { Login } from "./Components/Login"
-import { Register } from './Components/Register';
-import { EmailActivate } from './Components/emailActivate';
+import { Login } from "./components/Login";
+import {Register} from "./components/Register";
+import { EmailActivate } from './components/emailActivate';
 import { useState, useEffect } from 'react';
 import API from './API'
 

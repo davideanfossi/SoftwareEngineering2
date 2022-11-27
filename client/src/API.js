@@ -189,7 +189,7 @@ const API = {
   activateEmail,
   login,
   logout,
-  getUserInfo
+  getUserInfo,
   newHike
 };
 
