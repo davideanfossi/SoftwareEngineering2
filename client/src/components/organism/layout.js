@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown, Row, Col } from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
 import { useContext } from "react";
 import { UserContext } from "../../context/user-context";
@@ -19,19 +19,17 @@ export const Layout = (props) => {
   };
 
   const handleLogout = () => {
-    API.logout().then(
-      (res) => {
+    API.logout()
+      .then((res) => {
         userContext.setUser({
           id: undefined,
           role: undefined,
           user: undefined,
-        })
+        });
         navigate("/");
-      }
-    )
+      })
       .catch((err) => console.log(err));
-  }
-
+  };
 
   const goInsertHike = () => {
     navigate("/insert-hike");
@@ -48,29 +46,32 @@ export const Layout = (props) => {
               {["Local Guide"].includes(userContext.user.role) && (
                 <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
               )}
-              {userContext.user.id === undefined &&
+              {userContext.user.id === undefined && (
                 <>
                   <Nav.Link onClick={goLogin}>Login</Nav.Link>
                   <Nav.Link onClick={goRegister}>Register</Nav.Link>
                 </>
-              }
+              )}
             </Nav>
-            {userContext.user.id !== undefined &&
-              <Container fluid>
-                <Row >
-                  <Col xs={1}>
+            {userContext.user.id !== undefined && (
+              <NavDropdown
+                title={
+                  <div className="d-flex align-items-center">
                     <PersonCircle />
-                  </Col>
-                  <Col xs={1} >
-                    <NavDropdown title={userContext.user.user} id="basic-nav-dropdown">
-                      <NavDropdown.Item onClick={() => { handleLogout(); }}>
-                        Logout
-                      </NavDropdown.Item>
-                    </NavDropdown>
-                  </Col>
-                </Row>
-              </Container>
-            }
+                    <div className="px-1">{userContext.user.user}</div>
+                  </div>
+                }
+                id="basic-nav-dropdown"
+              >
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>
