@@ -12,27 +12,27 @@ RETROSPECTIVE Sprint 2 (Team 16)
 
 - Number of stories committed vs. done: 5 stories committed, 3 story done
 - Total points committed vs. done: 27 story points committed, 21 story points done
-- Nr of hours planned vs. spent (as a team): 84 hours planned, *71h 15m* hours spent
+- Nr of hours planned vs. spent (as a team): 74 hours planned, 73,5 hours spent
 
 
 ### Detailed statistics
 
 | Story  | # Tasks       | Points | Hours est. | Hours actual |
 |--------|---------------|--------|------------|--------------|
-| _#0_   |   8           |        |     22     |      ??      |
+| _#0_   |   8           |        |     14     |      17      |
 | _2_    |   7  (2 new)  |    5   |     8      |      9       |
-| _3_    |   10 (2 new)  |    8   |     7      |      15,5 ?  |
+| _3_    |   10 (2 new)  |    8   |     7      |      15,5    |
 | _4_    |   5           |    8   |     17     |      16,5    |       
-| _5_    |   5           |    3   |     14     |      11,5    |       
-| _6_    |   5           |    3   |     14     |      3    ?  |       
+| _5_    |   5           |    3   |     14     |      9,5     |       
+| _6_    |   5           |    3   |     14     |      6       |       
     
 
 - Hours per task average, standard deviation (estimate and actual): 
-avg = 4,3 h
+avg = 1,83 h
 deviation = 0,3356 h
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1:
-| (87 / 90) - 1 |= - 0,03 = 3%
+| (74 / 73,5) - 1 |= - 0,006 = 0,6%
 
 
   
