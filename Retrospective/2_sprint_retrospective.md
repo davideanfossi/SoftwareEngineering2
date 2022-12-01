@@ -10,32 +10,42 @@ RETROSPECTIVE Sprint 2 (Team 16)
 
 ### Macro statistics
 
-- Number of stories committed vs. done: 5 stories committed, 3 story done
-- Total points committed vs. done: 27 story points committed, 21 story points done
-- Nr of hours planned vs. spent (as a team): 74 hours planned, 73,5 hours spent
-
+- Number of stories committed vs. done: `5 stories committed, 3 story done`
+- Total points committed vs. done: `27 story points committed, 21 story points done`
+- Nr of hours planned vs. spent (as a team): `82h hours planned, 82h 15m hours spent`
 
 ### Detailed statistics
 
+_Note_: _all the numbers below are computed considering only the new tasks added in this sprint.
+In fact we manually counted the real estimated/actual hours for sprint 1 uncompleted stories (HT-2 and HT-3), because YouTrack automatically moved all the tasks uncompleted, from sprint1 to sprint2 board. 
+We created new tasks for the uncompleted stories, to better estimate the additional hours needed to complete them, but we also keep the old tasks to not lose all the commits and hours tracked._
+
+
 | Story  | # Tasks       | Points | Hours est. | Hours actual |
 |--------|---------------|--------|------------|--------------|
-| _#0_   |   8           |        |     14     |      17      |
-| _2_    |   7  (2 new)  |    5   |     8      |      9       |
-| _3_    |   10 (2 new)  |    8   |     7      |      15,5    |
-| _4_    |   5           |    8   |     17     |      16,5    |       
-| _5_    |   5           |    3   |     14     |      9,5     |       
-| _6_    |   5           |    3   |     14     |      6       |       
-    
+| _#0_   |   8 (6 new)   |        |     22     |   21h 45m    |
+| _2_    |   7  (2 new)  |    5   |     8      |     11h      |
+| _3_    |   10 (2 new)  |    8   |     7      |   15h 30m    |
+| _4_    |   5           |    8   |     17     |   16h 30m    |       
+| _5_    |   5           |    3   |     14     |   11h 30m    |       
+| _6_    |   5           |    3   |     14     |     6h       |       
+||
+| TOT    |   40 (25 new) |   27   |     82h    |   82h 15m    |
 
-- Hours per task average, standard deviation (estimate and actual): 
-avg = 1,83 h
-deviation = 0,3356 h
+
+- Hours per task average, standard deviation (estimate and actual):
+
+      estimated avg = 3,28 h
+      actual avg = 3,29 h
+      
+      estimated standard deviation = 1,889
+      actual standard deviation = 2,084
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1:
-| (74 / 73,5) - 1 |= - 0,006 = 0,6%
+
+      Total task estimation error ratio = 0,003 = 0,3%
 
 
-  
 ## QUALITY MEASURES 
 
 - Unit Testing:
@@ -81,4 +91,4 @@ deviation = 0,3356 h
 
 - One thing you are proud of as a Team!!
 
-     Good networking and relationship among members. 
+      Good networking and relationship among members. 
