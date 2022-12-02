@@ -19,7 +19,6 @@ function Register(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(username, password, confPassword, name, surname, phoneNumber);
         let flag = false;
 
         if (username === '') { setUsername(''); flag = true; }
@@ -27,7 +26,6 @@ function Register(props) {
         if (confPassword === '') { setConfPassword(''); flag = true; }
         if (password !== confPassword) { setPassword(''); setConfPassword(''); flag = true; }
 
-        console.log(flag);
         if (role !== 'Hiker') {
             if (name === '') { setName(''); flag = true; }
             if (surname === '') { setSurname(''); flag = true; }
