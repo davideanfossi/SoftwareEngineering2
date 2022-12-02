@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Button, Col, Container, Form, Row, Alert } from "react-bootstrap";
 import API from "../../API";
 import parseGpx from "../atoms/gpxParser";
@@ -25,10 +25,12 @@ function HikeForm() {
   const [endAltitude, setEndAltitude] = useState('');
   const [startAddress, setStartAddress] = useState('');
   const [endAddress, setEndAddress] = useState('');
+  const [showErr, setShowErr] = useState(false);
 
   const ref = useRef();
 
-  const cancelInput = () => {
+  const cancelInput = (cancelFile=false) => {
+    setShowErr(false);
     setTitle('');
     setLength('');
     setExpectedTime('');
@@ -44,26 +46,24 @@ function HikeForm() {
     setEndAltitude('');
     setStartAddress('');
     setEndAddress('');
+    if(cancelFile) setFile('');
   };
-
-  useEffect(() => {
-    cancelInput();
-  }, [file]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     let flag = false;
 
-    if (title === '') { setTitle(null); flag = true; }
-    if (length === '' || !(parseInt(length) > 0)) { setLength(null); flag = true; }
-    if (expectedTime === '' || !(parseInt(expectedTime) > 0)) { setExpectedTime(null); flag = true; }
-    if (ascent === '' || !(parseInt(ascent) > 0)) { setAscent(null); flag = true; }
-    if (startPointLabel === '') { setStartPointLabel(null); flag = true; }
-    if (endPointLabel === '') { setEndPointLabel(null); flag = true; }
-    if (file === '') { setFile(null); flag = true; }
+    if (title === '') { setShowErr(true); setTitle(''); flag = true; }
+    if (length === '') { setShowErr(true); setLength(''); flag = true; }
+    if (expectedTime === '' || !(parseInt(expectedTime) > 0)) { setShowErr(true); setExpectedTime(''); flag = true; }
+    if (startPointLabel === '') { setShowErr(true); setStartPointLabel(''); flag = true; }
+    if (endPointLabel === '') { setShowErr(true); setEndPointLabel(''); flag = true; }
+    if (file === '') { setShowErr(true); setFile(''); flag = true; }
 
     if (flag) return;
 
+    setShowErr(false);
+    
     const formData = new FormData();
     formData.append('trackingfile', file);
     formData.append('title', title);
@@ -86,7 +86,7 @@ function HikeForm() {
 
     API.newHike(formData)
       .then(() => {
-        cancelInput();
+        cancelInput(true);
         ref.current.value = null;
 
         setSuccess('yes');
@@ -121,7 +121,7 @@ function HikeForm() {
         <Form noValidate onSubmit={handleSubmit}>
           <Form.Group className="mt-2">
             <Form.Label>Gpx File</Form.Label>
-            <Form.Control isInvalid={file === null}
+            <Form.Control isInvalid={showErr && file === ''}
               type="file"
               ref={ref}
               placeholder="gpx file"
@@ -131,6 +131,7 @@ function HikeForm() {
                 const handleFileLoad = async (event) => {
                   // get coordinates
                   let { start, end, name, desc, length, ascent } = parseGpx(event.target.result);
+                  cancelInput(false);
 
                   setTitle(name);
                   setDescription(desc);
@@ -178,7 +179,7 @@ function HikeForm() {
 
           <Form.Group className="mt-3 mb-2">
             <Form.Label>Title</Form.Label>
-            <Form.Control isInvalid={title === null}
+            <Form.Control isInvalid={showErr && title === ''}
               type="text"
               placeholder="Title"
               value={title}
@@ -189,46 +190,44 @@ function HikeForm() {
           </Form.Group>
 
           <Row className="align-items-center pt-2">
-            <Col md>
+            <Col md={4} xs={6}>
               <Form.Group>
                 <Form.Label>Length (m)</Form.Label>
-                <Form.Control isInvalid={length === null}
+                <Form.Control isInvalid={showErr && length === ''}
                   type="number" step={100} min={0}
                   placeholder="length"
                   value={length}
                   disabled="disabled"
                   onChange={event => { setLength(event.target.value); }} />
                 <Form.Control.Feedback type="invalid">
-                  length needs to be a number greater than 0
+                  length must to be a number greater than 0
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-
-            <Col md>
-              <Form.Group>
-                <Form.Label>Expected Time (min)</Form.Label>
-                <Form.Control isInvalid={expectedTime === null}
-                  type="number" step={10} min={0}
-                  placeholder="Expected Time"
-                  value={expectedTime}
-                  onChange={event => { setExpectedTime(event.target.value); }} />
-                <Form.Control.Feedback type="invalid">
-                  Expected Time  needs to be a number greater than 0
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Col>
-
-            <Col md>
+            <Col md={4} xs={6}>
               <Form.Group>
                 <Form.Label>Ascent (m)</Form.Label>
-                <Form.Control isInvalid={ascent === null}
+                <Form.Control isInvalid={showErr && ascent === ''}
                   type="number" step={100} min={0}
                   placeholder="Ascent"
                   value={ascent}
                   disabled="disabled"
                   onChange={event => { setAscent(event.target.value); }} />
                 <Form.Control.Feedback type="invalid">
-                  Ascent  needs to be a number greater than 0
+                  Ascent must to be a number greater than 0
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col md={4} xs={9}>
+              <Form.Group>
+                <Form.Label>Expected Time (min)</Form.Label>
+                <Form.Control isInvalid={showErr && expectedTime === ''}
+                  type="number" step={10} min={0}
+                  placeholder="Expected Time"
+                  value={expectedTime}
+                  onChange={event => { setExpectedTime(event.target.value); }} />
+                <Form.Control.Feedback type="invalid">
+                  Expected Time must to be a number greater than 0
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
@@ -237,13 +236,13 @@ function HikeForm() {
           <Form.Group className="mt-3">
             <Form.Label>Description</Form.Label>
             <Form.Control as="textarea" rows={4}
-              isInvalid={description === null}
+              isInvalid={showErr && description === ''}
               type="text"
               placeholder="Description"
               value={description}
               onChange={event => { setDescription(event.target.value); }} />
             <Form.Control.Feedback type="invalid">
-              Description cant be empty
+              Description cannot be empty
             </Form.Control.Feedback>
           </Form.Group>
 
@@ -271,7 +270,7 @@ function HikeForm() {
             <Col md>
               <Form.Group className="mt-3">
                 <Form.Label>Start Point Label</Form.Label>
-                <Form.Control isInvalid={startPointLabel === null}
+                <Form.Control isInvalid={showErr &&  startPointLabel === ''}
                   type="text"
                   placeholder="Start Point Label"
                   value={startPointLabel}
@@ -285,7 +284,7 @@ function HikeForm() {
             <Col md>
               <Form.Group className="mt-3">
                 <Form.Label>End Point Label</Form.Label>
-                <Form.Control isInvalid={endPointLabel === null}
+                <Form.Control isInvalid={showErr && endPointLabel === ''}
                   type="text"
                   placeholder="End Point Label"
                   value={endPointLabel}
