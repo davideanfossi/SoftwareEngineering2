@@ -6,6 +6,7 @@
 - [POST registration](#post-registration)
 - [ADD new hike](#add-new-hike)
 - [GET hike track](#get-hike-track)
+- [GET huts](#get-huts)
 
 --------------------------------------------------------------
 ## GET hikes
@@ -206,3 +207,51 @@ empty
     "Hut Worker"
     ]
 ```
+
+
+## GET huts
+
+**`GET: /api/huts`**
+- get huts information with filters and paging
+- Authorization: _None_
+- Request body: _None_
+- Request query:
+    - `totalPages`: total number of pages with the given pageSize
+    - `pageNumber`: number of the page requested
+    - `pageSize`: maximum number of elements returned
+    - `minNumOfBeds`: minimum number of beds of the hut
+    - `maxNumOfBeds`: maximum number of beds of the hut
+    - `baseLat`: latitude of the center of the searched area (decimal number)
+    - `baseLon`: longitude of the center of the searched area (decimal number)
+    - `radius`: radius of the searched area expressed in `kilometers`
+- Example: `/api/huts?page=1&pageSize=5&minNumOfBeds=10`
+- Response: `200 OK` (success), `400 Bad Request` (query params not correct) or `500 Internal Server Error` (generic error).
+- Response body: 
+    ```
+    {
+        "totalPages": 2,
+        "pageNumber": 1,
+        "pageSize": 5,
+        "pageItems": [
+            {
+                "id": 1,
+                "name": "name of the hut",
+                "numOfBeds": 20,
+                "phoneNumber": "1234567890",
+                "email": "email@email.com",
+                "description": "description of the hut",
+                "website": "www.hut.com",
+                "point": {
+                    "id": 3,
+                    "latitude": 45.45021,
+                    "longitude": 7.695509,
+                    "altitude": 1109.16089,
+                    "name": "Caretto Superiore",
+                    "address": "Caretto Superiore, Castelnuovo Nigra, Torino, Piemonte, Italia"
+                }
+            },
+            ...
+        ]
+    }
+
+    ```
