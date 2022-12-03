@@ -17,8 +17,6 @@ function Register(props) {
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState('');
 
-    
-
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(username, password, confPassword, name, surname, phoneNumber);

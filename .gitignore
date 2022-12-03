@@ -2,9 +2,7 @@
 # dependencies
 node_modules
 package-lock.json
+.env
 
 # test
 coverage
-
-#folders
-public
