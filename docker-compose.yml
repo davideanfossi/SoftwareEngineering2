@@ -4,6 +4,11 @@ services:
     image: riccardogiambra/hike-tracker-server
     build:
       context: ./server
+      dockerfile: ./Dockerfile
+      args:
+        - JWT_ACC_ACTIVATE=$JWT_ACC_ACTIVATE
+        - CLIENT_URL=$CLIENT_URL
+        - API_KEY=$API_KEY
     ports:
       - "3001:3001"
   hike-tracker-client:

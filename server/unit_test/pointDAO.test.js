@@ -43,6 +43,10 @@ describe('Point DAO unit test',() => {
     const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
     testGetPoint(1, point1);
     testgetReferencePointsOfHike(1, [point2, point3]);
+
+    testInsertPoint(44.0703393, 71.686864, 2000, "point A","address A")
+    testInsertPoint(54.0703393, 44.686864, 200, "point B",null)
+
 });
 
 
@@ -58,4 +62,21 @@ function testgetReferencePointsOfHike(hikeId, expectedPoints) {
         const res = await pointDAO.getReferencePointsOfHike(hikeId);
         expect(res).toEqual(expect.arrayContaining(expectedPoints));
     });
+}
+
+function testInsertPoint(latitude,longitude,altitude,name,address){
+    test('add new point', async() => {
+
+        let lastID = await pointDAO.insertPoint(latitude,longitude,altitude,name,address);
+        expect(lastID).toBeTruthy();
+
+        var res = await pointDAO.getPoint(lastID);
+        expect(res.id).toEqual(lastID);
+        expect(res.latitude).toEqual(latitude);
+        expect(res.longitude).toEqual(longitude);
+        expect(res.altitude).toEqual(altitude);
+        expect(res.name).toEqual(name);
+        expect(res.address).toEqual(address);
+
+    })
 }

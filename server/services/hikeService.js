@@ -1,6 +1,12 @@
 'use strict';
 
+const togeojson = require ('togeojson');
+const fs = require ('fs');
+const DOMParser = require('xmldom').DOMParser;
+const path = require('path');
 const {difficultyType} = require("../models/hikeModel");
+
+const config = require("../config.json");
 
 class HikeService {
     constructor(hikeDAO, pointDAO) {
@@ -57,7 +63,7 @@ class HikeService {
 
             // take only page requested
             returnedHikes = hikes.slice(offset, offset + pageSize);
-                        
+
             const totalPages = Math.ceil(hikes.length / pageSize);
 
             return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes};
@@ -76,6 +82,49 @@ class HikeService {
         }
     }
 
+    addHike = async (title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress) => {
+        try {
+            //TODO :  add transaction or delete points in catch when insertHike returns err
+            //first insert startPoint and endPoint
+            const startPointId=await this.pointDAO.insertPoint(startLatitude,startLongitude,startAltitude,startPointLabel,startAddress)
+            const endPointId=await this.pointDAO.insertPoint(endLatitude,endLongitude,endAltitude,endPointLabel,endAddress)
+            if(startPointId>0 & endPointId>0)
+            {
+                const res = await this.hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
+                return res;
+            }
+            else
+                return false;
+           
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getHikeGpx = async (hikeId) => {
+        try {
+            const hike = await this.hikeDAO.getHike(hikeId);
+            if(hike === undefined)
+                throw {returnCode: 404, message: "Hike not Found"};
+            
+            hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+            hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
+            hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
+            if(hike.gpxPath === null)
+                throw {returnCode: 500, message: "Gpx file does not exist"};
+            const hikeGpxFile = path.resolve(config.gpxPath, hike.gpxPath);
+            if(!fs.existsSync(hikeGpxFile))
+                throw {returnCode: 500, message: "Gpx file does not exist"};
+
+            const gpx = new DOMParser().parseFromString(fs.readFileSync(hikeGpxFile, 'utf8'));
+            const geoJson = togeojson.gpx(gpx);
+            return {"startPoint": hike.startPoint, "endPoint": hike.endPoint,
+                "referencePoints": hike.referencePoints,
+                "track": geoJson.features[0].geometry.coordinates.map(p => {return {"lat": p[1], "lon": p[0]}})};
+        } catch (err) {
+            throw err;
+        }
+    };
 
 }
 
@@ -95,6 +144,8 @@ function computeDistance(lat1, lon1, lat2, lon2) {
     }
 }
 
+
+
 /**
  * @param {*} baseLat latitude of the center of the circle
  * @param {*} baseLng longitude of the center of the circle
@@ -107,21 +158,5 @@ function isWithinCircle(baseLat, baseLng, lat, lng, radius){
     return computeDistance(baseLat, baseLng, lat, lng) <= radius;
 }
 
-
-/** TODO: check if it works.
- * compute the ascent of the hike in meters
- * @param {*} pointsList list of points (start + reference + end)
- * @returns the ascent computed as the sum of positive delta between points altitudes
- */
-function computeHikeAscent(pointsList){
-    const ascent = 0;
-    pointsList.forEach((point, idx) => {
-        if(idx+1 <= pointsList.length - 1){
-            const delta = pointsList[idx+1].altitude - point.altitude;
-            ascent += delta > 0 ? delta : 0; 
-        }
-    });
-    return ascent;
-}
 
 module.exports = HikeService;
