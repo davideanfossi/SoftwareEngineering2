@@ -11,7 +11,7 @@ function HikeForm () {
     const [length, setLength] = useState('');
     const [expectedTime, setExpectedTime] = useState('');
     const [ascent, setAscent] = useState('');
-    const [difficult, setDifficult] = useState('tourist');
+    const [difficult, setDifficult] = useState('Tourist');
     const [description, setDescription] = useState('');
     const [startPointLabel, setStartPointLabel] = useState('');
     const [endPointLabel, setEndPointLabel] = useState('');
@@ -129,14 +129,14 @@ function HikeForm () {
                 <Col md>
                   <Form.Group>
                     <Form.Label>Length</Form.Label>
-                    <Form.Control isInvalid={length===null}
-                                  type="text"
-                                  placeholder="length"
-                                  value={length}
-                                  onChange={event => {setLength(event.target.value);}}/>
-                    <Form.Control.Feedback type="invalid">
-                      length needs to be a number greater than 0
-                    </Form.Control.Feedback>
+                      <Form.Control isInvalid={length===null}
+                                    type="number" step={100} min={0}
+                                    placeholder="length"
+                                    value={length}
+                                    onChange={event => {setLength(event.target.value);}}/>
+                      <Form.Control.Feedback type="invalid">
+                        length needs to be a number greater than 0
+                      </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
 
@@ -144,7 +144,7 @@ function HikeForm () {
                   <Form.Group>
                     <Form.Label>Expected Time</Form.Label>
                     <Form.Control isInvalid={expectedTime===null}
-                                  type="text"
+                                  type="number" step={10} min={0}
                                   placeholder="Expected Time"
                                   value={expectedTime}
                                   onChange={event => {setExpectedTime(event.target.value);}}/>
@@ -158,7 +158,7 @@ function HikeForm () {
                   <Form.Group>
                     <Form.Label>Ascent</Form.Label>
                     <Form.Control isInvalid={ascent===null}
-                                  type="text"
+                                  type="number" step={100} min={0}
                                   placeholder="Ascent"
                                   value={ascent}
                                   onChange={event => {setAscent(event.target.value);}}/>
@@ -173,7 +173,8 @@ function HikeForm () {
   
               <Form.Group style={{"paddingTop": "12px"}}>
                 <Form.Label>Description</Form.Label>
-                <Form.Control isInvalid={description===null}
+                <Form.Control as="textarea" rows={4}
+                              isInvalid={description===null}
                               type="text"
                               placeholder="Description"
                               value={description}
@@ -194,7 +195,10 @@ function HikeForm () {
 
                                 const handleFileLoad = async (event) => {
                                   // get coordinates
-                                  let [start, end] = parseGpx(event.target.result);
+                                  let {start, end, name, desc} = parseGpx(event.target.result);
+
+                                  setTitle(name);
+                                  setDescription(desc);
 
                                   setStartLongitude(start[0]);
                                   setStartLatitude(start[1]);
@@ -222,7 +226,6 @@ function HikeForm () {
                                     .catch(err => console.log(err));
 
                                   setEndAddress(address);
-
                                 }
                             
                                 const reader = new FileReader()
@@ -287,9 +290,9 @@ function HikeForm () {
               <Form.Group as={Col} md="8" style={{"paddingTop": "12px"}}>
                 <Form.Label>Difficulty</Form.Label><br></br>
                 <div style={{"paddingTop": "8px"}}>
-                  <Form.Check inline defaultChecked  type="radio" name="difficulty" label="Tourist" onChange={() => setDifficult("tourist")}/>
-                  <Form.Check inline type="radio" name="difficulty" label="Hiker" onChange={() => setDifficult("hiker")}/>
-                  <Form.Check inline type="radio" name="difficulty" label="Professional hiker" onChange={() => setDifficult("professional hiker")}/>
+                  <Form.Check inline defaultChecked  type="radio" name="difficulty" label="Tourist" onChange={() => setDifficult("Tourist")}/>
+                  <Form.Check inline type="radio" name="difficulty" label="Hiker" onChange={() => setDifficult("Hiker")}/>
+                  <Form.Check inline type="radio" name="difficulty" label="Professional Hiker" onChange={() => setDifficult("Professional Hiker")}/>
                 </div>      
               </Form.Group>
   

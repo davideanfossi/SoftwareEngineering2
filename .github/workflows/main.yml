@@ -20,6 +20,10 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - 
         name: Docker-Compose Build
+        env:
+          JWT_ACC_ACTIVATE: ${{ secrets.JWT_ACC_ACTIVATE }}
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
         run: |
           docker-compose build
       - 
