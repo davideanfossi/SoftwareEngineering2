@@ -13,7 +13,7 @@ class HutDAO {
     getAllHuts = async () =>{
         try{
             const sql="SELECT * FROM Hut";
-            const res = await this.dbManager.query(sql, []);
+            const res = await this.dbManager.get(sql, []);
             return res.map(r => new Hut(r.id, r.name, r.numOfBeds, r.phoneNumber, r.email, r.description, r.website, r.pointId, r.ownerId));
         }
         catch(err){
@@ -24,7 +24,7 @@ class HutDAO {
     getHuts = async (minNumOfBeds=0, maxNumOfBeds=10000) =>{
         try{
             const sql="SELECT * FROM Hut WHERE (numOfBeds >= ? AND numOfBeds <= ?)";
-            const res = await this.dbManager.query(sql, [minNumOfBeds, maxNumOfBeds]);
+            const res = await this.dbManager.get(sql, [minNumOfBeds, maxNumOfBeds]);
             return res.map(r => new Hut(r.id, r.name, r.numOfBeds, r.phoneNumber, r.email, r.description, r.website, r.pointId, r.ownerId));
         }
         catch(err){
@@ -35,7 +35,7 @@ class HutDAO {
     getHut = async (hutId) => {
         try{
             let sql="SELECT * FROM hut WHERE id = ?";
-            const res = await this.dbManager.query(sql, [hutId], true);
+            const res = await this.dbManager.get(sql, [hutId], true);
             return new Hut(res.id, res.name, res.numOfBeds, res.phoneNumber, res.email, res.description, res.website, res.pointId, res.ownerId);
         }
         catch(err){
@@ -46,7 +46,7 @@ class HutDAO {
     getHutImages = async (hutId) => {
         try{
             let sql="SELECT imageName FROM HutImages WHERE hutId = ?";
-            const res = await this.dbManager.query(sql, [hutId]);
+            const res = await this.dbManager.get(sql, [hutId]);
             return res;
         }
         catch(err){
