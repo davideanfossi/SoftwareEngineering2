@@ -1,6 +1,6 @@
 'use strict';
 
-const hut=require("../models/hutModel");
+const Hut=require("../models/hutModel");
 
 class HutDAO {
 
@@ -19,6 +19,26 @@ class HutDAO {
             return res;
         }
         catch(err){
+            throw err;
+        }
+    }
+
+    getHut=async(id)=>{
+        try {
+            const sql = "SELECT * FROM Hut WHERE id = ?";
+            const res = await this.dbManager.get(sql, [id], true);
+            return res ? new Hut(res.id, res.name, res.numOfBeds, res.pointId, res.description, res.phoneNumber, res.email, res.website, res.userId) : undefined;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getHutsbyUserId=async(id)=>{
+        try {
+            const sql = "SELECT * FROM Hut WHERE userId = ? ORDER BY id";
+            const res = await this.dbManager.get(sql, [id], true);
+            return res.map(r => new Hut(res.id, res.name, res.numOfBeds, res.pointId, res.description, res.phoneNumber, res.email, res.website, res.userId));
+        } catch (err) {
             throw err;
         }
     }

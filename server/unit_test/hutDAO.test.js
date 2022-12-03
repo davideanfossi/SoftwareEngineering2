@@ -32,17 +32,40 @@ describe('Hut DAO unit test',() => {
             .toThrow('DBManager must be defined for hutdao!');
     });
 
-    testInsertHut("hut 1",9,1,"hut desc1",null,1)
-    testInsertHut("hut 2",20,3,"hut desc2",null,1)
+    const hut1 = new Point(1, 45.0703393, 7.686864, 200, "point 1", null);
+    const hut2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
+
+    testGetPoint(1, point1);
+
+    testInsertHut("hut 1",9,1,"hut desc1",'123456','test@test.com','www.test.com',1)
+    testInsertHut("hut 2",20,3,"hut desc2",'32146582','test2@test.com','www.test2.com',1)
 
 });
 
-function testInsertHut(name,numOfBeds,pointId,description,image,userId){
+function testInsertHut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId){
     test('add new hut', async() => {
 
-        let lastID = await hutDAO.insertHut(name,numOfBeds,pointId,description,image,userId);
+        let lastID = await hutDAO.insertHut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId);
         expect(lastID).toBeTruthy();
 
+        var res = await hutDAO.getHut(lastID);
+        expect(res.id).toEqual(lastID);
+        expect(res.name).toEqual(name);
+        expect(res.numOfBeds).toEqual(numOfBeds);
+        expect(res.pointId).toEqual(pointId);
+        expect(res.description).toEqual(description);
+        expect(res.phoneNumber).toEqual(phoneNumber);
+        expect(res.email).toEqual(email);
+        expect(res.website).toEqual(website);
+        expect(res.userId).toEqual(userId);
 
     })
 }
+
+function testGetHut(hutId, expectedHut) {
+    test('test get hut', async () => {
+        const res = await hutDAO.getHut(hutId);
+        expect(res).toEqual(expectedHut);
+    });
+}
+

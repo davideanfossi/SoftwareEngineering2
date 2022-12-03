@@ -29,6 +29,15 @@ class HutService{
             throw err;
         }
     }
+
+    getHut=async (id)=>{
+        try{
+            const res = await this.hutDAO.getHut(id);
+            return res;
+        } catch(err){
+            throw err;
+        }
+    }
 }
 
 module.exports=HutService;
