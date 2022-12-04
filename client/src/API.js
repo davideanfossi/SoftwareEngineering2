@@ -21,6 +21,25 @@ const getHikesLimits = async () => {
   }
 };
 
+const getUserHikesLimits = async () => {
+  try {
+    const response = await fetch(new URL("hikes/limits", SERVER_BASE), {
+      //TODO: fix api call
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getAllHikes = async () => {
   try {
     const response = await fetch(new URL("hikes", SERVER_BASE), {
@@ -78,6 +97,58 @@ const getFilteredHikes = async (
         headers: {
           "Content-Type": "application/json",
         },
+      }
+    );
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
+const getFilteredUserHikes = async (
+  minLen,
+  maxLen,
+  minTime,
+  maxTime,
+  minAscent,
+  maxAscent,
+  difficulty,
+  radius,
+  baseLat,
+  baseLon,
+  pageSize,
+  pageNumber
+) => {
+  try {
+    const response = await fetch(
+      new URL(
+        "hikes?" + //TODO: fix api call
+          new URLSearchParams({
+            minLen,
+            maxLen,
+            minTime,
+            maxTime,
+            minAscent,
+            maxAscent,
+            difficulty,
+            radius: radius / 1000,
+            baseLat,
+            baseLon,
+            pageSize,
+            pageNumber,
+          }),
+        SERVER_BASE
+      ),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
       }
     );
     if (response.ok) {
@@ -210,6 +281,8 @@ const API = {
   login,
   logout,
   getUserInfo,
+  getFilteredUserHikes,
+  getUserHikesLimits,
 };
 
 export default API;
