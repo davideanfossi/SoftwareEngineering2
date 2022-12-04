@@ -47,7 +47,7 @@ class HutDAO {
         try{
             let sql="SELECT imageName FROM HutImages WHERE hutId = ?";
             const res = await this.dbManager.get(sql, [hutId]);
-            return res;
+            return res.map(r => r.imageName);
         }
         catch(err){
             throw err;
