@@ -12,6 +12,7 @@ import {Register} from "./components/Register";
 import { EmailActivate } from './components/emailActivate';
 import { useEffect, useState } from "react";
 import API from './API'
+import { LinkStartEnd } from './components/organism/LinkStartEnd';
 
 import { UserContext } from "./context/user-context";
 import { MyHikes } from './components/organism/my-hikes';
@@ -54,17 +55,11 @@ function App() {
                 <Route path="my-hikes" element={<MyHikes />} />
               </>
             )}
-            <Route
-              path="register"
-              index
-              element={<Register register={API.registerUser} />}
-            />
-            <Route path="login" index element={<Login />} />
-            <Route
-              path="authentication/activate/*"
-              index
-              element={<EmailActivate />}
-            />
+            <Route path="register" index element={<Register register={API.registerUser}/>} />
+            <Route path="login" index element={<Login/>} />
+            <Route path='authentication/activate/*' index element={<EmailActivate/>}/>
+
+            <Route path='link-start-end' index element={<LinkStartEnd/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
