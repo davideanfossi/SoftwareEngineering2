@@ -2,13 +2,13 @@
 
 class Parking{
 
-    constructor(id, latitude, longitude, altitude, name, address){
+    constructor(id, name, address){
         this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.altitude = altitude;
         this.name = name;
-        this.address = address;
+        this.numSpots = numSpots;
+        this.hasFreeSpots = hasFreeSpots;
+        this.pointId = pointId;
+        this.ownerId = ownerId;
     }
 }
 

@@ -1,54 +1,34 @@
 "use strict";
 
 const express = require("express");
-const {
-  expressValidator,
-  check,
-  query,
-  body,
-  param,
-  validationResult,
-} = require("express-validator");
+const {expressValidator, check, query, body, param, validationResult} = require("express-validator");
 const router = express.Router();
-const fileUpload = require("express-fileupload");
-
-const { v4: uuidv4 } = require("uuid");
-const path = require("path");
 
 const DbManager = require("../database/dbManager");
 const PointDAO = require("../daos/pointDAO");
+const ParkingDAO = require("../daos/parkingDAO");
+const ParkingService = require("../services/parkingService");
 const config = require("../config.json");
 
 const dbManager = new DbManager("PROD");
 const pointDAO = new PointDAO(dbManager);
+const parkingDAO = new ParkingDAO(dbManager);
+const parkingService = new ParkingService(parkingDAO, pointDAO);
 const { isLoggedIn, getPermission } = require("./loginController");
 
 
 router.post(
-    "/hike",
+    "/parking",
     isLoggedIn,
     getPermission(["Local Guide"]),
-    fileUpload({ createParentPath: true }),
   
     [
-      body("title").notEmpty().isString().trim(),
-      body("length").notEmpty().isInt({ min: 0 }),
-      body("expectedTime").notEmpty().isInt({ min: 0 }),
-      body("ascent").notEmpty().isInt({ min: 0 }),
-      body("difficulty").notEmpty().isString().trim(),
-      body("description").optional().isString().trim(),
-      check("trackingfile").optional(),
+      body("name").notEmpty().isString().trim(),
+      body("numSpots").notEmpty().isInt({ min: 0}),
+      body("hasFreeSpots").notEmpty().isInt({ min: 0}),
+      body("pointId").notEmpty().isInt({ min: 0}),
+      body("ownerId").notEmpty().isInt({ min: 0}),
   
-      body("startLongitude").notEmpty().isString().trim(),
-      body("startLatitude").notEmpty().isString().trim(),
-      body("endLongitude").notEmpty().isString().trim(),
-      body("endLatitude").notEmpty().isString().trim(),
-      body("startAltitude").notEmpty().isString().trim(),
-      body("endAltitude").notEmpty().isString().trim(),
-      body("startPointLabel").notEmpty().isString().trim(),
-      body("endPointLabel").notEmpty().isString().trim(),
-      body("startAddress").optional().isString().trim(),
-      body("endAddress").optional().isString().trim(),
     ],
     async (req, res) => {
       try {
@@ -56,8 +36,31 @@ router.post(
         if (!errors.isEmpty()) {
           return res.status(400).end();
         }
-        
 
+      //parking
+      const name = req.body.name;
+      const numSpots = Number.parseInt(req.body.numSpots);
+      const hasFreeSpots = Number.parseInt(req.body.hasFreeSpots);
+      const pointId = Number.parseInt(req.body.pointId);
+      const ownerId = Number.parseInt(req.body.ownerId);
+
+      const result = await parkingService.addParking(
+        name,
+        numSpots,
+        hasFreeSpots,
+        pointId,
+        ownerId,
+      );
+      if (!result) return res.status(500).end();
+      return res.status(200).json(result);
+    } catch (err) {
+      switch (err.returnCode) {
+        default:
+          return res.status(500).json(err.message);
+      }
+    }
+  }
+);
 
 
 module.exports = router;        

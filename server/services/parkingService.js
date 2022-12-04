@@ -6,18 +6,17 @@ class ParkingService {
             throw 'parkingDAO must be defined for parking service!';
         if (!pointDAO)
             throw 'pointDAO must be defined for parking service!';
-        this.parkingDAO = hikeDAO;
+        this.parkingDAO = parkingDAO;
         this.pointDAO = pointDAO;
     }
 
-    addParking = async (title, description, gpxPath, userId, latitude, longitude, altitude, pointLabel, address) => {
+    addParking = async (name, ownerId, numSpots, hasFreeSpots, latitude, longitude, altitude, pointLabel, address) => {
         try {
-            //first insert startPoint and endPoint
-            const startPointId=await this.pointDAO.insertPoint(startLatitude,startLongitude,startAltitude,startPointLabel,startAddress)
-            const endPointId=await this.pointDAO.insertPoint(endLatitude,endLongitude,endAltitude,endPointLabel,endAddress)
-            if(startPointId>0 & endPointId>0)
+            const pointId = await this.pointDAO.insertPoint(latitude,longitude,altitude,pointLabel,address)
+            
+            if (PointId > 0)
             {
-                const res = await this.hikeDAO.insertHike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId);
+                const res = await this.parkingDAO.insertParking(name, ownerId, pointId, numSpots, hasFreeSpots);
                 return res;
             }
             else
@@ -28,6 +27,6 @@ class ParkingService {
         }
     }
 
-
-
 }
+
+module.exports = ParkingService;

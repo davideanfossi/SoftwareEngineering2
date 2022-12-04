@@ -10,17 +10,16 @@ class ParkingDAO {
         this.dbManager = dbManager;
     }
 
-    insertParking = async (latitude,longitude,altitude,name,address) => {
+    insertParking = async (name, ownerId, pointId, numSpots, hasFreeSpots) => {
         try{
-            const sql= "insert into Parkings (latitude, longitude, altitude, name, address) values(?,?,?,?,?)";
-            const res = await this.dbManager.query(sql, [latitude,longitude,altitude,name,address]);
+            const sql= "insert into Parking (name, ownerId, pointId, numSpots, hasFreeSpots) values(?,?,?,?,?)";
+            const res = await this.dbManager.query(sql, [name, ownerId, pointId, numSpots, hasFreeSpots]);
             return res;
         }
         catch(err){
             throw err;
         }
-    }
-    
+       }    
 }
 
 module.exports = ParkingDAO;
