@@ -71,7 +71,7 @@ function Login() {
                 {
                     showAlert === true ?
                         <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
-                            <Alert.Heading>Registration occurred with errors!</Alert.Heading>
+                            <Alert.Heading>Incorrect username and/or password</Alert.Heading>
                         </Alert> : null
                 }
                 <Container className="border border-4 rounded" style={{ "marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white" }}>

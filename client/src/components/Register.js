@@ -16,6 +16,7 @@ function Register(props) {
 
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState('');
+    const [alertMsg, setAlertMsg] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -44,11 +45,11 @@ function Register(props) {
             'surname': surname ? surname : "",
             'phoneNumber': phoneNumber ? phoneNumber : ""
         }
-        //const credentials = { email, username, role, password, name, surname, phoneNumber };
 
         API.registerUser(formData)
             .then(() => { setShowAlert('success'); })
             .catch((err) => {
+                setAlertMsg(err);
                 setShowAlert('error');
             });
 
@@ -69,7 +70,7 @@ function Register(props) {
                         <>{
                             showAlert === "error" ?
                                 <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
-                                    <Alert.Heading>Registration occurred with errors!</Alert.Heading>
+                                    <Alert.Heading>{alertMsg}</Alert.Heading>
                                 </Alert>
                                 : <></>
                         }</>
