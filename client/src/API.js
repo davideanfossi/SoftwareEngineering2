@@ -199,6 +199,51 @@ const logout = async () => {
   if (response.ok) return null;
 };
 
+const getFilteredHut = async (
+  minNumOfBeds,
+  maxNumOfBeds,
+  lat,
+  lon,
+  radius,
+  pageNumber,
+  pageSize,
+  minAltitude,
+  maxAltitude
+) => {
+  try {
+    const response = await fetch(
+      new URL(
+        "huts?" +
+          new URLSearchParams({
+            minNumOfBeds,
+            maxNumOfBeds,
+            lat,
+            lon,
+            radius : radius/1000,
+            pageNumber,
+            pageSize,
+            minAltitude,
+            maxAltitude
+          }),
+        SERVER_BASE
+      ),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const API = {
   getHikesLimits,
   getAllHikes,
@@ -210,6 +255,7 @@ const API = {
   login,
   logout,
   getUserInfo,
+  getFilteredHut
 };
 
 export default API;
