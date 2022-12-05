@@ -34,13 +34,11 @@ export const MapModal = ({
   useEffect(() => {
     if (update) setUpdate(false);
   }, [update]);
-
   /*
   useEffect(() => {
     setRadius(useMap ? (startingRadius !== 0 ? startingRadius : 1000) : 0);
   }, [startingRadius, useMap]);
   */
-
   useEffect(() => {
     setRadius(startingRadius !== 0 ? startingRadius : 1000);
   }, [startingRadius]);
@@ -105,6 +103,9 @@ export const MapModal = ({
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
+        </Button>
+        <Button variant="secondary" onClick={() => {setRadius(0)}}>
+          Cancel
         </Button>
         <Button
           variant="primary"
