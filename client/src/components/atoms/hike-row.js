@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Col, Container, Row, Button } from "react-bootstrap";
-import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
 export const HikeRow = ({ hike, even }) => {
   const [dropped, setDropped] = useState(false);
 
@@ -115,18 +114,6 @@ export const HikeRow = ({ hike, even }) => {
                   </Col>
                 </Row>
               </Container>
-            </Col>
-            <Col
-              className="d-flex justify-content-center align-items-center my-3"
-              xs={12}
-              sm={2}
-              md={1}
-            >
-              {dropped ? (
-                <ChevronCompactUp onClick={toggleDrop} />
-              ) : (
-                <ChevronCompactDown onClick={toggleDrop} />
-              )}
             </Col>
           </Row>
           {dropped && (
