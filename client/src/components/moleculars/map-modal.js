@@ -27,6 +27,7 @@ export const MapModal = ({
       setRadius(10000);
       setZoom(10);
       setUpdate(true);
+      setUseMap((old) => !old)
     }
   }, [selectedPosition]);
 
