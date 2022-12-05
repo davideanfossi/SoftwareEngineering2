@@ -149,6 +149,7 @@ const newHike = async (formData) => {
   try {
     const response = await fetch(new URL("hike", SERVER_BASE), {
       method: "POST",
+      credentials: "include",
       body: formData,
     });
     if (response.ok) {
