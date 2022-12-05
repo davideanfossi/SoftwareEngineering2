@@ -4,15 +4,17 @@ import AutocompleteGeoInputStreet from "../atoms/autocomplete-geo-inputs-street"
 import { ParkingMap } from "../atoms/parking-map";
 import API from "../../API";
 
-function ParkingForm() {
+function HutForm() {
     // Form state
     const [success, setSuccess] = useState('0');
     const [coordSelector, setCoordSelector] = useState(false);
     const [name, setName] = useState('');
-    const [parkingSpot, setParkingSpot] = useState('');
-    const [evCharge, setEvCharge] = useState(false);
-    const [freeSpot, setFreeSpot] = useState(false);
+    const [numberBeds, setNumberBeds] = useState('');
+    const [altitude, setAltitude] = useState('');
     const [description, setDescription] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [website, setWebsite] = useState('');
     const [file, setFile] = useState('');
     const [update, setUpdate] = useState(true);
 
@@ -57,9 +59,10 @@ function ParkingForm() {
         let flag = false;
         
         if (name === '') { setName(null); flag = true; }
-        if (parkingSpot === '' || !(parseInt(parkingSpot) >= 0)) { setParkingSpot(null); flag = true; }
-        //if (evCharge === '') { setEvCharge(false); flag = true; }
-        //if (freeSpot === '') { setFreeSpot(false); flag = true; }
+        if (phone === '') { setPhone(null); flag = true; }
+        if (email === '') { setEmail(null); flag = true; }
+        if (numberBeds === '' || !(parseInt(numberBeds) >= 0)) { setNumberBeds(null); flag = true; }
+        if (altitude === '' || !(parseInt(altitude) >= 0)) { setAltitude(null); flag = true; }
         //if (description === '') { setDescription(''); flag = true; }
         //if (file === '') {setFile(null); flag=true;}
         if (flag) return;
@@ -68,9 +71,11 @@ function ParkingForm() {
         formData.append('name', name);
         formData.append('latitude', lat);
         formData.append('longitude', lon);
-        formData.append('parkingSpot', parkingSpot);
-        formData.append('evCharge', evCharge);
-        formData.append('freeSpot', freeSpot);
+        formData.append('altitude', altitude);
+        formData.append('phone', phone);
+        formData.append('email', email);
+        formData.append('website', website);
+        formData.append('numberBeds', numberBeds);
         formData.append('description', description);
         if(file!=="") formData.append('file', file);
 
@@ -78,7 +83,7 @@ function ParkingForm() {
           API.newParking(formData)
           .then(() => {
             setName('');
-            setParkingSpot('');
+            setNumberBeds('');
             setEvCharge('');
             
             ref.current.value=null;
@@ -95,19 +100,19 @@ function ParkingForm() {
     return (
         <Container fluid style={{ "padding": "0", "margin": "0px" }}>
             <Row className="text-center" style={{ "paddingLeft": "0.7rem" }}>
-                <b style={{ "fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem" }}>Insert Parking</b>
+                <b style={{ "fontSize": "1.3rem", "color": 'black', "paddingBottom": "0.6rem" }}>Insert Hut</b>
             </Row>
 
             {
                 success === "yes" ?
                     <Alert variant="success" onClose={() => setSuccess('')} dismissible>
-                        <Alert.Heading>Parking inserted correctly!</Alert.Heading>
+                        <Alert.Heading>Hut inserted correctly!</Alert.Heading>
                     </Alert>
                     :
                     <>{
                         success === "no" ?
                             <Alert variant="danger" onClose={() => setSuccess('')} dismissible>
-                                <Alert.Heading>Error, parking not inserted!</Alert.Heading>
+                                <Alert.Heading>Error, Hut not inserted!</Alert.Heading>
                             </Alert> : null
                     }</>
             }
@@ -149,7 +154,7 @@ function ParkingForm() {
                                         <Form.Control
                                             isInvalid={lat === null || parseFloat(lat) < 0 || parseFloat(lat) > 90}
                                             type='number' step={"any"}
-                                            placeholder="latitude of parking position"
+                                            placeholder="latitude of hut position"
                                             value={lat == null ? '' : lat}
                                             onChange={event => { setLat(event.target.value); }} />
                                         <Form.Control.Feedback type="invalid">
@@ -164,11 +169,26 @@ function ParkingForm() {
                                         <Form.Control
                                             isInvalid={lon === null || parseFloat(lon) < 0 || parseFloat(lon) > 90}
                                             type='number' step={"any"}
-                                            placeholder="longitude of parking position"
+                                            placeholder="longitude of hut position"
                                             value={lon == null ? '' : lon}
                                             onChange={event => { setLon(event.target.value); }} />
                                         <Form.Control.Feedback type="invalid">
                                             Invalid Longitude Format
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>
+
+                                <Col md className="align-items-center">
+                                    <Form.Group>
+                                        <Form.Label>Altitude *</Form.Label>
+                                        <Form.Control
+                                            isInvalid={altitude === null || parseFloat(altitude) < 0}
+                                            type='number' step={"any"}
+                                            placeholder="altitude of hut position"
+                                            value={altitude == null ? '' : altitude}
+                                            onChange={event => { setAltitude(event.target.value); }} />
+                                        <Form.Control.Feedback type="invalid">
+                                            Invalid altitude Format
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
@@ -204,14 +224,14 @@ function ParkingForm() {
                         <Row className="align-items-center pt-2">
                             <Col >
                                 <Form.Group>
-                                    <Form.Label>Number of Parking Spot *</Form.Label>
-                                    <Form.Control isInvalid={parkingSpot === null || parkingSpot < 0}
+                                    <Form.Label>Number of Beds *</Form.Label>
+                                    <Form.Control isInvalid={numberBeds === null || numberBeds < 0}
                                         type="number"
-                                        placeholder="number of parking spot"
-                                        value={parkingSpot == null ? '' : parkingSpot}
-                                        onChange={event => { setParkingSpot(event.target.value); }} />
+                                        placeholder="number of beds"
+                                        value={numberBeds == null ? '' : numberBeds}
+                                        onChange={event => { setNumberBeds(event.target.value); }} />
                                     <Form.Control.Feedback type="invalid">
-                                        Number of parking Spot needs to be a number greater than 0
+                                        Number of bedst needs to be a number greater than 0
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
@@ -219,27 +239,40 @@ function ParkingForm() {
                             <Col md className="align-items-center">
                             </Col>
                         </Row>
-                        <Col className="align-items-center pt-2">
-                            <Form.Group className="ms-3 mt-2">
-                                <Row >
-                                    <Form.Check
-                                        type="switch"
-                                        id="ev-switch"
-                                        label="electric veichle charging"
-                                        onChange={event => { setEvCharge(event.target.checked.valueOf()); }}
-                                    />
-                                </Row>
 
-                                <Row className="mt-1">
-                                    <Form.Check
-                                        type="switch"
-                                        id="free-switch"
-                                        label="free parking spots"
-                                        onChange={event => { setFreeSpot(event.target.checked.valueOf()); }}
-                                    />
-                                </Row>
-                            </Form.Group>
-                        </Col>
+                        <Form.Group>
+                            <Form.Label>Phone *</Form.Label>
+                            <Form.Control isInvalid={phone === null || phone < 0}
+                                type="text"
+                                placeholder="phone"
+                                value={phone == null ? '' : phone}
+                                onChange={event => { setPhone(event.target.value); }} />
+                            <Form.Control.Feedback type="invalid">
+                                Phone number can't be empty
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group>
+                            <Form.Label>Email *</Form.Label>
+                            <Form.Control isInvalid={email === null || email < 0}
+                                type="text"
+                                placeholder="email"
+                                value={email == null ? '' : email}
+                                onChange={event => { setEmail(event.target.value); }} />
+                            <Form.Control.Feedback type="invalid">
+                                Email can't be empty
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group style={{ "paddingTop": "12px" }}>
+                            <Form.Label>website</Form.Label>
+                            <Form.Control 
+                                type="text"
+                                placeholder="Insert website link"
+                                value={website == null ? '' : website}
+                                onChange={event => { setWebsite(event.target.value); }} />
+                        </Form.Group>
+
                         <Form.Group style={{ "paddingTop": "12px" }}>
                             <Form.Label>Description</Form.Label>
                             <Form.Control 
@@ -250,7 +283,7 @@ function ParkingForm() {
                         </Form.Group>
 
                         <Form.Group style={{ "paddingTop": "12px" }}>
-                            <Form.Label>Image of the Parking</Form.Label>
+                            <Form.Label>Image of the Hut</Form.Label>
                             <Form.Control type="file"
                                 ref={ref}
                                 placeholder="img file"
@@ -269,4 +302,4 @@ function ParkingForm() {
     );
 }
 
-export { ParkingForm };
+export { HutForm };
