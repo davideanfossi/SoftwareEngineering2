@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Container, Row, Card } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
+import { CardMessage } from './atoms/card-message';
 import API from '../API';
 
 function EmailActivate() {
@@ -8,23 +9,23 @@ function EmailActivate() {
 
     useEffect(() => {
         API.activateEmail({ 'token': window.location.pathname.split('/')[3] })
-        .then(() => {setSuccess(true); 
-           
-        })
-        .catch(() => { setSuccess(false);});
+            .then(() => {
+                setSuccess(true);
+
+            })
+            .catch(() => { setSuccess(false); });
     }, []);
 
     return (
-    <Container>
-    <Row className="justify-content-center align-items-center" >
-    <Card className="text-center" style={{ width: '20rem' }}>
-        <Card.Body>
-            <Card.Title>Email verification</Card.Title>
-            <Card.Subtitle>{success ? 'Email verified successful' : 'Wrong or expired token'}</Card.Subtitle>
-        </Card.Body>
-    </Card>
-    </Row>
-</Container>
+        <Container className='mt-5'>
+            <Row className="justify-content-center align-items-center" >
+                {success ?
+                    <CardMessage className="text-center" style={{ width: '70vw', "background-color": "LightGray" }} title="Email verification" subtitle="Email successfully verified" />
+                    :
+                    <CardMessage className="text-center" style={{ width: '70vw', "background-color": "LightGray" }} title="Email verification" subtitle="Wrong or expired token" />
+                }
+            </Row>
+        </Container>
     );
 }
 

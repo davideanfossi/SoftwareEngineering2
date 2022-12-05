@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import API from '../API';
-import { EmailMessage } from './atoms/emailMessage';
+import { CardMessage } from './atoms/card-message';
 
 
 function Register(props) {
@@ -11,8 +10,6 @@ function Register(props) {
         if (additionalData)
             setUsername(name + " " + surname);
     }
-
-    const navigate = useNavigate();
 
     const [role, setRole] = useState('Hiker');
     const [name, setName] = useState('');
@@ -26,6 +23,18 @@ function Register(props) {
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState('');
     const [alertMsg, setAlertMsg] = useState('');
+
+    const handleCancel = () => {
+        setName('');
+        setSurname('');
+        setUsername('');
+        setPhoneNumber('');
+        setEmail('');
+        setPassword('');
+        setConfPassword('');
+        setShowAlert('');
+        setAlertMsg('');
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -69,7 +78,9 @@ function Register(props) {
             <Container className='mt-3'>
                 {
                     showAlert === "success" ?
-                        <EmailMessage/>
+                    <Row className='justify-content-center align-items-center mt-4 mb-4'>
+                        <CardMessage className="text-center" style={{ width: '60vw'}} title="Please check your email" subtitle="We've sent you a verification message"/>
+                    </Row>
                         :
                         <>{
                             showAlert === "error" ?
@@ -209,7 +220,7 @@ function Register(props) {
                                 <Col>
                                     <Button variant="warning" type="submit" size='lg'>Register</Button>
                                     &ensp; &ensp;
-                                    <Button variant='light' size='lg'>Cancel</Button>
+                                    <Button variant='light' size='lg' onClick={handleCancel}>Cancel</Button>
                                 </Col>
                             </Row>
                         </Form.Group>

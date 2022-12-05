@@ -10,7 +10,6 @@ import { InsertHike } from "./components/organism/InsertHike";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { EmailActivate } from './components/emailActivate';
-import { EmailMessage } from './components/atoms/emailMessage';
 import { useEffect, useState } from "react";
 import API from './API'
 
