@@ -52,9 +52,7 @@ class HikeService {
             if((radius !== 0 && radius !== undefined) && baseLat !== undefined && baseLon !== undefined){
                 // filer all hikes with start point, end point or reference points inside the radius
                 hikes = hikes.filter(hike => {
-                    if (isWithinCircle(baseLat, baseLon, hike.startPoint.latitude, hike.startPoint.longitude, radius) 
-                        || isWithinCircle(baseLat, baseLon, hike.endPoint.latitude, hike.endPoint.longitude, radius)
-                        || hike.referencePoints.some(rp => isWithinCircle(baseLat, baseLon, rp.latitude, rp.longitude, radius)))
+                    if ( checkIsPointWithinCircle(baseLat, baseLon, radius,hike))
                         return true;
                     else
                         return false;
@@ -71,6 +69,12 @@ class HikeService {
             throw err;
         }
     };
+
+    checkIsPointWithinCircle= (baseLat, baseLon, radius,hike)=> {
+        return  isWithinCircle(baseLat, baseLon,  hike.startPoint.latitude,  hike.startPoint.longitude, radius) 
+        ||  isWithinCircle(baseLat, baseLon,  hike.endPoint.latitude, hike.endPoint.longitude, radius)
+        || hike.referencePoints.some(rp => isWithinCircle(baseLat, baseLon, rp.latitude, rp.longitude, radius))
+    }
 
     getHikesLimits = async () => {
         try {

@@ -70,7 +70,7 @@ function testInsertPoint(latitude,longitude,altitude,name,address){
         let lastID = await pointDAO.insertPoint(latitude,longitude,altitude,name,address);
         expect(lastID).toBeTruthy();
 
-        var res = await pointDAO.getPoint(lastID);
+        const res = await pointDAO.getPoint(lastID);
         expect(res.id).toEqual(lastID);
         expect(res.latitude).toEqual(latitude);
         expect(res.longitude).toEqual(longitude);

@@ -17,9 +17,9 @@ function Register(props) {
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState('');
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log(username, password, confPassword, name, surname, phoneNumber);
+
+    validateData= ()=>{
+
         let flag = false;
 
         if (username === '') { setUsername(''); flag = true; }
@@ -34,6 +34,14 @@ function Register(props) {
             if (phoneNumber === '') { setPhoneNumber(''); flag = true; }
         }
 
+        return flag;
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(username, password, confPassword, name, surname, phoneNumber);
+        
+        const flag= validateData();
         if (flag) return;
 
         let formData =
