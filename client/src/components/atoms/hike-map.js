@@ -65,6 +65,7 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
             type="checkbox"
             label="Show reference points"
             value={showReferencePoints}
+            onClick={(event) => event.stopPropagation()}
             onChange={(event) => {
               setShowReferencePoints(event.target.checked);
             }}

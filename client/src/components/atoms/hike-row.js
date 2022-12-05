@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { Col, Container, Row, Button } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
+import { Link } from 'react-router-dom';
 import API from "../../API";
 import { UserContext } from "../../context/user-context";
 import { HikeMap } from "./hike-map";
@@ -18,22 +19,6 @@ export const HikeRow = ({ hike, even }) => {
   });
   const [referencesPoints, setReferencePoints] = useState([]);
   const [track, setTrack] = useState([]);
-
-  function LogInRedirect() {
-    return(
-        <Button variant='link' href='/login'>
-            Log in
-        </Button>
-    );
-}
-
-  function LogInRedirect() {
-    return(
-        <Button variant='link' href='/login'>
-            Log in
-        </Button>
-    );
-}
 
   const toggleDrop = () => {
     setDropped((prev) => !prev);
@@ -167,7 +152,9 @@ export const HikeRow = ({ hike, even }) => {
                     track={track}
                   />
                 ) : (
-                  "Log in to see more info"
+                  <>
+                  <Link to='/login'>Log in</Link>&nbsp; to see more info
+                  </>
                 )}
               </Col>
             </Row>
