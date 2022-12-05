@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
-import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
+import { Col, Container, Row, Button } from "react-bootstrap";
 import API from "../../API";
 import { UserContext } from "../../context/user-context";
 import { HikeMap } from "./hike-map";
@@ -19,6 +18,22 @@ export const HikeRow = ({ hike, even }) => {
   });
   const [referencesPoints, setReferencePoints] = useState([]);
   const [track, setTrack] = useState([]);
+
+  function LogInRedirect() {
+    return(
+        <Button variant='link' href='/login'>
+            Log in
+        </Button>
+    );
+}
+
+  function LogInRedirect() {
+    return(
+        <Button variant='link' href='/login'>
+            Log in
+        </Button>
+    );
+}
 
   const toggleDrop = () => {
     setDropped((prev) => !prev);
@@ -39,8 +54,8 @@ export const HikeRow = ({ hike, even }) => {
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
       <Col>
-        <Container fluid>
-          <Row>
+        <Container fluid onClick={toggleDrop}>
+          <Row style={{cursor:'pointer'}}>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={12}
@@ -136,18 +151,6 @@ export const HikeRow = ({ hike, even }) => {
                   </Col>
                 </Row>
               </Container>
-            </Col>
-            <Col
-              className="d-flex justify-content-center align-items-center my-3"
-              xs={12}
-              sm={2}
-              md={1}
-            >
-              {dropped ? (
-                <ChevronCompactUp onClick={toggleDrop} />
-              ) : (
-                <ChevronCompactDown onClick={toggleDrop} />
-              )}
             </Col>
           </Row>
           {dropped && (
