@@ -20,10 +20,8 @@ function Registration() {
         <Form.Group className='mb-3' controlId='click-here'>
             <Row>
                 <Col xs={6} md={3} lg={2}>
-                    If not registered:
-                </Col>
-                <Col xs={4} md={2} lg={2}>
-                    <Link to='/register' style={{ textDecoration: 'none' }}>click here</Link>
+                    If not registered: {""}
+                    <Link to='/register'>click here</Link>
                 </Col>
             </Row>
         </Form.Group>

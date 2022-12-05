@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Container, Row, Card } from 'react-bootstrap';
 import API from '../API';
 
 function EmailActivate() {
@@ -14,9 +15,16 @@ function EmailActivate() {
     }, []);
 
     return (
-        <h1>
-            {success ? 'Email verified successful' : 'Wrong or expired token'}
-        </h1>
+    <Container>
+    <Row className="justify-content-center align-items-center" >
+    <Card className="text-center" style={{ width: '20rem' }}>
+        <Card.Body>
+            <Card.Title>Email verification</Card.Title>
+            <Card.Subtitle>{success ? 'Email verified successful' : 'Wrong or expired token'}</Card.Subtitle>
+        </Card.Body>
+    </Card>
+    </Row>
+</Container>
     );
 }
 
