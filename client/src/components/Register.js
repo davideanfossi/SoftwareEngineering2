@@ -18,7 +18,7 @@ function Register(props) {
     const [showAlert, setShowAlert] = useState('');
 
 
-    validateData= ()=>{
+    const validateData= ()=>{
 
         let flag = false;
 
