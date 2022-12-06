@@ -38,6 +38,15 @@ class HutService{
             throw err;
         }
     }
+
+    getHutbyUserId=async(userId)=>{
+        try{
+            const huts = await this.hutDAO.getHutbyUserId(userId);
+            return huts;
+        } catch(err){
+            throw err;
+        }
+    }
 }
 
 module.exports=HutService;

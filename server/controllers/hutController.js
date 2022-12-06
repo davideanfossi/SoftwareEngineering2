@@ -19,9 +19,11 @@ const hutDAO = new HutDAO(dbManager);
 const pointDAO = new PointDAO(dbManager);
 const hutService = new HutService(hutDAO, pointDAO);
 
-router.post('/hut',fileUpload({createParentPath: true}),
-
- [
+router.post('/hut',
+isLoggedIn,
+getPermission(["Local Guide"]),
+fileUpload({createParentPath: true}),
+[
     body('name').notEmpty().isString().trim(), 
     body('numOfBeds').notEmpty().isInt({ min: 0}), 
     body('description').optional().isString().trim(),
@@ -80,7 +82,7 @@ router.post('/hut',fileUpload({createParentPath: true}),
             const result = await hutService.addHut(name,bedCounts,description,phoneNumber,email,website,userId,latitude,longitude,altitude,pointLabel,address);
             if(!result)
                 return res.status(500).end();
-            return res.status(200).json(result);
+            return res.status(201).json(result);
         } catch (err) {
             switch(err.returnCode){
                 default:
@@ -88,5 +90,26 @@ router.post('/hut',fileUpload({createParentPath: true}),
             }
         }
     });
+
+    router.get("/userhuts",
+    isLoggedIn,
+    getPermission(["Local Guide"]),
+    express.json(), async (req, res) => {
+        try {
+            if(req.user)
+            {
+                const result = await hutService.getHutbyUserId(req.user.id);
+                return res.status(200).json(result);
+            }
+            else
+                return res.status(401).send();
+          
+        } catch (err) {
+          switch (err.returnCode) {
+            default:
+              return res.status(500).send();
+          }
+        }
+      });
 
     module.exports = router;
