@@ -68,7 +68,7 @@ export const MapModal = ({
                   <Form.Range
                     value={radius}
                     onChange={(event) => { setRadius(event.target.value);}}
-                    min={1000}
+                    min={0}
                     max={100000}
                     step={1000}
                   />
@@ -97,9 +97,6 @@ export const MapModal = ({
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Close
-        </Button>
-        <Button variant="primary" onClick={() => { setRadius(0) }}>
-          Cancel
         </Button>
         <Button
           variant="primary"
