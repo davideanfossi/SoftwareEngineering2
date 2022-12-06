@@ -20,13 +20,16 @@ function EmailActivate() {
         <Container className='mt-5'>
             <Row className="justify-content-center align-items-center" >
                 {success ?
-                    <CardMessage className="text-center" style={{ width: '70vw', "background-color": "LightGray" }} title="Email verification" subtitle="Email successfully verified" />
+                    <CardMessage className="text-center" bgVariant="light" textVariant="black" border="success" style={{ width: '70vw'}} 
+                        title="Email verification" subtitle="Email successfully verified"/>
                     :
-                    <CardMessage className="text-center" style={{ width: '70vw', "background-color": "LightGray" }} title="Email verification" subtitle="Wrong or expired token" />
+                    <CardMessage className="text-center" bgVariant="light" textVariant="black" border="danger" style={{ width: '70vw'}} 
+                        title="Email verification" subtitle="Wrong or expired token"/>
                 }
             </Row>
         </Container>
     );
 }
-
+// text-center
+// style={{ width: '70vw', "background-color": "LightGray" }}
 export { EmailActivate };

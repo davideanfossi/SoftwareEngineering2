@@ -6,11 +6,6 @@ import { CardMessage } from './atoms/card-message';
 
 function Register(props) {
 
-    function SetUsername() {
-        if (additionalData)
-            setUsername(name + " " + surname);
-    }
-
     const [role, setRole] = useState('Hiker');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -78,9 +73,9 @@ function Register(props) {
             <Container className='mt-3'>
                 {
                     showAlert === "success" ?
-                    <Row className='justify-content-center align-items-center mt-4 mb-4'>
-                        <CardMessage className="text-center" style={{ width: '60vw'}} title="Please check your email" subtitle="We've sent you a verification message"/>
-                    </Row>
+                        <Row className='justify-content-center align-items-center mt-4 mb-4'>
+                            <CardMessage className="text-center" style={{ width: '60vw' }} title="Please check your email" subtitle="We've sent you a verification message" />
+                        </Row>
                         :
                         <>{
                             showAlert === "error" ?
@@ -161,22 +156,21 @@ function Register(props) {
                                         maxLength={10} />
                                     <Form.Control.Feedback type="invalid">Please insert a valid phone number</Form.Control.Feedback>
                                 </Form.Group>
-                                <SetUsername />
                             </>
                             :
-                            <>
-                                <Form.Group className='mb-2' controlId='username'>
-                                    <Form.Label>Username:</Form.Label>
-                                    <Form.Control
-                                        type='text'
-                                        value={username}
-                                        minLength={1}
-                                        onChange={(ev) => setUsername(ev.target.value)}
-                                        required={true}
-                                        placeholder="Create a fancy username"
-                                        maxLength={30} />
-                                </Form.Group>
-                            </>}
+                            <></>
+                        }
+                        <Form.Group className='mb-2' controlId='username'>
+                            <Form.Label>Username:</Form.Label>
+                            <Form.Control
+                                type='text'
+                                value={username}
+                                minLength={1}
+                                onChange={(ev) => setUsername(ev.target.value)}
+                                required={true}
+                                placeholder="Create a fancy username"
+                                maxLength={30} />
+                        </Form.Group>
                         <Form.Group className='mb-2' controlId='email'>
                             <Form.Label>Email:</Form.Label>
                             <Form.Control
