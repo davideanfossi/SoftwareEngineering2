@@ -70,12 +70,9 @@ CREATE TABLE "Parking" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"name" TEXT NOT NULL,
 	"numSpots" INTEGER NOT NULL,
-	"hasElectricSpots" INTEGER NOT NULL,
 	"hasFreeSpots" INTEGER NOT NULL,
-	"phoneNumber" TEXT NOT NULL,
 	"pointId" INTEGER NOT NULL,
 	"ownerId" INTEGER NOT NULL,
-	"imageName" TEXT,
 	PRIMARY KEY("id"),
 	FOREIGN KEY("pointId") REFERENCES "Points"("id"),
 	FOREIGN KEY("ownerId") REFERENCES "User"("id")
