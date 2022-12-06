@@ -2,6 +2,7 @@ const DBManager = require('../database/dbManager');
 const HutDAO = require('../daos/hutDAO');
 const Hut = require('../models/hutModel');
 const { purgeAllTables } = require('./purgeUtils');
+const hut = require('../models/hutModel');
 
 const dbManager = new DBManager("TEST");
 dbManager.openConnection();
@@ -19,7 +20,13 @@ describe('Hut DAO unit test',() => {
 
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         res = await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
-
+        res = await dbManager.query(sql, ["user2@test.it", "user 2", "local guide", "password", "salt", null, null, null, 1, null, null]);
+        
+        sql = "INSERT INTO Hut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        res = await dbManager.query(sql, ["hut 1", 10, 1, "hut 1", '123468', "hut1@test.com", "www.hut1.com", 1]);
+        res = await dbManager.query(sql, ["hut 2", 20, 2, "hut 2", '9876541', "hut2@test.com", "www.hut2.com", 1]);
+        res = await dbManager.query(sql, ["hut 3", 30, 3, "hut 3", '235698', "hut3@test.com",  "www.hut3.com", 2]);
+  
     });
 
     afterAll(async () => {
@@ -32,13 +39,12 @@ describe('Hut DAO unit test',() => {
             .toThrow('DBManager must be defined for hutdao!');
     });
 
-    const hut1 = new Point(1, 45.0703393, 7.686864, 200, "point 1", null);
-    const hut2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
+    testInsertHut("hut 1",9,4,"hut desc1",'123456','test@test.com','www.test.com',2)
+   // testInsertHut("hut 2",20,3,"hut desc2",'32146582','test2@test.com','www.test2.com',1)
 
-    testGetPoint(1, point1);
-
-    testInsertHut("hut 1",9,1,"hut desc1",'123456','test@test.com','www.test.com',1)
-    testInsertHut("hut 2",20,3,"hut desc2",'32146582','test2@test.com','www.test2.com',1)
+    const hut1 = new hut(1, "hut 1", 10, 1, "hut 1", '123468', "hut1@test.com", "www.hut1.com", 1);
+    const hut2 = new hut(2,"hut 2", 20, 2, "hut 2", '9876541', "hut2@test.com", "www.hut2.com", 1);
+    testGetHutsbyUserId(1,[hut1, hut2]);
 
 });
 
@@ -62,10 +68,10 @@ function testInsertHut(name,numOfBeds,pointId,description,phoneNumber,email,webs
     })
 }
 
-function testGetHut(hutId, expectedHut) {
-    test('test get hut', async () => {
-        const res = await hutDAO.getHut(hutId);
-        expect(res).toEqual(expectedHut);
+function testGetHutsbyUserId(userId, expectedHuts) {
+    test('test get user huts', async () => {
+        const res = await hutDAO.getHutsbyUserId(userId);
+        expect(res).toEqual(expectedHuts);
     });
 }
 

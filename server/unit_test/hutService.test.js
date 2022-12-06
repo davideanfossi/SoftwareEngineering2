@@ -33,15 +33,15 @@ describe('Hut Service unit test',() => {
             .toThrow('pointDAO must be defined for HutService!');
     });
 
-    testAddHut("hut 1",9,"hut desc1",null,1,"40.714","65.714",1000,"p1","A1")
-    testAddHut("hut 2",20,"hut desc2",null,1,"47.714","45.714",2000,"p2","A2")
+    testAddHut("hut 1",9,"hut desc1",'258963',"a@a.com","www.aaa.com",1,"40.714","65.714",1000,"p1","A1")
+    testAddHut("hut 2",20,"hut desc2","987541","b@b.com",undefined,1,"47.714","45.714",2000,"p2","A2")
 
 });
 
-function testAddHut(name,numOfBeds,description,image, userId,latitude,longitude,altitude,pointLabel,address){
+function testAddHut(name,numOfBeds,description,phoneNumber,email,website,userId,latitude,longitude,altitude,pointLabel,address){
     test('add new hut', async() => {
 
-        let lastID = await hutService.addHut(name,numOfBeds,description,image, userId,latitude,longitude,altitude,pointLabel,address);
+        let lastID = await hutService.addHut(name,numOfBeds,description,phoneNumber,email,website, userId,latitude,longitude,altitude,pointLabel,address);
         expect(lastID).toBeTruthy();
     })
 }
