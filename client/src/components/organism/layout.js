@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown} from "react-bootstrap";
+import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router";
 import { useContext } from "react";
 import { UserContext } from "../../context/user-context";
@@ -34,12 +34,19 @@ export const Layout = (props) => {
   const goInsertHike = () => {
     navigate("/insert-hike");
   };
+
+  const goMyHikes = () => {
+    navigate("/my-hikes");
+  };
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">
         <Container fluid>
           <Navbar.Toggle className="me-2" />
-          <Navbar.Brand onClick={goHome}>Hike Tracker</Navbar.Brand>
+          <Navbar.Brand onClick={goHome}>
+            <div className="brand">Hike Tracker</div>
+          </Navbar.Brand>
           {userContext.user.id !== undefined && (
             <div className="d-flex justify-content-end">
               <NavDropdown
@@ -53,6 +60,13 @@ export const Layout = (props) => {
                 }
                 id="basic-nav-dropdown"
               >
+                <NavDropdown.Item
+                  onClick={() => {
+                    goMyHikes();
+                  }}
+                >
+                  My hikes
+                </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
                     handleLogout();

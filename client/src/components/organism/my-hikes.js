@@ -5,7 +5,7 @@ import { HikeFilter } from "../moleculars/hike-filter";
 import { Paging } from "../atoms/paging";
 import API from "../../API";
 
-export const Home = () => {
+export const MyHikes = () => {
   const [hikeList, setHikeList] = useState([]);
   const [pageNumber, setPageNumer] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -65,8 +65,8 @@ export const Home = () => {
         handleServerResponseChangePage={handleServerResponseChangePage}
         pageSize={pageSize}
         pageNumber={pageNumber}
-        apiCall={API.getFilteredHikes}
-        getLimits={API.getHikesLimits}
+        apiCall={API.getFilteredUserHikes}
+        getLimits={API.getUserHikesLimits}
       />
       <div className="hike-table-container">
         <HikeTable hikeList={hikeList} />

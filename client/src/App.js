@@ -15,6 +15,7 @@ import API from './API'
 import { LinkStartEnd } from './components/organism/LinkStartEnd';
 
 import { UserContext } from "./context/user-context";
+import { MyHikes } from './components/organism/my-hikes';
 
 function App() {
   const [user, setUser] = useState({
@@ -49,7 +50,10 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             {["Local Guide"].includes(user.role) && (
-              <Route path="insert-hike" element={<InsertHike />} />
+              <>
+                <Route path="insert-hike" element={<InsertHike />} />
+                <Route path="my-hikes" element={<MyHikes />} />
+              </>
             )}
             <Route path="register" index element={<Register register={API.registerUser}/>} />
             <Route path="login" index element={<Login/>} />
