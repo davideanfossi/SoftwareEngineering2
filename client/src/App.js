@@ -55,7 +55,7 @@ function App() {
             <Route path="login" index element={<Login/>} />
             <Route path='authentication/activate/*' index element={<EmailActivate/>}/>
 
-            <Route path='link-start-end' index element={<LinkStartEnd/>}/>
+            <Route path='link-start-end/:id' index element={<LinkStartEnd/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
