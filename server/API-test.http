@@ -45,8 +45,14 @@ content-type: application/json
 
 {
     "name": "parkTest",
+    "ownerId": "2",
+    "pointId": "2",
     "numSpots": "100",
     "hasFreeSpots": "50",
-    "pointId": "2",
-    "ownerId": "2"
+    "latitude": "",
+    "longitude": "",
+    "altitude": "",
+    "pointLabel": "",
+    "address": ""
+    
 }

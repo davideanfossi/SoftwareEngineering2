@@ -28,6 +28,12 @@ router.post(
       body("hasFreeSpots").notEmpty().isInt({ min: 0}),
       body("pointId").notEmpty().isInt({ min: 0}),
       body("ownerId").notEmpty().isInt({ min: 0}),
+
+      body("longitude").notEmpty().isString().trim(),
+      body("latitude").notEmpty().isString().trim(),
+      body("altitude").notEmpty().isString().trim(),
+      body("pointLabel").notEmpty().isString().trim(),
+      body("address").optional().isString().trim(),
   
     ],
     async (req, res) => {
@@ -44,12 +50,24 @@ router.post(
       const pointId = Number.parseInt(req.body.pointId);
       const ownerId = Number.parseInt(req.body.ownerId);
 
+      //parkingPoint
+      const latitude = req.body.latitude;
+      const longitude = req.body.longitude;
+      const altitude = req.body.altitude;
+      const pointLabel = req.body.pointLabel;
+      const address = req.body.address;
+
       const result = await parkingService.addParking(
         name,
+        ownerId,
+        pointId,        
         numSpots,
         hasFreeSpots,
-        pointId,
-        ownerId,
+        latitude,
+        longitude,
+        altitude,
+        pointLabel,
+        address       
       );
       if (!result) return res.status(500).end();
       return res.status(200).json(result);

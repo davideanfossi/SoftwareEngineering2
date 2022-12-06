@@ -10,7 +10,7 @@ class ParkingService {
         this.pointDAO = pointDAO;
     }
 
-    addParking = async (name, ownerId, numSpots, hasFreeSpots, latitude, longitude, altitude, pointLabel, address) => {
+    addParking = async (name, ownerId, pointId, numSpots, hasFreeSpots, latitude,longitude,altitude,pointLabel,address) => {
         try {
             const pointId = await this.pointDAO.insertPoint(latitude,longitude,altitude,pointLabel,address)
             
