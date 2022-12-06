@@ -13,11 +13,13 @@ const HutDAO = require('../daos/hutDAO');
 const PointDAO = require("../daos/pointDAO");
 const HutService = require("../services/hutService");
 const config = require("../config.json");
+const { isLoggedIn, getPermission } = require("./loginController");
 
 const dbManager = new DbManager("PROD");
 const hutDAO = new HutDAO(dbManager);
 const pointDAO = new PointDAO(dbManager);
 const hutService = new HutService(hutDAO, pointDAO);
+
 
 router.post('/hut',
 isLoggedIn,

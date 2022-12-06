@@ -33,11 +33,12 @@ class HutDAO {
         }
     }
 
-    getHutsbyUserId=async(id)=>{
+    getHutsbyUserId=async(userId)=>{
         try {
             const sql = "SELECT * FROM Hut WHERE userId = ? ORDER BY id";
-            const res = await this.dbManager.get(sql, [id], true);
-            return res.map(r => new Hut(res.id, res.name, res.numOfBeds, res.pointId, res.description, res.phoneNumber, res.email, res.website, res.userId));
+            const res = await this.dbManager.get(sql, [userId]);
+            let huts= res.map(r => new Hut(r.id, r.name, r.numOfBeds, r.pointId, r.description, r.phoneNumber, r.email, r.website, r.userId));
+            return huts;
         } catch (err) {
             throw err;
         }

@@ -41,9 +41,10 @@ class HutService{
 
     getHutbyUserId=async(userId)=>{
         try{
-            const huts = await this.hutDAO.getHutbyUserId(userId);
+            const huts = await this.hutDAO.getHutsbyUserId(userId);
             return huts;
         } catch(err){
+            console.log(err)
             throw err;
         }
     }
