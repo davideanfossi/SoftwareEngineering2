@@ -1,11 +1,16 @@
 import { Container } from "react-bootstrap";
 import { HikeRow } from "../atoms/hike-row";
 
-export const HikeTable = ({ hikeList }) => {
+export const HikeTable = ({ hikeList, isUserHike = false }) => {
   return (
     <Container className="hike-table" fluid>
       {hikeList.map((hike, count) => (
-        <HikeRow hike={hike} key={hike.id} even={count % 2 === 0} />
+        <HikeRow
+          hike={hike}
+          key={hike.id}
+          even={count % 2 === 0}
+          isUserHike={isUserHike}
+        />
       ))}
     </Container>
   );

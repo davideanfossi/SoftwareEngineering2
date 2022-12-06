@@ -69,7 +69,7 @@ export const MyHikes = () => {
         getLimits={API.getUserHikesLimits}
       />
       <div className="hike-table-container">
-        <HikeTable hikeList={hikeList} />
+        <HikeTable hikeList={hikeList} isUserHike={true} />
       </div>
       <Paging
         totalPages={totalPages}

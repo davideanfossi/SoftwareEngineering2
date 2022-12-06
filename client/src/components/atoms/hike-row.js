@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
+import { useNavigate } from "react-router";
 import API from "../../API";
 import { UserContext } from "../../context/user-context";
 import { HikeMap } from "./hike-map";
 
-export const HikeRow = ({ hike, even }) => {
+export const HikeRow = ({ hike, even, isUserHike = false }) => {
   const userContext = useContext(UserContext);
   const isLogged = ["Hiker", "Local Guide"].includes(userContext.user.role);
   const [dropped, setDropped] = useState(false);
@@ -19,6 +20,7 @@ export const HikeRow = ({ hike, even }) => {
   });
   const [referencesPoints, setReferencePoints] = useState([]);
   const [track, setTrack] = useState([]);
+  const navigate=useNavigate();
 
   const toggleDrop = () => {
     setDropped((prev) => !prev);
@@ -151,23 +153,39 @@ export const HikeRow = ({ hike, even }) => {
             </Col>
           </Row>
           {dropped && (
-            <Row>
-              <Col
-                className="d-flex justify-content-center align-items-center my-3"
-                xs={12}
-              >
-                {isLogged ? (
-                  <HikeMap
-                    startPoint={startPoint}
-                    endPoint={endPoint}
-                    referencesPoints={referencesPoints}
-                    track={track}
-                  />
-                ) : (
-                  "Log in to see more info"
-                )}
-              </Col>
-            </Row>
+            <>
+              <Row>
+                <Col
+                  className="d-flex justify-content-center align-items-center my-3"
+                  xs={12}
+                >
+                  {isLogged ? (
+                    <HikeMap
+                      startPoint={startPoint}
+                      endPoint={endPoint}
+                      referencesPoints={referencesPoints}
+                      track={track}
+                    />
+                  ) : (
+                    "Log in to see more info"
+                  )}
+                </Col>
+              </Row>
+              {isUserHike && (
+                <Row>
+                  <Col
+                    className="d-flex justify-content-center align-items-center my-3"
+                    xs={12}
+                  >
+                    <Button
+                      onClick={() => navigate("/link-start-end/" + hike.id)}
+                    >
+                      Link start/end point
+                    </Button>
+                  </Col>
+                </Row>
+              )}
+            </>
           )}
         </Container>
       </Col>

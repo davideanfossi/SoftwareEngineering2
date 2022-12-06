@@ -4,16 +4,6 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { LinkPointMap } from "../atoms/link-point-map";
 
-function Placeholder(props) {
-  return (
-    <>
-      <div style={{ backgroundColor: "grey", height: "500px" }}>
-        {props.test}
-      </div>
-    </>
-  );
-}
-
 function LinkStartEnd() {
   const [changed, setChanged] = useState(true);
   return (

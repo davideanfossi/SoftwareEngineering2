@@ -24,11 +24,12 @@ export const LinkPointMap = ({
   });
   const [map, setMap] = useState(undefined);
   const [selected, setSelected] = useState(-1);
-  const referencePointList = [
-    { latitude: 45.319959, longitude: 7.304834, name: "test1" },
-    { latitude: 45.316959, longitude: 7.306834, name: "test2" },
-    { latitude: 45.313959, longitude: 7.302834, name: "test3" },
-  ];
+  // eslint-disable-next-line no-unused-vars
+  const [referencePointList, setReferencePointsList] = useState([
+    { id: 1, latitude: 45.319959, longitude: 7.304834, name: "test1" },
+    { id: 2, latitude: 45.316959, longitude: 7.306834, name: "test2" },
+    { id: 3, latitude: 45.313959, longitude: 7.302834, name: "test3" },
+  ]);
   let { id } = useParams();
 
   useEffect(() => {
@@ -55,8 +56,8 @@ export const LinkPointMap = ({
       setChanged(false);
     }
   });
-  const onClickHandle = (index) => {
-    setSelected((prev) => (prev !== index ? index : -1));
+  const onClickHandle = (id) => {
+    setSelected((prev) => (prev !== id ? id : -1));
   };
   return (
     <div style={{ width: "100%" }}>
@@ -76,12 +77,12 @@ export const LinkPointMap = ({
 
         <Circle center={center} radius={500} />
         <Polyline positions={track} />
-        {referencePointList.map((point, index) => (
+        {referencePointList.map((point) => (
           <MarkerPoint
-            key={index}
+            key={point.id}
             point={point}
-            selected={index === selected}
-            onClickHandle={() => onClickHandle(index)}
+            selected={point.id === selected}
+            onClickHandle={() => onClickHandle(point.id)}
           />
         ))}
         {start && (
@@ -100,7 +101,10 @@ export const LinkPointMap = ({
         {selected !== -1 && (
           <Row>
             <Col className="d-flex justify-content-center">
-              {referencePointList[selected].name}
+              {
+                referencePointList.filter((elem) => elem.id === selected)[0]
+                  .name
+              }
             </Col>
           </Row>
         )}
