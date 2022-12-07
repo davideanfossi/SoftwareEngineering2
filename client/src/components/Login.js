@@ -92,7 +92,8 @@ function Login() {
                                 value={password}
                                 onChange={(ev) => setPassword(ev.target.value)}
                                 required={true}
-                                minLength={8}
+                                minLength={6}
+                                maxLength={15}
                                 placeholder="Password" />
                         </Form.Group>
                         <Checkbox />
