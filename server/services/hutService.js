@@ -11,7 +11,7 @@ class HutService{
         this.pointDAO=pointDAO;
     }
 
-    addHut = async (name,numOfBeds,description,phoneNumber,email,website, userId,latitude,longitude,altitude,pointLabel,address) => {
+    addHut = async (name,numOfBeds,description,phoneNumber,email,website, userId,latitude,longitude,altitude,pointLabel,address,imageName) => {
         try {
             //TODO :  add transaction or delete points in catch when insertHike returns err
             //first insert Point 
@@ -19,7 +19,7 @@ class HutService{
           
             if(pointId>0)
             {
-                const res = await this.hutDAO.insertHut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId);
+                const res = await this.hutDAO.insertHut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId,imageName);
                 return res;
             }
             else
@@ -49,5 +49,6 @@ class HutService{
         }
     }
 }
+
 
 module.exports=HutService;

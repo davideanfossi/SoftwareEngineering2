@@ -22,8 +22,8 @@ const hutService = new HutService(hutDAO, pointDAO);
 
 
 router.post('/hut',
-isLoggedIn,
-getPermission(["Local Guide"]),
+//isLoggedIn,
+//getPermission(["Local Guide"]),
 fileUpload({createParentPath: true}),
 [
     body('name').notEmpty().isString().trim(), 
@@ -37,7 +37,9 @@ fileUpload({createParentPath: true}),
     body('latitude').optional().isString().trim(),  
     body('altitude').optional().isString().trim(), 
     body('pointLabel').optional().isString().trim(), 
-    body('address').optional().isString().trim()
+    body('address').optional().isString().trim(),
+
+    body('image').optional()
 ],  
     async(req,res) => {
         try {
@@ -54,7 +56,7 @@ fileUpload({createParentPath: true}),
             const email=req.body.email;
             const website=req.body.website;
             
-           /*  const rootPath=config.hutImagesPath;
+            const rootPath=config.hutImagesPath;
             if (!rootPath) {
                 return res.status(500).json("error in reading hutImagesPath from config");
             }
@@ -70,7 +72,7 @@ fileUpload({createParentPath: true}),
                         return res.status(500).json(err.message);
                     }
                 });
-            }   */
+            }   
             const userId=req.user? req.user.id : 1;
 
             //Point
@@ -81,7 +83,7 @@ fileUpload({createParentPath: true}),
             const address=req.body.address;
             
             
-            const result = await hutService.addHut(name,bedCounts,description,phoneNumber,email,website,userId,latitude,longitude,altitude,pointLabel,address);
+            const result = await hutService.addHut(name,bedCounts,description,phoneNumber,email,website,userId,latitude,longitude,altitude,pointLabel,address,imageName);
             if(!result)
                 return res.status(500).end();
             return res.status(201).json(result);

@@ -12,10 +12,10 @@ class HutDAO {
 
 
 
-    insertHut=async (name,numOfBeds,pointId,description,phoneNumber,email,website,userId) =>{
+    insertHut=async (name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image) =>{
         try{
-            const sql="insert into hut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId) values(?,?,?,?,?,?,?,?)";
-            const res = await this.dbManager.query(sql, [name,numOfBeds,pointId,description,phoneNumber,email,website,userId]);
+            const sql="insert into hut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image) values(?,?,?,?,?,?,?,?,?)";
+            const res = await this.dbManager.query(sql, [name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image]);
             return res;
         }
         catch(err){
