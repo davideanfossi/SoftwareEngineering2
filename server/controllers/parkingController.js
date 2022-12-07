@@ -9,6 +9,9 @@ const PointDAO = require("../daos/pointDAO");
 const ParkingDAO = require("../daos/parkingDAO");
 const ParkingService = require("../services/parkingService");
 const config = require("../config.json");
+const fileUpload=require('express-fileupload');
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
 const dbManager = new DbManager("PROD");
 const pointDAO = new PointDAO(dbManager);
@@ -21,12 +24,12 @@ router.post(
     "/parking",
     isLoggedIn,
     getPermission(["Local Guide"]),
+    fileUpload({ createParentPath: true }),
   
     [
       body("name").notEmpty().isString().trim(),
       body("numSpots").notEmpty().isInt({ min: 0}),
       body("hasFreeSpots").notEmpty().isInt({ min: 0}),
-      body("pointId").notEmpty().isInt({ min: 0}),
       body("ownerId").notEmpty().isInt({ min: 0}),
 
       body("longitude").notEmpty().isString().trim(),
@@ -34,6 +37,8 @@ router.post(
       body("altitude").notEmpty().isString().trim(),
       body("pointLabel").notEmpty().isString().trim(),
       body("address").optional().isString().trim(),
+
+      body('image').optional(),
   
     ],
     async (req, res) => {
@@ -47,8 +52,25 @@ router.post(
       const name = req.body.name;
       const numSpots = Number.parseInt(req.body.numSpots);
       const hasFreeSpots = Number.parseInt(req.body.hasFreeSpots);
-      const pointId = Number.parseInt(req.body.pointId);
-      const ownerId = Number.parseInt(req.body.ownerId);
+
+      const rootPath = config.parkingImagesPath;
+        if (!rootPath) {
+          return res.status(500).json("error in reading parkingImagesPath from config");
+        }
+        const image = req.files ? req.files.image : null;
+        const imageName = image ? uuidv4() + '-' + image.name : null;
+        const imagePath = image ? rootPath + imageName : null;
+
+        if (image) {
+          //  mv() method places the file inside public directory
+          image.mv(imagePath, function (err) {
+            if (err) {
+              return res.status(500).json(err.message);
+            }
+          });
+        }  
+      
+      const ownerId = req.user ? req.user.id : 1; 
 
       //parkingPoint
       const latitude = req.body.latitude;
@@ -59,15 +81,15 @@ router.post(
 
       const result = await parkingService.addParking(
         name,
-        ownerId,
-        pointId,        
+        ownerId,       
         numSpots,
         hasFreeSpots,
         latitude,
         longitude,
         altitude,
         pointLabel,
-        address       
+        address,
+        imageName       
       );
       if (!result) return res.status(500).end();
       return res.status(200).json(result);
