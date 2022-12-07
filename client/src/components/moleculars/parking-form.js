@@ -10,9 +10,8 @@ function ParkingForm() {
     const [coordSelector, setCoordSelector] = useState(false);
     const [name, setName] = useState('');
     const [parkingSpot, setParkingSpot] = useState('');
-    const [evCharge, setEvCharge] = useState(false);
+    const [altitude, setAltitude] = useState('');
     const [freeSpot, setFreeSpot] = useState(false);
-    const [description, setDescription] = useState('');
     const [file, setFile] = useState('');
     const [update, setUpdate] = useState(true);
 
@@ -28,6 +27,8 @@ function ParkingForm() {
     const [selectedPosition, setSelectedPosition] = useState(undefined);
     const [lat, setLat] = useState(45.0702899); //it is Turin!
     const [lon, setLon] = useState(7.6348208);
+    const [addr, setAddr] = useState(7.6348208);
+
     const [zoom, setZoom] = useState(6);
     const handleSave = (lat, lon, zoom) => {
         setLat(lat);
@@ -52,13 +53,20 @@ function ParkingForm() {
         if (update) setUpdate(false);
     }, [update]);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         let flag = false;
         
+        let url = 'https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&zoom=16';
+        let address = await fetch(url)
+        .then(response => response.text())
+        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+        .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
+        .catch(err => console.log(err));
+        setAddr(address);
+
         if (name === '') { setName(null); flag = true; }
         if (parkingSpot === '' || !(parseInt(parkingSpot) >= 0)) { setParkingSpot(null); flag = true; }
-        //if (evCharge === '') { setEvCharge(false); flag = true; }
         //if (freeSpot === '') { setFreeSpot(false); flag = true; }
         //if (description === '') { setDescription(''); flag = true; }
         //if (file === '') {setFile(null); flag=true;}
@@ -66,12 +74,12 @@ function ParkingForm() {
         
         const formData = new FormData();
         formData.append('name', name);
+        formData.append('numSpots', parkingSpot);
+        formData.append('hasFreeSpot', freeSpot);
         formData.append('latitude', lat);
         formData.append('longitude', lon);
-        formData.append('parkingSpot', parkingSpot);
-        formData.append('evCharge', evCharge);
-        formData.append('freeSpot', freeSpot);
-        formData.append('description', description);
+        formData.append('altitude', altitude);
+        formData.append('address', addr);
         if(file!=="") formData.append('file', file);
 
         /*
@@ -207,7 +215,7 @@ function ParkingForm() {
                                     <Form.Label>Number of Parking Spot *</Form.Label>
                                     <Form.Control isInvalid={parkingSpot === null || parkingSpot < 0}
                                         type="number"
-                                        placeholder="number of parking spot"
+                                        placeholder="Number of parking spot"
                                         value={parkingSpot == null ? '' : parkingSpot}
                                         onChange={event => { setParkingSpot(event.target.value); }} />
                                     <Form.Control.Feedback type="invalid">
@@ -217,18 +225,29 @@ function ParkingForm() {
                             </Col>
 
                             <Col md className="align-items-center">
+                                <Form.Group>
+                                    <Form.Label>Altitude *</Form.Label>
+                                    <Form.Control isInvalid={altitude === null || altitude < 0}
+                                        type="number"
+                                        placeholder="Altitude"
+                                        value={altitude == null ? '' : altitude}
+                                        onChange={event => { setAltitude(event.target.value); }} />
+                                    <Form.Control.Feedback type="invalid">
+                                        Altitude number greater than 0
+                                    </Form.Control.Feedback>
+                                </Form.Group>
                             </Col>
                         </Row>
                         <Col className="align-items-center pt-2">
                             <Form.Group className="ms-3 mt-2">
-                                <Row >
+                                {/* <Row >
                                     <Form.Check
                                         type="switch"
                                         id="ev-switch"
                                         label="electric veichle charging"
                                         onChange={event => { setEvCharge(event.target.checked.valueOf()); }}
                                     />
-                                </Row>
+                                </Row> */}
 
                                 <Row className="mt-1">
                                     <Form.Check
@@ -240,14 +259,14 @@ function ParkingForm() {
                                 </Row>
                             </Form.Group>
                         </Col>
-                        <Form.Group style={{ "paddingTop": "12px" }}>
+                        {/* <Form.Group style={{ "paddingTop": "12px" }}>
                             <Form.Label>Description</Form.Label>
                             <Form.Control 
                                 type="text"
                                 placeholder="Insert useful information for Hikers"
                                 value={description == null ? '' : description}
                                 onChange={event => { setDescription(event.target.value); }} />
-                        </Form.Group>
+                        </Form.Group> */}
 
                         <Form.Group style={{ "paddingTop": "12px" }}>
                             <Form.Label>Image of the Parking</Form.Label>
