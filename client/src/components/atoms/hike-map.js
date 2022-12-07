@@ -24,7 +24,7 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
     }
   }, [center, map]);
   return (
-    <Container>
+    <Container onClick={(event) => { event.stopPropagation(); }}>
       <Row>
         <Col>
           <div style={{ width: "100%", padding: "1rem" }}>
@@ -42,13 +42,13 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
                 //TODO:decide if keep or not
 
                 showReferencePoints &&
-                  referencesPoints.map((point, index) => (
-                    <MarkerReferencePoint
-                      point={point}
-                      key={index}
-                      isReference={true}
-                    />
-                  ))
+                referencesPoints.map((point, index) => (
+                  <MarkerReferencePoint
+                    point={point}
+                    key={index}
+                    isReference={true}
+                  />
+                ))
               }
               <Polyline positions={track} />
               <TileLayer
