@@ -16,7 +16,6 @@ export const MapModal = ({
   const [lat, setLat] = useState(startingLat);
   const [lon, setLon] = useState(startingLon);
   const [zoom, setZoom] = useState(startingZoom);
-  const [useMap, setUseMap] = useState(startingRadius !== 0);
   const [selectedPosition, setSelectedPosition] = useState(undefined);
   const [update, setUpdate] = useState(true);
 
@@ -35,8 +34,9 @@ export const MapModal = ({
   }, [update]);
 
   useEffect(() => {
-    setRadius(useMap ? (startingRadius !== 0 ? startingRadius : 1000) : 0);
-  }, [startingRadius, useMap]);
+    setRadius(startingRadius !== 0 ? startingRadius : 0);
+  }, [startingRadius]);
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -44,18 +44,7 @@ export const MapModal = ({
       </Modal.Header>
       <Modal.Body>
         <Container fluid>
-          <Row>
-            <Col xs={1}>
-              <Form.Check
-                type="switch"
-                checked={useMap}
-                onChange={() => setUseMap((old) => !old)}
-              />
-            </Col>
-            <Col xs={11}>Use Map</Col>
-          </Row>
-
-          {useMap && !update && (
+          {!update && (
             <>
               <Row>
                 <Col>
@@ -78,8 +67,8 @@ export const MapModal = ({
                 <Col>
                   <Form.Range
                     value={radius}
-                    onChange={(event) => setRadius(event.target.value)}
-                    min={1000}
+                    onChange={(event) => { setRadius(event.target.value);}}
+                    min={0}
                     max={100000}
                     step={1000}
                   />
