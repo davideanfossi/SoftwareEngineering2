@@ -145,7 +145,7 @@ function testAddHike(title, length, expectedTime,ascent, difficulty , descriptio
         let lastID = await hikeService.addHike(title, length, expectedTime,ascent, difficulty , description, gpxPath, userId,startLatitude,startLongitude,startAltitude,startPointLabel,startAddress,endLatitude,endLongitude,endAltitude,endPointLabel,endAddress);
         expect(lastID).toBeTruthy();
 
-        var res = await hikeService.getHikes(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, difficulty, undefined, undefined, undefined, undefined, undefined);
+        const res = await hikeService.getHikes(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, difficulty, undefined, undefined, undefined, undefined, undefined);
         expect(res.pageItems.length).toBeGreaterThan(0);
 
     })

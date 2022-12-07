@@ -8,7 +8,7 @@ import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
 import { InsertHike } from "./components/organism/InsertHike";
 import { Login } from "./components/Login";
-import {Register} from "./components/Register";
+import { Register } from "./components/Register";
 import { EmailActivate } from './components/emailActivate';
 import { useEffect, useState } from "react";
 import API from './API'
