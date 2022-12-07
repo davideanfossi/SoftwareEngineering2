@@ -17,9 +17,9 @@ const authDAO = new AuthDAO(dbManager);
 const authService = new AuthService(authDAO);
 
 
-var SibApiV3Sdk = require('sib-api-v3-sdk');
-var defaultClient = SibApiV3Sdk.ApiClient.instance;
-var apiKey = defaultClient.authentications['api-key'];
+const SibApiV3Sdk = require('sib-api-v3-sdk');
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+const apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.API_KEY;
 
 const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();

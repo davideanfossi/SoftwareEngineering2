@@ -100,7 +100,7 @@ function testInsertHike(title, length, expectedTime,ascent, difficulty ,startPoi
 
         const hike = new Hike(lastID,title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, [], gpxPath, userId);
 
-        var res = await hikeDAO.getAllHikes();
+        const res = await hikeDAO.getAllHikes();
         expect(res.length).toBeGreaterThan(0);
         expect(res).toEqual(expect.arrayContaining([hike]));
 
