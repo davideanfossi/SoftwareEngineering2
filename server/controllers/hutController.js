@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const {expressValidator, check, query,body, validationResult} = require('express-validator');
+const {expressValidator, check, param,body, validationResult} = require('express-validator');
 const router = express.Router();
 const fileUpload=require('express-fileupload');
 
@@ -115,5 +115,28 @@ fileUpload({createParentPath: true}),
           }
         }
       });
+
+    router.get(
+        "/huts/:id",
+       // isLoggedIn,
+       // getPermission(["Hiker", "Local Guide"]),
+        [param("id").exists().isInt({ min: 1 })],
+        async (req, res) => {
+          try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+              return res.status(400).end();
+            }
+            const result = await hutService.getHut(req.params.id);
+            return res.status(200).json(result);
+          } catch (err) {
+            console.log(err);
+            switch (err.returnCode) {
+              default:
+                return res.status(500).end();
+            }
+          }
+        }
+      );
 
     module.exports = router;

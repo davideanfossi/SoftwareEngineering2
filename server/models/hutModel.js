@@ -1,7 +1,7 @@
 
 class hut{
 
-    constructor(id,name,numOfBeds,pointId,description,phoneNumber,email,website,userId)
+    constructor(id,name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image)
     {
         this.id=id;
         this.name=name;
@@ -12,6 +12,7 @@ class hut{
         this.email=email;
         this.website=website;
         this.userId=userId;
+        this.image=image;
     }
 }
 

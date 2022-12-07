@@ -26,8 +26,8 @@ class HutDAO {
     getHut=async(id)=>{
         try {
             const sql = "SELECT * FROM Hut WHERE id = ?";
-            const res = await this.dbManager.get(sql, [id], true);
-            return res ? new Hut(res.id, res.name, res.numOfBeds, res.pointId, res.description, res.phoneNumber, res.email, res.website, res.userId) : undefined;
+            const res = await this.dbManager.get(sql, [id],true);
+            return res ? new Hut(res.id, res.name, res.numOfBeds, res.pointId, res.description, res.phoneNumber, res.email, res.website, res.userId,res.image) : undefined;
         } catch (err) {
             throw err;
         }
@@ -37,7 +37,7 @@ class HutDAO {
         try {
             const sql = "SELECT * FROM Hut WHERE userId = ? ORDER BY id";
             const res = await this.dbManager.get(sql, [userId]);
-            let huts= res.map(r => new Hut(r.id, r.name, r.numOfBeds, r.pointId, r.description, r.phoneNumber, r.email, r.website, r.userId));
+            let huts= res.map(r => new Hut(r.id, r.name, r.numOfBeds, r.pointId, r.description, r.phoneNumber, r.email, r.website, r.userId,r.image));
             return huts;
         } catch (err) {
             throw err;
