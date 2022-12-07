@@ -30,6 +30,5 @@ function EmailActivate() {
         </Container>
     );
 }
-// text-center
-// style={{ width: '70vw', "background-color": "LightGray" }}
+
 export { EmailActivate };
