@@ -36,7 +36,7 @@ $ npm start
 #### Docker
 
 Alternately you can use the docker image by clicking this link and following the istruction in the page:
-[https://hub.docker.com/r/riccardogiambra/hike-tracker-server](URL 'https://hub.docker.com/r/riccardogiambra/hike-tracker-server')
+[https://hub.docker.com/r/riccardogiambra/hike-tracker-server](https://hub.docker.com/r/riccardogiambra/hike-tracker-server)
 
 
 ## Credentials
