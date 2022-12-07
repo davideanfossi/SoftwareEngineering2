@@ -34,7 +34,7 @@ export const MapModal = ({
   }, [update]);
 
   useEffect(() => {
-    setRadius(startingRadius !== 0 ? startingRadius : 1000);
+    setRadius(startingRadius !== 0 ? startingRadius : 0);
   }, [startingRadius]);
 
   return (
