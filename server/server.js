@@ -65,7 +65,6 @@ app.post("/api/sessions", passport.authenticate('local'), (req, res) => {
 
 // GET /api/sessions/current
 app.get('/api/sessions/current', (req, res) => {
-    console.log("User: " + req.user);
     if (req.isAuthenticated())
       return res.status(200).json(req.user);
     else

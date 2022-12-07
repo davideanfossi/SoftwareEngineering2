@@ -110,10 +110,8 @@ router.get(
       });
       return res.status(200).json(result);
     } catch (err) {
-      switch (err.returnCode) {
-        default:
+      console.log(err);
           return res.status(500).send();
-      }
     }
   }
 );
@@ -123,10 +121,7 @@ router.get("/hikes/limits", express.json(), async (req, res) => {
     const result = await hikeService.getHikesLimits();
     return res.status(200).json(result);
   } catch (err) {
-    switch (err.returnCode) {
-      default:
         return res.status(500).send();
-    }
   }
 });
 
@@ -231,10 +226,7 @@ router.post(
       if (!result) return res.status(500).end();
       return res.status(201).json(result);
     } catch (err) {
-      switch (err.returnCode) {
-        default:
           return res.status(500).json(err.message);
-      }
     }
   }
 );

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
+import { Link } from 'react-router-dom';
 import API from "../../API";
 import { UserContext } from "../../context/user-context";
 import { HikeMap } from "./hike-map";
@@ -39,8 +39,8 @@ export const HikeRow = ({ hike, even }) => {
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
       <Col>
-        <Container fluid>
-          <Row>
+        <Container fluid onClick={toggleDrop}>
+          <Row style={{cursor:'pointer'}}>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={12}
@@ -137,18 +137,6 @@ export const HikeRow = ({ hike, even }) => {
                 </Row>
               </Container>
             </Col>
-            <Col
-              className="d-flex justify-content-center align-items-center my-3"
-              xs={12}
-              sm={2}
-              md={1}
-            >
-              {dropped ? (
-                <ChevronCompactUp onClick={toggleDrop} />
-              ) : (
-                <ChevronCompactDown onClick={toggleDrop} />
-              )}
-            </Col>
           </Row>
           {dropped && (
             <Row>
@@ -164,7 +152,9 @@ export const HikeRow = ({ hike, even }) => {
                     track={track}
                   />
                 ) : (
-                  "Log in to see more info"
+                  <>
+                  <Link to='/login'>Log in</Link>&nbsp; to see more info
+                  </>
                 )}
               </Col>
             </Row>
