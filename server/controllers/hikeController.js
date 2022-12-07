@@ -224,7 +224,7 @@ router.post(
         endAddress
       );
       if (!result) return res.status(500).end();
-      return res.status(200).json(result);
+      return res.status(201).json(result);
     } catch (err) {
           return res.status(500).json(err.message);
     }
