@@ -1,4 +1,4 @@
-import {HutForm} from "../moleculars/hut-form"
+import {HutForm} from "../moleculars/HutForm"
 import { Row } from "react-bootstrap";
 
 function InsertHut(){
