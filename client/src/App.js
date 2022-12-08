@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router";
 import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
+import { InsertHut } from "./components/organism/insertHut";
 import { InsertHike } from "./components/organism/InsertHike";
 import { InsertHut } from "./components/organism/InsertHut";
 import { Login } from "./components/Login";
