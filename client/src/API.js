@@ -12,9 +12,9 @@ const getHikesLimits = async () => {
       },
     });
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -30,9 +30,9 @@ const getAllHikes = async () => {
       },
     });
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -81,9 +81,9 @@ const getFilteredHikes = async (
       }
     );
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -98,9 +98,9 @@ const registerUser = async (formData) => {
       body: JSON.stringify(formData),
     });
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -115,9 +115,9 @@ const activateEmail = async (formData) => {
       body: JSON.stringify(formData),
     });
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -136,9 +136,9 @@ const getHikeDetails = async (hike) => {
       }
     );
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -153,9 +153,9 @@ const newHike = async (formData) => {
       body: formData,
     });
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -171,9 +171,9 @@ const login = async (credentials) => {
       body: JSON.stringify(credentials),
     });
     if (response.ok) {
-      return response.json();
+      return await response.json();
     } else {
-      throw response.text();
+      throw await response.text();
     }
   } catch (e) {
     throw e;
@@ -185,9 +185,9 @@ const getUserInfo = async () => {
     credentials: "include",
   });
   if (response.ok) {
-    return response.json();
+    return await response.json();
   } else {
-    throw response.text();
+    throw await response.text();
   }
 };
 

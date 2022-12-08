@@ -8,8 +8,9 @@ import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
 import { InsertHut } from "./components/organism/insertHut";
 import { InsertHike } from "./components/organism/InsertHike";
+import { InsertHut } from "./components/organism/InsertHut";
 import { Login } from "./components/Login";
-import {Register} from "./components/Register";
+import { Register } from "./components/Register";
 import { EmailActivate } from './components/emailActivate';
 import { useEffect, useState } from "react";
 import API from './API'
@@ -48,7 +49,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="inserthut" element={<InsertHut />} />
+            <Route path="inserthut" element={<InsertHut/>} />
             {["Local Guide"].includes(user.role) && (
               <Route path="insert-hike" element={<InsertHike />} />
             )}

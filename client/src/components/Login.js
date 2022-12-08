@@ -23,7 +23,7 @@ function Registration() {
                     If not registered:
                 </Col>
                 <Col xs={4} md={2} lg={2}>
-                    <Link to='/register' style={{ textDecoration: 'none' }}>click here</Link>
+                    <Link to='/register' >click here</Link>
                 </Col>
             </Row>
         </Form.Group>
@@ -65,15 +65,15 @@ function Login() {
     return (
         <>
             <Container className='mt-3'>
-                <Row>
-                    <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Login</b>
-                </Row>
                 {
                     showAlert === true ?
                         <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
-                            <Alert.Heading>Registration occurred with errors!</Alert.Heading>
+                            <Alert.Heading>Incorrect username and/or password</Alert.Heading>
                         </Alert> : null
                 }
+                <Row>
+                    <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Login</b>
+                </Row>
                 <Container className="border border-4 rounded" style={{ "marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white" }}>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className='mb-2' controlId='email'>
@@ -92,7 +92,8 @@ function Login() {
                                 value={password}
                                 onChange={(ev) => setPassword(ev.target.value)}
                                 required={true}
-                                minLength={8}
+                                minLength={6}
+                                maxLength={15}
                                 placeholder="Password" />
                         </Form.Group>
                         <Checkbox />
