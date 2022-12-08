@@ -72,28 +72,34 @@ function HutForm() {
         formData.append('latitude', lat);
         formData.append('longitude', lon);
         formData.append('altitude', altitude);
-        formData.append('phone', phone);
+        formData.append('phoneNumber', phone);
         formData.append('email', email);
         formData.append('website', website);
-        formData.append('numberBeds', numberBeds);
+        formData.append('numOfBeds', numberBeds);
         formData.append('description', description);
         if(file!=="") formData.append('file', file);
 
-        /*
-          API.newParking(formData)
-          .then(() => {
-            setName('');
-            setNumberBeds('');
-            setEvCharge('');
-            
-            ref.current.value=null;
-    
-            setSuccess('yes');
-          })
-          .catch(() => {
-            setSuccess('no');
-          })
-        */
+        
+        API.newHut(formData)
+            .then(() => {
+                setName('');
+                setLat('');
+                setLon('');
+                setAltitude('');
+                setPhone('');
+                setEmail('');
+                setWebsite('');
+                setNumberBeds('');
+                setDescription('');
+                
+                ref.current.value=null;
+
+                setSuccess('yes');
+            })
+            .catch(() => {
+                setSuccess('no');
+            })
+        
     };
 
 

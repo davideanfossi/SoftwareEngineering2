@@ -162,6 +162,23 @@ const newHike = async (formData) => {
   }
 };
 
+const newHut = async (formData) => {
+  try {
+    const response = await fetch(new URL("hut", SERVER_BASE), {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const login = async (credentials) => {
   try {
     const response = await fetch(new URL("sessions", SERVER_BASE), {
@@ -205,6 +222,7 @@ const API = {
   getFilteredHikes,
   getHikeDetails,
   newHike,
+  newHut,
   registerUser,
   activateEmail,
   login,
