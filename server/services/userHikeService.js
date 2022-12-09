@@ -93,13 +93,11 @@ class UserHikeService {
                 user = await this.userDAO.getUserById(id);
             const res = await this.hikeDAO.getUserMaxData(user.id);
             res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
-            
-            if(isLoggedIn && getPermission(["Local Guide"]))
-                return res;
-            else 
-                return null;
+            return res;
         } catch (err) {
             throw err;
         }
     }
 } 
+
+module.exports = HikeService;
