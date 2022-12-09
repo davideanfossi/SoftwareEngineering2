@@ -12,7 +12,7 @@ const hutDAO = new HutDAO(dbManager);
 const pointDAO = new PointDAO(dbManager);
 const hutService = new HutService(hutDAO, pointDAO);
 
-describe('Hut Service unit test',() => {
+describe('Hut Service unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
 
@@ -38,7 +38,7 @@ describe('Hut Service unit test',() => {
         try { dbManager.closeConnection(); }
         catch (err) {/*foo*/ }
     });
-    
+
     describe('Constructor test', () => {
         expect(() => new HutService(undefined, pointDAO))
             .toThrow('hutDAO must be defined for HutService!');
@@ -57,28 +57,37 @@ describe('Hut Service unit test',() => {
     let page = 1;
     let pageSize = 2;
     testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined,
-        {"totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut1, hut2]});
+        { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut1, hut2] });
     page = 2;
     testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined,
-        {"totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut3]});
+        { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut3] });
     page = undefined;
     pageSize = undefined;
     testGetHuts('test get huts page and pageSize undefined', page, pageSize, undefined, undefined, undefined, undefined, undefined,
-        {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut2, hut3]});
+        { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut2, hut3] });
 
     testGetHuts('test get huts min number of beds', page, pageSize, 20, undefined, undefined, undefined, undefined,
-        {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2, hut3]});  
+        { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2, hut3] });
     testGetHuts('test get huts max number of beds', page, pageSize, undefined, 20, undefined, undefined, undefined,
-        {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut3]});
+        { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut3] });
     testGetHuts('test get huts radius', page, pageSize, undefined, undefined, 47.5715101, 8.456101, 10,
-        {"totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2]});
+        { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2] });
+
+    testGetHutsLimits({ "maxNumOfBeds": 50 });
 
 });
 
 
-function testGetHuts(testMsg, pageNumber, pageSize, minNumOfBeds, maxNumOfBeds, baseLat, baseLon, radius, expectedObj){
-    test(testMsg, async() => {
+function testGetHuts(testMsg, pageNumber, pageSize, minNumOfBeds, maxNumOfBeds, baseLat, baseLon, radius, expectedObj) {
+    test(testMsg, async () => {
         const res = await hutService.getHuts(pageNumber, pageSize, minNumOfBeds, maxNumOfBeds, baseLat, baseLon, radius);
         expect(res).toEqual(expectedObj);
     })
+}
+
+function testGetHutsLimits(expectedObj) {
+    test('test get hikes limits', async () => {
+        const res = await hutService.getHutsLimits();
+        expect(res).toEqual(expectedObj);
+    });
 }
