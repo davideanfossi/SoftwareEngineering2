@@ -14,7 +14,7 @@ class ParkingService {
         try {
             const pointId = await this.pointDAO.insertPoint(latitude,longitude,altitude,pointLabel,address)
             
-            if (PointId > 0)
+            if (pointId > 0)
             {
                 const res = await this.parkingDAO.insertParking(name, ownerId, pointId, numSpots, hasFreeSpots, imageName);
                 return res;

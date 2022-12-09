@@ -25,19 +25,16 @@ router.post(
     isLoggedIn,
     getPermission(["Local Guide"]),
     fileUpload({ createParentPath: true }),
-  
     [
       body("name").notEmpty().isString().trim(),
       body("numSpots").notEmpty().isInt({ min: 0}),
-      body("hasFreeSpots").notEmpty().isInt({ min: 0}),
-      body("ownerId").notEmpty().isInt({ min: 0}),
-
+      body("hasFreeSpots").notEmpty().isBoolean(),
+      
       body("longitude").notEmpty().isString().trim(),
       body("latitude").notEmpty().isString().trim(),
       body("altitude").notEmpty().isString().trim(),
-      body("pointLabel").notEmpty().isString().trim(),
       body("address").optional().isString().trim(),
-
+      
       body('image').optional(),
   
     ],
@@ -51,16 +48,17 @@ router.post(
       //parking
       const name = req.body.name;
       const numSpots = Number.parseInt(req.body.numSpots);
-      const hasFreeSpots = Number.parseInt(req.body.hasFreeSpots);
+      const hasFreeSpots = req.body.hasFreeSpots ? 1 : 0;
 
       const rootPath = config.parkingImagesPath;
-        if (!rootPath) {
-          return res.status(500).json("error in reading parkingImagesPath from config");
-        }
-        const image = req.files ? req.files.image : null;
-        const imageName = image ? uuidv4() + '-' + image.name : null;
-        const imagePath = image ? rootPath + imageName : null;
-
+      if (!rootPath) {
+        return res.status(500).json("error in reading parkingImagesPath from config");
+      }
+      const image = req.files ? req.files.image : null;
+      const imageName = image ? uuidv4() + '-' + image.name : null;
+      const imagePath = image ? rootPath + imageName : null;
+      
+      
         if (image) {
           //  mv() method places the file inside public directory
           image.mv(imagePath, function (err) {
@@ -71,7 +69,7 @@ router.post(
         }  
       
       const ownerId = req.user.id; 
-
+      
       //parkingPoint
       const latitude = req.body.latitude;
       const longitude = req.body.longitude;
@@ -94,6 +92,7 @@ router.post(
       if (!result) return res.status(500).end();
       return res.status(200).json(result);
     } catch (err) {
+      console.log(err);
       switch (err.returnCode) {
         default:
           return res.status(500).json(err.message);

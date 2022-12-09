@@ -33,7 +33,6 @@ class UserDAO {
 
     async loginUser(email, password) {
         try {
-            console.log(email, password);
             const sql = "SELECT * FROM User WHERE email = ? ";
             const user = await this.dbManager.get(sql, [email], true);
             if (user === undefined) {

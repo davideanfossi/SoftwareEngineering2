@@ -27,7 +27,6 @@ function ParkingForm() {
     const [selectedPosition, setSelectedPosition] = useState(undefined);
     const [lat, setLat] = useState(45.0702899); //it is Turin!
     const [lon, setLon] = useState(7.6348208);
-    const [addr, setAddr] = useState(7.6348208);
 
     const [zoom, setZoom] = useState(6);
     const handleSave = (lat, lon, zoom) => {
@@ -63,40 +62,38 @@ function ParkingForm() {
         .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
         .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
         .catch(err => console.log(err));
-        setAddr(address);
 
         if (name === '') { setName(null); flag = true; }
         if (parkingSpot === '' || !(parseInt(parkingSpot) >= 0)) { setParkingSpot(null); flag = true; }
-        //if (freeSpot === '') { setFreeSpot(false); flag = true; }
-        //if (description === '') { setDescription(''); flag = true; }
-        //if (file === '') {setFile(null); flag=true;}
+        if (altitude === '' || !(parseInt(altitude) >= 0)) { setAltitude(null); flag = true; }
         if (flag) return;
         
         const formData = new FormData();
         formData.append('name', name);
         formData.append('numSpots', parkingSpot);
-        formData.append('hasFreeSpot', freeSpot);
-        formData.append('latitude', lat);
+        formData.append('hasFreeSpots', freeSpot);
         formData.append('longitude', lon);
+        formData.append('latitude', lat);
         formData.append('altitude', altitude);
-        formData.append('address', addr);
-        if(file!=="") formData.append('file', file);
+        formData.append('pointLabel', null);
+        formData.append('address', address);
+        if(file!=="") formData.append('image', file);
 
-        /*
+        
           API.newParking(formData)
           .then(() => {
             setName('');
             setParkingSpot('');
-            setEvCharge('');
-            
+            setAltitude('');
+            setFreeSpot(false);
+            setFile('');
             ref.current.value=null;
-    
             setSuccess('yes');
           })
           .catch(() => {
             setSuccess('no');
           })
-        */
+        
     };
 
 
@@ -155,7 +152,7 @@ function ParkingForm() {
                                     <Form.Group>
                                         <Form.Label>Latitude *</Form.Label>
                                         <Form.Control
-                                            isInvalid={lat === null || parseFloat(lat) < 0 || parseFloat(lat) > 90}
+                                            isInvalid={lat === null || lat === '' || parseFloat(lat) < 0 || parseFloat(lat) > 90}
                                             type='number' step={"any"}
                                             placeholder="latitude of parking position"
                                             value={lat == null ? '' : lat}
@@ -170,7 +167,7 @@ function ParkingForm() {
                                     <Form.Group>
                                         <Form.Label>Longitude *</Form.Label>
                                         <Form.Control
-                                            isInvalid={lon === null || parseFloat(lon) < 0 || parseFloat(lon) > 90}
+                                            isInvalid={lon === null || lon === '' || parseFloat(lon) < 0 || parseFloat(lon) > 90}
                                             type='number' step={"any"}
                                             placeholder="longitude of parking position"
                                             value={lon == null ? '' : lon}
@@ -190,7 +187,6 @@ function ParkingForm() {
                             onClick={() => {
                                 handleInputMehtod();
                                 handleSave(lat, lon, zoom);
-                                console.log(lat, lon, zoom);
                             }}
                         > {coordSelector ? "Use coordinates" : "Use map"}
                         </Button>
@@ -227,28 +223,20 @@ function ParkingForm() {
                             <Col md className="align-items-center">
                                 <Form.Group>
                                     <Form.Label>Altitude *</Form.Label>
-                                    <Form.Control isInvalid={altitude === null || altitude < 0}
+                                    <Form.Control 
+                                    isInvalid={altitude === null  || altitude < 0}
                                         type="number"
                                         placeholder="Altitude"
                                         value={altitude == null ? '' : altitude}
                                         onChange={event => { setAltitude(event.target.value); }} />
                                     <Form.Control.Feedback type="invalid">
-                                        Altitude number greater than 0
+                                        Altitude number must be greater than 0
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Col>
                         </Row>
                         <Col className="align-items-center pt-2">
                             <Form.Group className="ms-3 mt-2">
-                                {/* <Row >
-                                    <Form.Check
-                                        type="switch"
-                                        id="ev-switch"
-                                        label="electric veichle charging"
-                                        onChange={event => { setEvCharge(event.target.checked.valueOf()); }}
-                                    />
-                                </Row> */}
-
                                 <Row className="mt-1">
                                     <Form.Check
                                         type="switch"
@@ -259,14 +247,6 @@ function ParkingForm() {
                                 </Row>
                             </Form.Group>
                         </Col>
-                        {/* <Form.Group style={{ "paddingTop": "12px" }}>
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control 
-                                type="text"
-                                placeholder="Insert useful information for Hikers"
-                                value={description == null ? '' : description}
-                                onChange={event => { setDescription(event.target.value); }} />
-                        </Form.Group> */}
 
                         <Form.Group style={{ "paddingTop": "12px" }}>
                             <Form.Label>Image of the Parking</Form.Label>
