@@ -8,6 +8,7 @@ const LocalStrategy = require('passport-local');
 const session = require('express-session');
 const DbManager = require("./database/dbManager");
 const hikeController = require('./controllers/hikeController');
+const hutController=require('./Controllers/hutController')
 const { login, getPermission } = require('./controllers/loginController');
 const authRoutes = require('./controllers/authController');
 
@@ -64,7 +65,6 @@ app.post("/api/sessions", passport.authenticate('local'), (req, res) => {
 
 // GET /api/sessions/current
 app.get('/api/sessions/current', (req, res) => {
-    console.log("User: " + req.user);
     if (req.isAuthenticated())
       return res.status(200).json(req.user);
     else
@@ -92,6 +92,7 @@ dbManager.openConnection()
 
 /********* APIs *********/
 app.use("/api", hikeController);
+app.use("/api", hutController);
 app.use("/api", authRoutes);
 
 

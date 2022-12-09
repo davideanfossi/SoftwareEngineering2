@@ -43,13 +43,14 @@ class UserDAO {
 
     async loginUser(email, password) {
         try {
-            console.log(email, password);
             const sql = "SELECT * FROM User WHERE email = ? ";
             const user = await this.dbManager.get(sql, [email], true);
             if (user === undefined) {
                 // user does not exist
                 throw { err: 401, msg: "Incorrect username and/or password." };
             }
+            if(user.isVerified === 0)
+                throw { err: 401, msg: "Account must be verified" };
             const login = await verifyPassword(
                 user.password,
                 user.salt,
