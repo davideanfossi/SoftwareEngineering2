@@ -34,28 +34,28 @@ export const HutFilter = ({
 
   const [show, setShow] = useState(false);
 
-//   useEffect(() => {
-//     API.getHikesLimits()
-//       .then((limits) => {
-//         setMaxNumOfBeds(limits.maxNumOfBeds);
-//         setMaxAltitude(limits.maxAscent);
-//         setMaxExpectedTime(limits.maxExpectedTime);
-//         setAbsoluteMaxLength(limits.maxNumOfBeds);
-//         setAbsoluteMaxHeight(limits.maxAscent);
-//         setAbsoluteExpectedTime(limits.maxExpectedTime);
-//         setDifficulties(limits.difficultyType);
-//         navigator.geolocation.getCurrentPosition(function (position) {
-//           //evaluate if do it in a dedicated useEffect
-//           setLat(position.coords.latitude);
-//           setLon(position.coords.longitude);
-//         });
-//       })
-//       .catch((err) => console.log(err));
-//   }, []);
+  //   useEffect(() => {
+  //     API.getHikesLimits()
+  //       .then((limits) => {
+  //         setMaxNumOfBeds(limits.maxNumOfBeds);
+  //         setMaxAltitude(limits.maxAscent);
+  //         setMaxExpectedTime(limits.maxExpectedTime);
+  //         setAbsoluteMaxLength(limits.maxNumOfBeds);
+  //         setAbsoluteMaxHeight(limits.maxAscent);
+  //         setAbsoluteExpectedTime(limits.maxExpectedTime);
+  //         setDifficulties(limits.difficultyType);
+  //         navigator.geolocation.getCurrentPosition(function (position) {
+  //           //evaluate if do it in a dedicated useEffect
+  //           setLat(position.coords.latitude);
+  //           setLon(position.coords.longitude);
+  //         });
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }, []);
 
   //this handle the change of a filter so it will set the pageNuber to 1
   useEffect(() => {
-    API.getFilteredHikes(
+    API.getFilteredHut(
       minNumOfBeds,
       maxNumOfBeds,
       lat,
@@ -86,19 +86,18 @@ export const HutFilter = ({
   //this handle the page change
   useEffect(() => {
     API.getFilteredHut(
-        minNumOfBeds,
-        maxNumOfBeds,
-        lat,
-        lon,
-        radius,
-        pageNumber,
-        pageSize,
-        minAltitude,
-        maxAltitude
+      minNumOfBeds,
+      maxNumOfBeds,
+      lat,
+      lon,
+      radius,
+      pageNumber,
+      pageSize,
+      minAltitude,
+      maxAltitude
     )
       .then((hikes) => handleServerResponseChangePage(hikes))
       .catch((err) => console.log(err));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize, pageNumber]);
 
   //those handler are for map modal
@@ -127,6 +126,14 @@ export const HutFilter = ({
       <div className="hike-filter-container">
         <Container fluid>
           <Row>
+            <Col>
+              <Form.Label
+                aria-label="Default select example">Name </Form.Label>
+              <Form.Control type="text" placeholder="Name of the hut"
+                value={name}
+                onChange={(event) => setName(event.target.value)} />
+
+            </Col>
             <Col xs={12} md={4}>
               <div>Number of beds</div>
               <MultiRangeSlider
@@ -151,31 +158,6 @@ export const HutFilter = ({
             </Col>
           </Row>
           <Row>
-            <Col xs={12} md={6}>
-              {/* <Container>
-                <Row>
-                  <Col>
-                    <div>Difficulty</div>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Select
-                      aria-label="Default select example"
-                      value={difficulty}
-                      onChange={(event) => setDifficulty(event.target.value)}
-                    >
-                      <option value={-1}>Select difficulty</option>
-                      {difficulties.map((difficulty, count) => (
-                        <option key={count} value={count}>
-                          {difficulty}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                </Row>
-              </Container> */}
-            </Col>
             <Col
               xs={12}
               md={6}

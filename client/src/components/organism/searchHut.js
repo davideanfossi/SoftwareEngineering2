@@ -13,17 +13,18 @@ export const SearchHut = () => {
     setPageNumer(1);
     setPageSize(huts.pageSize);
     setTotalPages(huts.totalPages);
+    console.log(huts);
     setHutList(
       huts.pageItems.map(
         (hut) =>
-          new Hut(
+        new Hut(
             hut.id,
             hut.name,
             hut.description,
-            hut.numberOfBeds,
-            hut.phone,
+            hut.numOfBeds,
+            hut.phoneNumber,
             hut.email,
-            hut.optionalWebSite,
+            hut.website,
             new Point(
                 hut.point.id,
                 hut.point.latitude,
@@ -47,10 +48,10 @@ export const SearchHut = () => {
             hut.id,
             hut.name,
             hut.description,
-            hut.numberOfBeds,
-            hut.phone,
+            hut.numOfBeds,
+            hut.phoneNumber,
             hut.email,
-            hut.optionalWebSite,
+            hut.website,
             new Point(
                 hut.point.id,
                 hut.point.latitude,
