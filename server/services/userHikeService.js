@@ -1,5 +1,9 @@
 'use strict'
 
+const { difficultyType } = require("../models/hikeModel");
+const { checkHikeIsWithinCircle } = require("../utils/positionUtils");
+import { getPermission, isLoggedIn } from "../controllers/loginController";
+
 class UserHikeService {
     constructor(hikeDAO, pointDAO, userDAO) {
         if (!hikeDAO)
@@ -38,9 +42,12 @@ class UserHikeService {
             else
                 user = await this.userDAO.getUserById(id);
 
-            if(user.isVerified === true) {
+            if(id !== undefined || username !== undefined && email !== undefined && role !== undefined) {
                 hikes = hikes.filter(hike => {
-                    return hike.userId === user.id
+                    if(isLoggedIn && getPermission(["Local Guide"]))
+                        return hike.userId === user.id;
+                    else 
+                        return null;
                 })
             }
 
@@ -60,9 +67,7 @@ class UserHikeService {
             if((radius !== 0 && radius !== undefined) && baseLat !== undefined && baseLon !== undefined){
                 // filer all hikes with start point, end point or reference points inside the radius
                 hikes = hikes.filter(hike => {
-                    if (isWithinCircle(baseLat, baseLon, hike.startPoint.latitude, hike.startPoint.longitude, radius) 
-                        || isWithinCircle(baseLat, baseLon, hike.endPoint.latitude, hike.endPoint.longitude, radius)
-                        || hike.referencePoints.some(rp => isWithinCircle(baseLat, baseLon, rp.latitude, rp.longitude, radius)))
+                    if (checkHikeIsWithinCircle(baseLat, baseLon, radius, hike))
                         return true;
                     else
                         return false;
@@ -86,12 +91,15 @@ class UserHikeService {
                 user = await this.userDAO.getUSerByCredentials(username, email, role);
             else
                 user = await this.userDAO.getUserById(id);
-
             const res = await this.hikeDAO.getUserMaxData(user.id);
             res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
-            return res;
+            
+            if(isLoggedIn && getPermission(["Local Guide"]))
+                return res;
+            else 
+                return null;
         } catch (err) {
             throw err;
         }
     }
-}
+} 
