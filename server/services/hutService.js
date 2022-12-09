@@ -13,7 +13,7 @@ class HutService {
         this.pointDAO = pointDAO;
     }
 
-    getHuts = async (pageNumber = 1, pageSize = 10, minNumOfBeds, maxNumOfBeds, baseLat, baseLon, radius = 0) => {
+    getHuts = async ({ minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius = 0 }, { pageNumber = 1, pageSize = 10 }) => {
         let huts;
         let returnedHuts;
         const offset = (pageNumber - 1) * pageSize; // offset of the page
@@ -37,6 +37,12 @@ class HutService {
                     return false;
             });
         }
+
+        if (minAltitude !== undefined || maxAltitude !== undefined) {
+            huts = huts.filter(hut => (minAltitude === undefined || hut.point.altitude >= minAltitude) &&
+                (maxAltitude === undefined || hut.point.altitude <= maxAltitude));
+        }
+
         returnedHuts = huts.slice(offset, offset + pageSize);
         const totalPages = Math.ceil(huts.length / pageSize);
 
