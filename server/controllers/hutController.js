@@ -58,4 +58,15 @@ router.get("/huts",
 );
 
 
+router.get("/huts/limits", async (req, res) => {
+    try {
+        const result = await hutService.getHutsLimits();
+        return res.status(200).json(result);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send();
+    }
+});
+
+
 module.exports = router;
