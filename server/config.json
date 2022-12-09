@@ -4,5 +4,5 @@
         "TEST": "./database/test.db"
     },
     "gpxPath" : "./public/gpxFiles/",
-    "parkingImagesPath" : "./public/parkingImages/"
+    "parkingImagesPath" : "./public/parkingimages/"
 }

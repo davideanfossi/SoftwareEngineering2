@@ -70,7 +70,7 @@ router.post(
           });
         }  
       
-      const ownerId = req.user ? req.user.id : 1; 
+      const ownerId = req.user.id; 
 
       //parkingPoint
       const latitude = req.body.latitude;
