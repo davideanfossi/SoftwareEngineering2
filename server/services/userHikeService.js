@@ -1,17 +1,23 @@
-class HikeService {
-    constructor(hikeDAO, pointDAO) {
+'use strict'
+
+class UserHikeService {
+    constructor(hikeDAO, pointDAO, userDAO) {
         if (!hikeDAO)
             throw 'hikeDAO must be defined for hike service!';
         if (!pointDAO)
             throw 'pointDAO must be defined for hike service!';
+        if(!userDAO) 
+            throw 'userDAO must be define for user hike service!';
         this.hikeDAO = hikeDAO;
         this.pointDAO = pointDAO;
+        this.userDAO = userDAO;
     }
 
-    getHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius=0, city, province) => {
+    getUserHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius=0, city, province, email, username, id, role) => {
         try {
             let hikes;
             let returnedHikes;
+            let user;
             const offset = (pageNumber - 1) * pageSize; // offset of the page
 
             if (!minLen && !maxLen && !minTime && !maxTime && !minAscent && !maxAscent && !difficulty)
@@ -25,6 +31,12 @@ class HikeService {
                 hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
                 hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
             }
+
+            //get user
+            if(!id) 
+                user = await this.userDAO.getUSerByCredentials(username, email, role);
+            else
+                user = await this.userDAO.getUserByEmail(id);
 
             if(city){
                 hikes = hikes.filter(hike => {
@@ -51,24 +63,14 @@ class HikeService {
                 });
             }
 
-            // take only page requested
-            returnedHikes = hikes.slice(offset, offset + pageSize);
-
-            const totalPages = Math.ceil(hikes.length / pageSize);
-
-            return {"totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes};
-        } catch (err) {
-            throw err;
+            getHikesLimits = async () => {
+                try {
+                    const res = await this.hikeDAO.getMaxData();
+                    res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
+                    return res;
+                } catch (err) {
+                    throw err;
+                }
+            }
         }
-    };
-
-    getHikesLimits = async () => {
-        try {
-            const res = await this.hikeDAO.getMaxData();
-            res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
-            return res;
-        } catch (err) {
-            throw err;
-        }
-    }
 }
