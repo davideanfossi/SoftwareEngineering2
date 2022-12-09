@@ -56,21 +56,25 @@ describe('Hut Service unit test', () => {
 
     let page = 1;
     let pageSize = 2;
-    testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut1, hut2] });
     page = 2;
-    testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut3] });
     page = undefined;
     pageSize = undefined;
-    testGetHuts('test get huts page and pageSize undefined', page, pageSize, undefined, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts page and pageSize undefined', page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut2, hut3] });
 
-    testGetHuts('test get huts min number of beds', page, pageSize, 20, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts min number of beds', page, pageSize, 20, undefined, undefined, undefined, undefined, undefined, undefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2, hut3] });
-    testGetHuts('test get huts max number of beds', page, pageSize, undefined, 20, undefined, undefined, undefined,
+    testGetHuts('test get huts max number of beds', page, pageSize, undefined, 20, undefined, undefined, undefined, undefined, undefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut3] });
-    testGetHuts('test get huts radius', page, pageSize, undefined, undefined, 47.5715101, 8.456101, 10,
+    testGetHuts('test get huts min altitude', page, pageSize, undefined, undefined, 270, undefined, undefined, undefined, undefined,
+        { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2] });
+    testGetHuts('test get huts max altitude', page, pageSize, undefined, undefined, undefined, 220, undefined, undefined, undefined,
+        { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut3] });
+    testGetHuts('test get huts radius', page, pageSize, undefined, undefined, undefined, undefined, 47.5715101, 8.456101, 10,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2] });
 
     testGetHutsLimits({ "maxNumOfBeds": 50 });
@@ -78,9 +82,9 @@ describe('Hut Service unit test', () => {
 });
 
 
-function testGetHuts(testMsg, pageNumber, pageSize, minNumOfBeds, maxNumOfBeds, baseLat, baseLon, radius, expectedObj) {
+function testGetHuts(testMsg, pageNumber, pageSize, minNumOfBeds, maxNumOfBeds, minAltitude, maxAltitude, baseLat, baseLon, radius, expectedObj) {
     test(testMsg, async () => {
-        const res = await hutService.getHuts(pageNumber, pageSize, minNumOfBeds, maxNumOfBeds, baseLat, baseLon, radius);
+        const res = await hutService.getHuts({ minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius }, { pageNumber, pageSize });
         expect(res).toEqual(expectedObj);
     })
 }
