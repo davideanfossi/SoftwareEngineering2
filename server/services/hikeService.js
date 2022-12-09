@@ -7,6 +7,9 @@ const path = require('path');
 const {difficultyType} = require("../models/hikeModel");
 
 const config = require("../config.json");
+//const ParkingDAO = require("../daos/parkingDAO");
+//const parkingDAO = new ParkingDAO(dbManager);
+const { getAllParkings } = require("../daos/parkingDAO");
 
 class HikeService {
     constructor(hikeDAO, pointDAO) {
@@ -71,6 +74,28 @@ class HikeService {
             throw err;
         }
     };
+
+    getParkingsStart = async(hike) => {
+        try {
+            let parkings = await getAllParkings();
+            let returnedParkings = [];
+
+            hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+            
+            // get parkings
+            for (const parking of parkings) {
+                parking.point = await parking.pointDAO.getPoint(parking.point);
+                if (checkParkingIsWithinCircle5(hike.startPoint, parking.point))
+                    returnedParkings.push(parking);
+            }
+
+            return returnedParkings;
+
+        }catch (err) {
+            throw err;
+        }
+    };
+
 
     getHikesLimits = async () => {
         try {
@@ -156,6 +181,11 @@ function computeDistance(lat1, lon1, lat2, lon2) {
  */
 function isWithinCircle(baseLat, baseLng, lat, lng, radius){
     return computeDistance(baseLat, baseLng, lat, lng) <= radius;
+}
+
+
+function checkParkingIsWithinCircle5(hike, parking){
+    return isWithinCircle(hike.startPoint.latitude, hike.startPoint.longitude, parking.latitude, parking.longitude, 5)
 }
 
 

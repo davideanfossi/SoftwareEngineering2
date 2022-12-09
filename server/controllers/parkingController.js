@@ -18,6 +18,7 @@ const pointDAO = new PointDAO(dbManager);
 const parkingDAO = new ParkingDAO(dbManager);
 const parkingService = new ParkingService(parkingDAO, pointDAO);
 const { isLoggedIn, getPermission } = require("./loginController");
+const { isWithinCircle, checkHikeIsWithinCircle, checkParkingIsWithinCircle5 } = require("../utils/positionUtils");
 
 
 router.post(

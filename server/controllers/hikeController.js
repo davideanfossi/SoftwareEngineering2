@@ -130,6 +130,18 @@ router.get("/hikes/limits", express.json(), async (req, res) => {
   }
 });
 
+router.get("/hikes", express.json(), async (req, res) => {
+  try {
+    const result = await hikeService.getParkingsStart(hike);
+    return res.status(200).json(result);
+  } catch (err) {
+    switch (err.returnCode) {
+      default:
+        return res.status(500).send();
+    }
+  }
+});
+
 router.post(
   "/hike",
   isLoggedIn,
