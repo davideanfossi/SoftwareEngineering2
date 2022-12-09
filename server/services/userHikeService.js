@@ -36,7 +36,13 @@ class UserHikeService {
             if(!id) 
                 user = await this.userDAO.getUSerByCredentials(username, email, role);
             else
-                user = await this.userDAO.getUserByEmail(id);
+                user = await this.userDAO.getUserById(id);
+                
+            if(user.isVerified === true) {
+                hikes = hikes.filter(hike => {
+                    return hike.userId === user.id
+                })
+            }
 
             if(city){
                 hikes = hikes.filter(hike => {
@@ -61,16 +67,25 @@ class UserHikeService {
                     else
                         return false;
                 });
-            }
+            } 
+            // take only page requested
+            returnedHikes = hikes.slice(offset, offset + pageSize);
 
-            getHikesLimits = async () => {
-                try {
-                    const res = await this.hikeDAO.getMaxData();
-                    res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
-                    return res;
-                } catch (err) {
-                    throw err;
-                }
-            }
+            const totalPages = Math.ceil(hikes.length / pageSize);
+
+            return { "totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes };
+        } catch (err) {
+            throw err;
+        };
+    }
+    
+    getUserHikesLimits = async () => {
+        try {
+            const res = await this.hikeDAO.getMaxData();
+            res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
+            return res;
+        } catch (err) {
+            throw err;
         }
+    }
 }
