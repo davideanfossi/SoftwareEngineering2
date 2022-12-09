@@ -27,12 +27,12 @@ export const HikeRow = ({ hike, even }) => {
   useEffect(() => {
     if (isLogged && dropped) {
       API.getHikeDetails(hike).then((elem) => {
-        console.log(elem);
         setStartPoint(elem.startPoint);
         setEndPoint(elem.endPoint);
         setReferencePoints(elem.referencePoints);
         setTrack(elem.track);
-      });
+      }).catch(err => {
+      }) ;
     }
   }, [dropped, hike, isLogged]);
 

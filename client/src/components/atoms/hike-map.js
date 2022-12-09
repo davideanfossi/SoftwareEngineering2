@@ -8,7 +8,6 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
   const [map, setMap] = useState(undefined);
 
-  console.log(center);
   useEffect(() => {
     if (startPoint !== undefined && endPoint !== undefined) {
       setCenter([

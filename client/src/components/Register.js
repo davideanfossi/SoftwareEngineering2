@@ -52,7 +52,6 @@ function Register(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(username, password, confPassword, name, surname, phoneNumber);
         
         const flag= validateData();
         if (flag) return;

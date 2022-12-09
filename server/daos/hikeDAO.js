@@ -20,7 +20,7 @@ class HikeDAO {
         }
     };
 
-    getHikes = async (minLen = 0, maxLen = 100000, minTime = 0, maxTime = 100000, minAscent = 0, maxAscent = 100000, difficulty) => {
+    getHikes = async (minLen = 0, maxLen = 100000, minTime = 0, maxTime = 100000, minAscent = 0, maxAscent = 100000, difficulty=undefined) => {
         try {
             const sql = difficulty ?
                 "SELECT * FROM Hike WHERE (length >= ? AND length <= ?) AND (expectedTime >= ? AND expectedTime <= ?) AND (ascent >= ? AND ascent <= ?) AND difficulty = ? ORDER BY id;" :
