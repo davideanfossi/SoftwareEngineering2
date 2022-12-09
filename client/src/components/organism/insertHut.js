@@ -1,16 +1,16 @@
-import {ParkingForm} from "../moleculars/parking-form"
+import {HutForm} from "../moleculars/hut-form"
 import { Row } from "react-bootstrap";
 
-function InsertParking(){
+function InsertHut(){
     return <>
         <Row className='justify-content-center align-items-center w-100' style={{"margin": "0px"}}>
             <Row className="justify-content-center align-items-center" 
             style={{"paddingTop": '20px', "paddingBottom": '50px', "paddingRight": "0px", "paddingLeft": "0px",
             "backgroundColor": "white", "width": "800px"}}>
-                <ParkingForm/>
+                <HutForm/>
             </Row>
         </Row>
     </>
 }
 
-export {InsertParking};
+export {InsertHut};
