@@ -37,7 +37,7 @@ class UserHikeService {
                 user = await this.userDAO.getUSerByCredentials(username, email, role);
             else
                 user = await this.userDAO.getUserById(id);
-                
+
             if(user.isVerified === true) {
                 hikes = hikes.filter(hike => {
                     return hike.userId === user.id
@@ -79,9 +79,15 @@ class UserHikeService {
         };
     }
     
-    getUserHikesLimits = async () => {
+    getUserHikesLimits = async (email, username, id, role) => {
         try {
-            const res = await this.hikeDAO.getMaxData();
+            let user;
+            if(!id) 
+                user = await this.userDAO.getUSerByCredentials(username, email, role);
+            else
+                user = await this.userDAO.getUserById(id);
+
+            const res = await this.hikeDAO.getUserMaxData(user.id);
             res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
             return res;
         } catch (err) {
