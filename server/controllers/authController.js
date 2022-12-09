@@ -42,7 +42,6 @@ const userValidator = (req, res, next) => {
 
 router.post('/signup', userValidator, 
     async (req, res) => {
-        let response = {};
         try {
             const { email, username, role, password, name, surname, phoneNumber } = req.body;
 

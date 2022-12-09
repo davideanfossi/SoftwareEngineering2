@@ -30,7 +30,6 @@ const getPermission = (authorizedRoles) => {
     return async (req, res, next) => {
         const userId = req.user.id;
         const user = await userDAO.getUserById(userId);
-        console.log(user);
         authorizedRoles.includes(user.role)
             ? next()
             : res.status(403).send("Forbidden");
