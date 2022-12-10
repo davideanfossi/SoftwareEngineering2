@@ -26,8 +26,7 @@ router.get(
     "/user-hikes",
     isLoggedIn,
     getPermission(["Local Guide"]),
-    [param("id").exists().isInt({ min: 1 })],
-    express.json(), async (req, res) => {
+    async (req, res) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -99,7 +98,9 @@ router.get(
     }
 );
 
-router.get("/user-hikes/limits", isLoggedIn, getPermission(["Local Guide"]), async (req, res) => {
+router.get("/user-hikes/limits", 
+isLoggedIn, getPermission(["Local Guide"]), 
+async (req, res) => {
     try {
       const result = await profileService.getUserHikesLimits(req.user.id);
       return res.status(200).json(result);
