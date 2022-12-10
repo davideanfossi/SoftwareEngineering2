@@ -9,6 +9,7 @@ export const HutFilter = ({
   handleServerResponseChangePage,
   pageSize,
   pageNumber,
+  setNameSearch
 }) => {
   const [radius, setRadius] = useState(0);
   const [lat, setLat] = useState(45.0702899); //it is Turin!
@@ -19,18 +20,10 @@ export const HutFilter = ({
   const [minAltitude, setMinAltitude] = useState(0);
   const [maxAltitude, setMaxAltitude] = useState(100);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [webSite, setWebSite] = useState("");
-  //const [minExpectedTime, setMinExpectedTime] = useState(0);
-  //const [maxExpectedTime, setMaxExpectedTime] = useState(100);
-  //const [difficulty, setDifficulty] = useState(-1);
 
-  const [absoluteMaxLength, setAbsoluteMaxLength] = useState(100);
-  const [absoluteMaxHeight, setAbsoluteMaxHeight] = useState(100);
-  const [absoluteMaxExpectedTime, setAbsoluteExpectedTime] = useState(100);
-  const [difficulties, setDifficulties] = useState(["Easy", "Medium", "Hard"]);
+  const [absoluteMaxBed, setAbsoluteMaxBed] = useState(100);
+  const [absoluteMaxAltitude, setAbsoluteMaxAltitude] = useState(100);
+  
 
   const [show, setShow] = useState(false);
 
@@ -68,20 +61,17 @@ export const HutFilter = ({
     )
       .then((huts) => handleServerResponse(huts))
       .catch((err) => console.log(err));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     maxAltitude,
     maxNumOfBeds,
-    minAltitude,
     minNumOfBeds,
     radius,
     lat,
     lon,
-    name,
-    description,
-    phone,
-    email,
-    webSite
   ]);
+
+  
 
   //this handle the page change
   useEffect(() => {
@@ -98,6 +88,7 @@ export const HutFilter = ({
     )
       .then((hikes) => handleServerResponseChangePage(hikes))
       .catch((err) => console.log(err));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize, pageNumber]);
 
   //those handler are for map modal
@@ -131,14 +122,15 @@ export const HutFilter = ({
                 aria-label="Default select example">Name </Form.Label>
               <Form.Control type="text" placeholder="Name of the hut"
                 value={name}
-                onChange={(event) => setName(event.target.value)} />
+                onChange={(event) => {setName(event.target.value);
+                                      setNameSearch(event.target.value);}} />
 
             </Col>
             <Col xs={12} md={4}>
               <div>Number of beds</div>
               <MultiRangeSlider
                 min={0}
-                max={absoluteMaxLength}
+                max={absoluteMaxBed}
                 minVal={minNumOfBeds}
                 maxVal={maxNumOfBeds}
                 setMinVal={setMinNumOfBeds}
@@ -149,7 +141,7 @@ export const HutFilter = ({
               <div>Altitude</div>
               <MultiRangeSlider
                 min={0}
-                max={absoluteMaxHeight}
+                max={absoluteMaxAltitude}
                 minVal={minAltitude}
                 maxVal={maxAltitude}
                 setMinVal={setMinAltitude}

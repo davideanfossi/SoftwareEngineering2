@@ -9,6 +9,7 @@ export const SearchHut = () => {
   const [pageNumber, setPageNumer] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
+  const [nameSearch, setNameSearch] = useState('');
   const handleServerResponse = (huts) => {
     setPageNumer(1);
     setPageSize(huts.pageSize);
@@ -64,6 +65,8 @@ export const SearchHut = () => {
       )
     );
   };
+
+
   const onPageChange = (newPageNumber) => {
     setPageNumer(newPageNumber);
   };
@@ -75,9 +78,10 @@ export const SearchHut = () => {
         handleServerResponseChangePage={handleServerResponseChangePage}
         pageSize={pageSize}
         pageNumber={pageNumber}
+        setNameSearch={setNameSearch}
       />
       <div className="hut-table-container">
-        <HutTable hutList={hutList} />
+        <HutTable hutList={nameSearch === '' ? hutList : hutList.filter(hut => hut.name.includes(nameSearch))} />
       </div>
       <Paging
         totalPages={totalPages}

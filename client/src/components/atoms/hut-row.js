@@ -1,20 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
-import API from "../../API";
+import { Link } from 'react-router-dom';
+import { SinglePointMap } from "./single-point-map";
+import { UserContext } from "../../context/user-context";
 
 export const HutRow = ({ hut, even }) => {
+  const userContext = useContext(UserContext);
+  const [dropped, setDropped] = useState(false);
+  const isLogged = ["Hiker", "Local Guide"].includes(userContext.user.role);
+
+  const toggleDrop = () => {
+    setDropped((prev) => !prev);
+  };
+
 
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
       <Col>
-        <Container fluid>
+        <Container fluid onClick={toggleDrop}>
           <Row>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              // xs={8}
-              // sm={4}
-              // md={2}
+              xs={12}
+              sm={12}
+              md={4}
             >
               <Container fluid>
                 <Row>
@@ -31,9 +40,9 @@ export const HutRow = ({ hut, even }) => {
 
             <Col
                className="d-flex justify-content-center align-items-center my-3 text-center"
-              // xs={8}
-              // sm={2}
-              // md={1}
+              xs={6}
+              sm={6}
+              md={4}
             >
               <Container fluid>
                 <Row>
@@ -45,60 +54,11 @@ export const HutRow = ({ hut, even }) => {
               </Container>
             </Col>
 
-            {hut.optionalWebsite === "" ? <></> :
-            <Col
-              className="d-flex justify-content-center align-items-center my-3 text-center"
-              // xs={8}
-              // sm={4}
-              // md={2}
-            >
-              <Container fluid>
-                <Row>
-                  <Col className="fw-bold">Website:</Col>
-                </Row>
-                <Row>
-                  <Col>
-                    {hut.optionalWebsite}
-                  </Col>
-                </Row>
-              </Container>
-            </Col> }
-
             <Col
                className="d-flex justify-content-center align-items-center my-3 text-center"
-              // xs={4}
-              // sm={2}
-              // md={1}
-            >
-              <Container fluid>
-                <Row>
-                  <Col className="fw-bold">Phone:</Col>
-                </Row>
-                <Row>
-                  <Col>{hut.phone}</Col>
-                </Row>
-              </Container>
-            </Col>
-            <Col
-               className="d-flex justify-content-center align-items-center my-3 text-center"
-              // xs={4}
-              // sm={2}
-              // md={1}
-            >
-              <Container fluid>
-                <Row>
-                  <Col className="fw-bold ">Email:</Col>
-                </Row>
-                <Row>
-                  <Col>{hut.email}m</Col>
-                </Row>
-              </Container>
-            </Col>
-            <Col
-               className="d-flex justify-content-center align-items-center my-3 text-center"
-              // xs={12}
-              // sm={4}
-              // md={2}
+              xs={6}
+              sm={6}
+              md={4}
             >
               <Container fluid>
                 <Row>
@@ -111,20 +71,70 @@ export const HutRow = ({ hut, even }) => {
                 </Row>
               </Container>
             </Col>
+
+            <Col
+              className="d-flex justify-content-center align-items-center my-3 text-center"
+              xs={6}
+              sm={4}
+              md={4}
+            >
+              <Container fluid>
+                <Row>
+                  <Col className="fw-bold">Website:</Col>
+                </Row>
+                <Row>
+                  <Col>
+                    {hut.optionalWebsite === "" ? " - " :  hut.optionalWebsite }
+                  </Col>
+                </Row>
+              </Container>
+            </Col> 
+
+            <Col
+               className="d-flex justify-content-center align-items-center my-3 text-center"
+              xs={6}
+              sm={4}
+              md={4}
+            >
+              <Container fluid>
+                <Row>
+                  <Col className="fw-bold">Phone:</Col>
+                </Row>
+                <Row>
+                  <Col>{hut.phone}</Col>
+                </Row>
+              </Container>
+            </Col>
+            <Col
+               className="d-flex justify-content-center align-items-center my-3 text-center"
+              xs={12}
+              sm={4}
+              md={4}
+            >
+              <Container fluid>
+                <Row>
+                  <Col className="fw-bold ">Email:</Col>
+                </Row>
+                <Row>
+                  <Col>{hut.email}m</Col>
+                </Row>
+              </Container>
+            </Col>
+           
             
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              // xs={12}
-              // sm={6}
-              // md={4}
+              xs={12}
+              sm={12}
+              md={12}
             >
               <Container fluid>
                 <Row>
                   <Col className="fw-bold">Description:</Col>
                 </Row>
                 <Row>
-                  <Col>
-                    {hut.description}
+                  <Col className={dropped ? "" : "text-truncate"}>
+                    {"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum" + hut.description}
                   </Col>
                 </Row>
               </Container>
@@ -132,6 +142,27 @@ export const HutRow = ({ hut, even }) => {
            
 
           </Row>
+
+          {dropped && (
+            <Row>
+              <Col
+                className="d-flex justify-content-center align-items-center my-3"
+                xs={12}
+              >
+                {isLogged ? (
+                  <SinglePointMap
+                    point={hut.point}
+                  />
+                  ) : (
+                    <>
+                    <Link to='/login'>Log in</Link>&nbsp; to see more info
+                    </>
+                  )}
+              </Col>
+            </Row>
+          )}
+       
+
         </Container>
       </Col>
     </Row>
