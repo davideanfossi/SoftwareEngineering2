@@ -2,7 +2,7 @@
 
 class Parking{
 
-    constructor(id, name, address){
+    constructor(id, name, numSpots, hasFreeSpots, pointId, ownerId){
         this.id = id;
         this.name = name;
         this.numSpots = numSpots;
