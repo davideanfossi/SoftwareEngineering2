@@ -3,6 +3,5 @@
         "PROD": "./database/hikeDB.db",
         "TEST": "./database/test.db"
     },
-    "gpxPath" : "./public/gpxFiles/",
-    "hutImagesPath" : "./public/hutImages/"
+    "gpxPath" : "./public/gpxFiles/"
 }

@@ -8,7 +8,6 @@ const LocalStrategy = require('passport-local');
 const session = require('express-session');
 const DbManager = require("./database/dbManager");
 const hikeController = require('./controllers/hikeController');
-const hutController=require('./Controllers/hutController')
 const { login, getPermission } = require('./controllers/loginController');
 const authRoutes = require('./controllers/authController');
 
@@ -92,7 +91,6 @@ dbManager.openConnection()
 
 /********* APIs *********/
 app.use("/api", hikeController);
-app.use("/api", hutController);
 app.use("/api", authRoutes);
 
 
