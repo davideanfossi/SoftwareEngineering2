@@ -27,24 +27,16 @@ export const HutFilter = ({
 
   const [show, setShow] = useState(false);
 
-  //   useEffect(() => {
-  //     API.getHikesLimits()
-  //       .then((limits) => {
-  //         setMaxNumOfBeds(limits.maxNumOfBeds);
-  //         setMaxAltitude(limits.maxAscent);
-  //         setMaxExpectedTime(limits.maxExpectedTime);
-  //         setAbsoluteMaxLength(limits.maxNumOfBeds);
-  //         setAbsoluteMaxHeight(limits.maxAscent);
-  //         setAbsoluteExpectedTime(limits.maxExpectedTime);
-  //         setDifficulties(limits.difficultyType);
-  //         navigator.geolocation.getCurrentPosition(function (position) {
-  //           //evaluate if do it in a dedicated useEffect
-  //           setLat(position.coords.latitude);
-  //           setLon(position.coords.longitude);
-  //         });
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }, []);
+    useEffect(() => {
+      API.getHutsLimits()
+        .then((limits) => {
+          setAbsoluteMaxBed(limits.maxNumOfBeds);
+          setMaxNumOfBeds(limits.maxNumOfBeds)
+          setAbsoluteMaxAltitude(limits.maxAltitude);
+          setMaxAltitude(limits.maxAltitude)
+        })
+        .catch((err) => console.log(err));
+    }, []);
 
   //this handle the change of a filter so it will set the pageNuber to 1
   useEffect(() => {
@@ -64,6 +56,7 @@ export const HutFilter = ({
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     maxAltitude,
+    minAltitude,
     maxNumOfBeds,
     minNumOfBeds,
     radius,
@@ -138,7 +131,7 @@ export const HutFilter = ({
               />
             </Col>
             <Col xs={12} md={4}>
-              <div>Altitude</div>
+              <div>Altitude (m) </div>
               <MultiRangeSlider
                 min={0}
                 max={absoluteMaxAltitude}

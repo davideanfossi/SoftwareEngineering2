@@ -244,6 +244,24 @@ const getFilteredHut = async (
   }
 };
 
+const getHutsLimits = async () => {
+  try {
+    const response = await fetch(new URL("huts/limits", SERVER_BASE), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const API = {
   getHikesLimits,
   getAllHikes,
@@ -255,7 +273,8 @@ const API = {
   login,
   logout,
   getUserInfo,
-  getFilteredHut
+  getFilteredHut,
+  getHutsLimits
 };
 
 export default API;
