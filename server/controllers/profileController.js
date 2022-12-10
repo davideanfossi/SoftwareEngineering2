@@ -3,20 +3,24 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+const {
+    param,
+    validationResult,
+  } = require("express-validator");
 
 const DbManager = require("../database/dbManager");
 const HikeDAO = require("../daos/hikeDAO");
 const PointDAO = require("../daos/pointDAO");
 const UserDAO = require("../daos/userDAO");
-const UserHikeService = require("../services/userHikeService");
+const ProfileService = require("../services/profileService");
 const config = require("../config.json");
-const { isLoggedIn } = require("./loginController");
+const { isLoggedIn, getPermission } = require("./loginController");
 
 const dbManager = new DbManager("PROD");
 const hikeDAO = new HikeDAO(dbManager);
 const pointDAO = new PointDAO(dbManager);
 const userDAO = new UserDAO(dbManager);
-const userHikeService = new UserHikeService(hikeDAO, pointDAO, userDAO);
+const profileService = new ProfileService(hikeDAO, pointDAO, userDAO);
 
 router.get(
     "/user-hikes",
@@ -65,19 +69,20 @@ router.get(
             const pageSize = req.query.pageSize
                 ? Number.parseInt(req.query.pageSize)
                 : undefined;
-            const result = await userHikeService.getUserHikes(
-                pageNumber,
-                pageSize,
+            const result = await profileService.getUserHikes(
                 minLen,
                 maxLen,
                 minTime,
                 maxTime,
                 minAscent,
                 maxAscent,
-                difficulty,
+                difficulty, 
+                req.user.id, 
                 baseLat,
                 baseLon,
-                radius
+                radius,
+                pageNumber,
+                pageSize,
             );
             // remove additional data
             result.pageItems.map((hike) => {
@@ -94,11 +99,13 @@ router.get(
     }
 );
 
-router.get("/user-hikes/limits", express.json(), async (req, res) => {
+router.get("/user-hikes/limits", isLoggedIn, getPermission(["Local Guide"]), async (req, res) => {
     try {
-      const result = await userHikeService.getUserHikesLimits();
+      const result = await profileService.getUserHikesLimits(req.user.id);
       return res.status(200).json(result);
     } catch (err) {
           return res.status(500).send();
     }
   });
+
+  module.exports = router;

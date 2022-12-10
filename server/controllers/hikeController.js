@@ -24,7 +24,7 @@ const config = require("../config.json");
 const dbManager = new DbManager("PROD");
 const hikeDAO = new HikeDAO(dbManager);
 const pointDAO = new PointDAO(dbManager);
-const hikeService = new HikeService(hikeDAO, pointDAO);
+const   hikeService = new HikeService(hikeDAO, pointDAO);
 const { isLoggedIn, getPermission } = require("./loginController");
 
 router.get(
@@ -116,14 +116,7 @@ router.get(
   }
 );
 
-router.get("/hikes/limits", express.json(), async (req, res) => {
-  try {
-    const result = await hikeService.getHikesLimits();
-    return res.status(200).json(result);
-  } catch (err) {
-        return res.status(500).send();
-  }
-});
+   
 
 router.post(
   "/hike",
@@ -255,5 +248,14 @@ router.get(
     }
   }
 );
+
+router.get("/hikes/limits", async (req, res) => {
+  try {
+    const result = await hikeService.getHikesLimits();
+    return res.status(200).json(result);
+  } catch (err) {
+        return res.status(500).send();
+  }
+});
 
 module.exports = router;
