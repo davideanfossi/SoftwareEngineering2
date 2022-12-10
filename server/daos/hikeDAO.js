@@ -6,7 +6,7 @@ class HikeDAO {
 
     constructor(dbManager) {
         if (!dbManager)
-            throw 'DBManager must be defined for Hike dao!';
+            throw new Error('DBManager must be defined for Hike dao!');
         this.dbManager = dbManager;
     }
 

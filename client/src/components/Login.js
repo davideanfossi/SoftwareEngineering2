@@ -62,12 +62,16 @@ function Login() {
             });
     }
 
+    function resetAlert() { setShowAlert('') }
+    function handleEmail(ev) { setEmail(ev.target.value) }
+    function handlePassword(ev) { setPassword(ev.target.value) }
+
     return (
         <>
             <Container className='mt-3'>
                 {
                     showAlert === true ?
-                        <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
+                        <Alert variant="danger" onClose={resetAlert} dismissible>
                             <Alert.Heading>Incorrect username and/or password</Alert.Heading>
                         </Alert> : null
                 }
@@ -81,7 +85,7 @@ function Login() {
                             <Form.Control
                                 type="email"
                                 value={email}
-                                onChange={(ev) => setEmail(ev.target.value)}
+                                onChange={handleEmail}
                                 required={true}
                                 placeholder="Enter email" />
                         </Form.Group>
@@ -90,7 +94,7 @@ function Login() {
                             <Form.Control
                                 type='password'
                                 value={password}
-                                onChange={(ev) => setPassword(ev.target.value)}
+                                onChange={handlePassword}
                                 required={true}
                                 minLength={6}
                                 maxLength={15}
@@ -99,7 +103,7 @@ function Login() {
                         <Checkbox />
                         <Registration />
                         <Form.Group>
-                            <Button variant='warning' type='submit' size='lg' onSubmit={() => { handleSubmit() }}>
+                            <Button variant='warning' type='submit' size='lg' onSubmit={handleSubmit}>
                                 Login
                             </Button>
                         </Form.Group>
