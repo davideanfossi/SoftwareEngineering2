@@ -7,7 +7,7 @@ import { Paging } from "../atoms/paging";
 export const SearchHut = () => {
   const [hutList, setHutList] = useState([]);
   const [pageNumber, setPageNumer] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [nameSearch, setNameSearch] = useState('');
   const handleServerResponse = (huts) => {

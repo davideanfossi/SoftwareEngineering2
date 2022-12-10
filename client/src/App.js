@@ -55,7 +55,7 @@ function App() {
             {["Local Guide"].includes(user.role) && (
               <Route path="insert-hike" element={<InsertHike />} />
             )}
-            {/*["Local Guide", "Hiker", "Hut Worker"].includes(user.role) && */
+            {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) &&
               <Route path="search-hut" element={<SearchHut />} />
             }
             <Route path="register" index element={<Register register={API.registerUser}/>} />
