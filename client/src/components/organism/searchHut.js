@@ -3,6 +3,7 @@ import { HutTable } from "../moleculars/hut-table";
 import { useState } from "react";
 import { HutFilter } from "../moleculars/hut-filter";
 import { Paging } from "../atoms/paging";
+import API from "../../API";
 
 export const SearchHut = () => {
   const [hutList, setHutList] = useState([]);
@@ -79,9 +80,17 @@ export const SearchHut = () => {
         pageSize={pageSize}
         pageNumber={pageNumber}
         setNameSearch={setNameSearch}
+        apiCall={API.getFilteredHut}
+        getLimits={API.getHutsLimits}
       />
       <div className="hut-table-container">
-        <HutTable hutList={nameSearch === '' ? hutList : hutList.filter(hut => hut.name.includes(nameSearch))} />
+        <HutTable
+          hutList={
+            nameSearch === ""
+              ? hutList
+              : hutList.filter((hut) => hut.name.includes(nameSearch))
+          }
+        />
       </div>
       <Paging
         totalPages={totalPages}

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import API from "../../API";
 import { MapModal } from "./map-modal";
 import { MultiRangeSlider } from "../atoms/multi-range-slider/multi-range-slider";
 
@@ -9,7 +8,9 @@ export const HutFilter = ({
   handleServerResponseChangePage,
   pageSize,
   pageNumber,
-  setNameSearch
+  setNameSearch,
+  apiCall,
+  getLimits,
 }) => {
   const [radius, setRadius] = useState(0);
   const [lat, setLat] = useState(45.0702899); //it is Turin!
@@ -27,7 +28,7 @@ export const HutFilter = ({
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    API.getHutsLimits()
+    getLimits()
       .then((limits) => {
         const maxBeds = Number.parseInt(limits.maxNumOfBeds);
         const maxAlt = Number.parseInt(limits.maxAltitude);
@@ -37,11 +38,11 @@ export const HutFilter = ({
         setAbsoluteMaxAltitude(maxAlt !== 0 ? maxAlt : 100);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [getLimits]);
 
   //this handle the change of a filter so it will set the pageNuber to 1
   useEffect(() => {
-    API.getFilteredHut(
+    apiCall(
       minNumOfBeds,
       maxNumOfBeds,
       lat,
@@ -55,21 +56,11 @@ export const HutFilter = ({
       .then((huts) => handleServerResponse(huts))
       .catch((err) => console.log(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    maxAltitude,
-    minAltitude,
-    maxNumOfBeds,
-    minNumOfBeds,
-    radius,
-    lat,
-    lon,
-  ]);
-
-
+  }, [maxAltitude, minAltitude, maxNumOfBeds, minNumOfBeds, radius, lat, lon]);
 
   //this handle the page change
   useEffect(() => {
-    API.getFilteredHut(
+    apiCall(
       minNumOfBeds,
       maxNumOfBeds,
       lat,
@@ -116,15 +107,7 @@ export const HutFilter = ({
       <div className="hike-filter-container">
         <Container fluid>
           <Row>
-            <Col>
-              <Form.Label
-                aria-label="Default select example">Name </Form.Label>
-              <Form.Control type="text" placeholder="Name of the hut"
-                value={name}
-                onChange={handleChangeName} />
-
-            </Col>
-            <Col xs={12} md={4}>
+            <Col xs={12} md={6}>
               <div>Number of beds</div>
               <MultiRangeSlider
                 min={0}
@@ -135,7 +118,7 @@ export const HutFilter = ({
                 setMaxVal={setMaxNumOfBeds}
               />
             </Col>
-            <Col xs={12} md={4}>
+            <Col xs={12} md={6}>
               <div>Altitude (m) </div>
               <MultiRangeSlider
                 min={0}
@@ -148,6 +131,15 @@ export const HutFilter = ({
             </Col>
           </Row>
           <Row>
+            <Col xs={12} md={6}>
+              <Form.Label aria-label="Default select example">Name </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Name of the hut"
+                value={name}
+                onChange={handleChangeName}
+              />
+            </Col>
             <Col
               xs={12}
               md={6}
