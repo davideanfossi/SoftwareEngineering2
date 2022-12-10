@@ -47,7 +47,8 @@ describe('Hut DAO unit test', () => {
     testGetHutImages('test get images of hut', 2, ["image1.png", "image2.png"]);
     testGetAllHut('test get all huts', [hut1, hut2, hut3]);
     testGetHuts('test get huts with filters', 20, 100, [hut2, hut3]);
-    testGetHuts('test get huts without filters', undefined, undefined, [hut1, hut2, hut3])
+    testGetHuts('test get huts without filters', undefined, undefined, [hut1, hut2, hut3]);
+    testGetMaxData({"maxNumOfBeds": 50});
 });
 
 
@@ -77,5 +78,12 @@ function testGetHutImages(testMsg, hutId, expectedImageList) {
     test(testMsg, async () => {
         const res = await hutDAO.getHutImages(hutId);
         expect(res).toEqual(expect.arrayContaining(expectedImageList));
+    });
+}
+
+function testGetMaxData(expectedObj) {
+    test('test get max data', async () => {
+        const res = await hutDAO.getMaxData();
+        expect(res).toEqual(expectedObj);
     });
 }
