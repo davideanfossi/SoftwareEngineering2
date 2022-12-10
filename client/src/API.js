@@ -4,7 +4,6 @@ const SERVER_PORT = 3001;
 const SERVER_BASE = `${SERVER_HOST}:${SERVER_PORT}/api/`;
 
 const getHikesLimits = async () => {
-  try {
     const response = await fetch(new URL("hikes/limits", SERVER_BASE), {
       method: "GET",
       headers: {
@@ -16,13 +15,9 @@ const getHikesLimits = async () => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const getAllHikes = async () => {
-  try {
     const response = await fetch(new URL("hikes", SERVER_BASE), {
       method: "GET",
       headers: {
@@ -34,9 +29,6 @@ const getAllHikes = async () => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const getFilteredHikes = async (
@@ -53,24 +45,23 @@ const getFilteredHikes = async (
   pageSize,
   pageNumber
 ) => {
-  try {
     const response = await fetch(
       new URL(
         "hikes?" +
-          new URLSearchParams({
-            minLen,
-            maxLen,
-            minTime,
-            maxTime,
-            minAscent,
-            maxAscent,
-            difficulty,
-            radius: radius / 1000,
-            baseLat,
-            baseLon,
-            pageSize,
-            pageNumber,
-          }),
+        new URLSearchParams({
+          minLen,
+          maxLen,
+          minTime,
+          maxTime,
+          minAscent,
+          maxAscent,
+          difficulty,
+          radius: radius / 1000,
+          baseLat,
+          baseLon,
+          pageSize,
+          pageNumber,
+        }),
         SERVER_BASE
       ),
       {
@@ -85,13 +76,9 @@ const getFilteredHikes = async (
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const registerUser = async (formData) => {
-  try {
     const response = await fetch(new URL("signup", SERVER_BASE), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -102,13 +89,9 @@ const registerUser = async (formData) => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const activateEmail = async (formData) => {
-  try {
     const response = await fetch(new URL("email-activate", SERVER_BASE), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -119,12 +102,8 @@ const activateEmail = async (formData) => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 const getHikeDetails = async (hike) => {
-  try {
     const response = await fetch(
       new URL("hikes/" + hike.id + "/track", SERVER_BASE),
       {
@@ -140,13 +119,9 @@ const getHikeDetails = async (hike) => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const newHike = async (formData) => {
-  try {
     const response = await fetch(new URL("hike", SERVER_BASE), {
       method: "POST",
       credentials: "include",
@@ -157,13 +132,9 @@ const newHike = async (formData) => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const login = async (credentials) => {
-  try {
     const response = await fetch(new URL("sessions", SERVER_BASE), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -175,9 +146,6 @@ const login = async (credentials) => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const getUserInfo = async () => {
@@ -201,7 +169,6 @@ const logout = async () => {
 
 
 const newParking = async (formData) => {
-  try {
     const response = await fetch(new URL("parking", SERVER_BASE), {
       method: "POST",
       credentials: "include",
@@ -212,9 +179,6 @@ const newParking = async (formData) => {
     } else {
       throw response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const getFilteredHut = async (
@@ -228,21 +192,20 @@ const getFilteredHut = async (
   minAltitude,
   maxAltitude
 ) => {
-  try {
     const response = await fetch(
       new URL(
         "huts?" +
-          new URLSearchParams({
-            minNumOfBeds,
-            maxNumOfBeds,
-            baseLat,
-            baseLon,
-            radius : radius/1000,
-            pageNumber,
-            pageSize,
-            minAltitude,
-            maxAltitude
-          }),
+        new URLSearchParams({
+          minNumOfBeds,
+          maxNumOfBeds,
+          baseLat,
+          baseLon,
+          radius: radius / 1000,
+          pageNumber,
+          pageSize,
+          minAltitude,
+          maxAltitude
+        }),
         SERVER_BASE
       ),
       {
@@ -257,13 +220,9 @@ const getFilteredHut = async (
     } else {
       throw response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const getHutsLimits = async () => {
-  try {
     const response = await fetch(new URL("huts/limits", SERVER_BASE), {
       method: "GET",
       headers: {
@@ -275,10 +234,23 @@ const getHutsLimits = async () => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
+
+const getAltitudeFromCoordinates = async (lat, lon) => {
+  const response = await fetch(new URL("altitude?" + 
+  new URLSearchParams({lat, lon}), SERVER_BASE), {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+
+}
 
 const API = {
   getHikesLimits,
@@ -293,7 +265,8 @@ const API = {
   getUserInfo,
   getFilteredHut,
   getHutsLimits,
-  newParking
+  newParking,
+  getAltitudeFromCoordinates
 };
 
 export default API;

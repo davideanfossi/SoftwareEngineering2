@@ -15,6 +15,10 @@ function ParkingForm() {
     const [file, setFile] = useState('');
     const [update, setUpdate] = useState(true);
 
+    const [selectedPosition, setSelectedPosition] = useState(undefined);
+    const [lat, setLat] = useState(45.0702899); //it is Turin!
+    const [lon, setLon] = useState(7.6348208);
+
     const ref = useRef();
 
     useEffect(() => {
@@ -22,11 +26,15 @@ function ParkingForm() {
             setLat(pos.coords.latitude);
             setLon(pos.coords.longitude);
         })
-    }, [])
+    }, []);
 
-    const [selectedPosition, setSelectedPosition] = useState(undefined);
-    const [lat, setLat] = useState(45.0702899); //it is Turin!
-    const [lon, setLon] = useState(7.6348208);
+    useEffect(() => {
+        API.getAltitudeFromCoordinates(lat, lon)
+        .then((res) => {
+          setAltitude(res.elevation);
+        })
+        .catch((err) => setAltitude(''));
+    }, [lat, lon]);
 
     const [zoom, setZoom] = useState(6);
     const handleSave = (lat, lon, zoom) => {
@@ -55,19 +63,19 @@ function ParkingForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         let flag = false;
-        
+
         let url = 'https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&zoom=16';
         let address = await fetch(url)
-        .then(response => response.text())
-        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-        .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
-        .catch(err => console.log(err));
+            .then(response => response.text())
+            .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+            .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
+            .catch(err => console.log(err));
 
         if (name === '') { setName(null); flag = true; }
         if (parkingSpot === '' || !(parseInt(parkingSpot) >= 0)) { setParkingSpot(null); flag = true; }
         if (altitude === '' || !(parseInt(altitude) >= 0)) { setAltitude(null); flag = true; }
         if (flag) return;
-        
+
         const formData = new FormData();
         formData.append('name', name);
         formData.append('numSpots', parkingSpot);
@@ -77,23 +85,21 @@ function ParkingForm() {
         formData.append('altitude', altitude);
         formData.append('pointLabel', null);
         formData.append('address', address);
-        if(file!=="") formData.append('image', file);
-
-        
-          API.newParking(formData)
-          .then(() => {
-            setName('');
-            setParkingSpot('');
-            setAltitude('');
-            setFreeSpot(false);
-            setFile('');
-            ref.current.value=null;
-            setSuccess('yes');
-          })
-          .catch(() => {
-            setSuccess('no');
-          })
-        
+        if (file !== "")
+            formData.append('image', file);
+        API.newParking(formData)
+            .then(() => {
+                setName('');
+                setParkingSpot('');
+                setAltitude('');
+                setFreeSpot(false);
+                setFile('');
+                ref.current.value = null;
+                setSuccess('yes');
+            })
+            .catch(() => {
+                setSuccess('no');
+            })
     };
 
 
@@ -182,13 +188,13 @@ function ParkingForm() {
                     </>
 
                     <div className="d-flex justify-content-center align-items-right">
-                        <Button style={{ "marginTop": "8px" }}
+                        <Button className="mt-2"
                             variant="primary"
                             onClick={() => {
                                 handleInputMehtod();
                                 handleSave(lat, lon, zoom);
                             }}
-                        > {coordSelector ? "Use coordinates" : "Use map"}
+                        > {coordSelector ? "Set coordinates" : "Use map"}
                         </Button>
                     </div>
 
@@ -223,12 +229,13 @@ function ParkingForm() {
                             <Col md className="align-items-center">
                                 <Form.Group>
                                     <Form.Label>Altitude *</Form.Label>
-                                    <Form.Control 
-                                    isInvalid={altitude === null  || altitude < 0}
+                                    <Form.Control
+                                        isInvalid={altitude === null || altitude < 0}
                                         type="number"
                                         placeholder="Altitude"
                                         value={altitude == null ? '' : altitude}
-                                        onChange={event => { setAltitude(event.target.value); }} />
+                                        onChange={event => { setAltitude(event.target.value); }}
+                                        disabled />
                                     <Form.Control.Feedback type="invalid">
                                         Altitude number must be greater than 0
                                     </Form.Control.Feedback>
