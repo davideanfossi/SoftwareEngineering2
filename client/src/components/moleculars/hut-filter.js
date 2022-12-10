@@ -16,27 +16,26 @@ export const HutFilter = ({
   const [lon, setLon] = useState(7.6348208);
   const [zoom, setZoom] = useState(6);
   const [minNumOfBeds, setMinNumOfBeds] = useState(0);
-  const [maxNumOfBeds, setMaxNumOfBeds] = useState(100);
+  const [maxNumOfBeds, setMaxNumOfBeds] = useState(1000);
   const [minAltitude, setMinAltitude] = useState(0);
-  const [maxAltitude, setMaxAltitude] = useState(100);
+  const [maxAltitude, setMaxAltitude] = useState(10000);
   const [name, setName] = useState("");
 
   const [absoluteMaxBed, setAbsoluteMaxBed] = useState(100);
   const [absoluteMaxAltitude, setAbsoluteMaxAltitude] = useState(100);
-  
 
   const [show, setShow] = useState(false);
 
-    useEffect(() => {
-      API.getHutsLimits()
-        .then((limits) => {
-          setAbsoluteMaxBed(limits.maxNumOfBeds);
-          setMaxNumOfBeds(limits.maxNumOfBeds)
-          setAbsoluteMaxAltitude(limits.maxAltitude);
-          setMaxAltitude(limits.maxAltitude)
-        })
-        .catch((err) => console.log(err));
-    }, []);
+  useEffect(() => {
+    API.getHutsLimits()
+      .then((limits) => {
+        setMaxNumOfBeds(limits.maxNumOfBeds)
+        setMaxAltitude(limits.maxAltitude)
+        setAbsoluteMaxBed(limits.maxNumOfBeds);
+        setAbsoluteMaxAltitude(limits.maxAltitude);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   //this handle the change of a filter so it will set the pageNuber to 1
   useEffect(() => {
@@ -53,7 +52,7 @@ export const HutFilter = ({
     )
       .then((huts) => handleServerResponse(huts))
       .catch((err) => console.log(err));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     maxAltitude,
     minAltitude,
@@ -64,7 +63,7 @@ export const HutFilter = ({
     lon,
   ]);
 
-  
+
 
   //this handle the page change
   useEffect(() => {
@@ -79,9 +78,9 @@ export const HutFilter = ({
       minAltitude,
       maxAltitude
     )
-      .then((hikes) => handleServerResponseChangePage(hikes))
+      .then((huts) => handleServerResponseChangePage(huts))
       .catch((err) => console.log(err));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize, pageNumber]);
 
   //those handler are for map modal
@@ -92,6 +91,11 @@ export const HutFilter = ({
     setLon(lon);
     setRadius(radius);
     setZoom(zoom);
+  };
+
+  const handleChangeName = (event) => {
+    setName(event.target.value);
+    setNameSearch(event.target.value);
   };
 
   return (
@@ -115,8 +119,7 @@ export const HutFilter = ({
                 aria-label="Default select example">Name </Form.Label>
               <Form.Control type="text" placeholder="Name of the hut"
                 value={name}
-                onChange={(event) => {setName(event.target.value);
-                                      setNameSearch(event.target.value);}} />
+                onChange={handleChangeName} />
 
             </Col>
             <Col xs={12} md={4}>
