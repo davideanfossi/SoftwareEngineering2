@@ -37,7 +37,7 @@ class HutDAO {
     getMaxData = async () => {
         const sql = "SELECT max(numOfBeds) AS maxNumOfBeds, max(altitude) AS maxAltitude FROM Hut H, Points P WHERE H.pointId = P.id";
         const res = await this.dbManager.get(sql, [], true);
-        res.maxAltitude = Math.round(res.maxAltitude);
+        res.maxAltitude = Math.ceil(res.maxAltitude);
         return res;
     }
 
