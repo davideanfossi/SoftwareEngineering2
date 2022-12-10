@@ -104,7 +104,7 @@ export const HutFilter = ({
           startingZoom={zoom}
         />
       )}
-      <div className="hike-filter-container">
+      <div className="hut-filter-container">
         <Container fluid>
           <Row>
             <Col xs={12} md={6}>

@@ -15,7 +15,7 @@ export const HutRow = ({ hut, even }) => {
 
 
   return (
-    <Row className={even ? "hike-row-even" : "hike-row"}>
+    <Row className={even ? "hut-row-even" : "hut-row"}>
       <Col>
         <Container fluid onClick={toggleDrop}>
           <Row>
