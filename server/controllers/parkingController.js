@@ -8,6 +8,7 @@ const DbManager = require("../database/dbManager");
 const PointDAO = require("../daos/pointDAO");
 const ParkingDAO = require("../daos/parkingDAO");
 const ParkingService = require("../services/parkingService");
+const Parking = require("../models/parkingModel");
 const config = require("../config.json");
 const fileUpload=require('express-fileupload');
 const { v4: uuidv4 } = require('uuid');
@@ -18,6 +19,7 @@ const pointDAO = new PointDAO(dbManager);
 const parkingDAO = new ParkingDAO(dbManager);
 const parkingService = new ParkingService(parkingDAO, pointDAO);
 const { isLoggedIn, getPermission } = require("./loginController");
+const Point = require("../models/pointModel");
 
 
 router.post(
@@ -42,7 +44,7 @@ router.post(
       try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-          return res.status(400).end();
+          return res.status(400).send();
         }
 
       //parking
@@ -52,7 +54,7 @@ router.post(
 
       const rootPath = config.parkingImagesPath;
       if (!rootPath) {
-        return res.status(500).json("error in reading parkingImagesPath from config");
+        return res.status(500).send("error in reading parkingImagesPath from config");
       }
       const image = req.files ? req.files.image : null;
       const imageName = image ? uuidv4() + '-' + image.name : null;
@@ -63,7 +65,7 @@ router.post(
           //  mv() method places the file inside public directory
           image.mv(imagePath, function (err) {
             if (err) {
-              return res.status(500).json(err.message);
+              return res.status(500).send(err.message);
             }
           });
         }  
@@ -77,25 +79,18 @@ router.post(
       const pointLabel = req.body.pointLabel;
       const address = req.body.address;
 
+      let newpoint = new Point(undefined, latitude,longitude,altitude,pointLabel,address)
+      let newParking = new Parking(undefined, name, numSpots, hasFreeSpots, newpoint, ownerId, imageName)
       const result = await parkingService.addParking(
-        name,
-        ownerId,       
-        numSpots,
-        hasFreeSpots,
-        latitude,
-        longitude,
-        altitude,
-        pointLabel,
-        address,
-        imageName       
+        newParking      
       );
-      if (!result) return res.status(500).end();
+      if (!result) return res.status(500).send();
       return res.status(200).json(result);
     } catch (err) {
       console.log(err);
       switch (err.returnCode) {
         default:
-          return res.status(500).json(err.message);
+          return res.status(500).send(err.message);
       }
     }
   }

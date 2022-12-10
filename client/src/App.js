@@ -48,7 +48,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            {["Local Guide"].includes(user.role) && (
             <Route path="insertparking" element={<InsertParking />} />
+            )}
             {["Local Guide"].includes(user.role) && (
               <Route path="insert-hike" element={<InsertHike />} />
             )}
