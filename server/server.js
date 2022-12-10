@@ -13,6 +13,7 @@ const parkingController = require('./controllers/parkingController');
 const positionController = require('./controllers/positionController');
 const { login, getPermission } = require('./controllers/loginController');
 const authRoutes = require('./controllers/authController');
+const profileController = require('./controllers/profileController');
 
 // init express
 const app = express();
@@ -98,6 +99,8 @@ app.use("/api", authRoutes);
 app.use("/api", hutController);
 app.use("/api", parkingController);
 app.use("/api", positionController);
+app.use("/api", profileController)
+
 
 // activate the server
 app.listen(port, () => console.log(`Server started at http://localhost:${port}.`));

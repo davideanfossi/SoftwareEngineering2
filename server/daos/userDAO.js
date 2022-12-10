@@ -31,6 +31,16 @@ class UserDAO {
         }
     }
 
+    async getUserByCredentials(username, email, role) {
+        const query = "SELECT * FROM User WHERE email = ? AND username = ? AND role = ?";
+        try {
+            const result = await this.dbManager.get(query, [email, username, role]);
+            return new User(result.id, result.username, result.email, result.role);
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async loginUser(email, password) {
         try {
             const sql = "SELECT * FROM User WHERE email = ? ";

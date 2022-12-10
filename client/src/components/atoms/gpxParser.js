@@ -1,6 +1,6 @@
 const togeojson = require('togeojson');
 const DOMParser = require('xmldom').DOMParser;
-const gpxParser = require('gpxparser');
+const gpxParser = require('./gpxParser');
 
 const parseGpx = (file) => {
     try {
