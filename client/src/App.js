@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router";
 import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
+import { InsertParking } from "./components/organism/insertParking";
 import { InsertHike } from "./components/organism/InsertHike";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
@@ -48,6 +49,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            {["Local Guide"].includes(user.role) && (
+            <Route path="insertparking" element={<InsertParking />} />
+            )}
             {["Local Guide"].includes(user.role) && (
               <Route path="insert-hike" element={<InsertHike />} />
             )}

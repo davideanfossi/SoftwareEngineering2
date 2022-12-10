@@ -199,6 +199,24 @@ const logout = async () => {
   if (response.ok) return null;
 };
 
+
+const newParking = async (formData) => {
+  try {
+    const response = await fetch(new URL("parking", SERVER_BASE), {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getFilteredHut = async (
   minNumOfBeds,
   maxNumOfBeds,
@@ -274,7 +292,8 @@ const API = {
   logout,
   getUserInfo,
   getFilteredHut,
-  getHutsLimits
+  getHutsLimits,
+  newParking
 };
 
 export default API;

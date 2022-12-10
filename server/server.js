@@ -11,6 +11,7 @@ const hikeController = require('./controllers/hikeController');
 const hutController = require('./controllers/hutController');
 const { login, getPermission } = require('./controllers/loginController');
 const authRoutes = require('./controllers/authController');
+const parkingController = require('./controllers/parkingController');
 
 // init express
 const app = express();
@@ -94,6 +95,7 @@ dbManager.openConnection()
 app.use("/api", hikeController);
 app.use("/api", authRoutes);
 app.use("/api", hutController);
+app.use("/api", parkingController);
 
 
 // activate the server
