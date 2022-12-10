@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router";
 import { Home } from "./components/organism/home";
 import { Layout } from "./components/organism/layout";
+import { InsertParking } from "./components/organism/insertParking";
 import { InsertHike } from "./components/organism/InsertHike";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
@@ -16,6 +17,7 @@ import { LinkStartEnd } from './components/organism/LinkStartEnd';
 
 import { UserContext } from "./context/user-context";
 import { MyHikes } from './components/organism/my-hikes';
+import { SearchHut } from './components/organism/searchHut';
 
 function App() {
   const [user, setUser] = useState({
@@ -53,8 +55,12 @@ function App() {
               <>
                 <Route path="insert-hike" element={<InsertHike />} />
                 <Route path="my-hikes" element={<MyHikes />} />
+                <Route path="insertparking" element={<InsertParking />} />
               </>
             )}
+            {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) &&
+              <Route path="search-hut" element={<SearchHut />} />
+            }
             <Route path="register" index element={<Register register={API.registerUser}/>} />
             <Route path="login" index element={<Login/>} />
             <Route path='authentication/activate/*' index element={<EmailActivate/>}/>

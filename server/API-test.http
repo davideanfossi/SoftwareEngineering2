@@ -38,3 +38,21 @@ content-Type: application/json
 
 ### get the list of available roles
 GET http://localhost:3001/api/roles
+
+###
+POST http://localhost:3001/api/parking
+content-type: application/json
+
+{
+    "name": "parkTest",
+    "ownerId": "2",
+    "pointId": "2",
+    "numSpots": "100",
+    "hasFreeSpots": "50",
+    "latitude": "",
+    "longitude": "",
+    "altitude": "",
+    "pointLabel": "",
+    "address": ""
+    
+}
