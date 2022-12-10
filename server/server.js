@@ -10,6 +10,7 @@ const DbManager = require("./database/dbManager");
 const hikeController = require('./controllers/hikeController');
 const { login, getPermission } = require('./controllers/loginController');
 const authRoutes = require('./controllers/authController');
+const parkingController = require('./controllers/parkingController');
 
 // init express
 const app = express();
@@ -92,6 +93,7 @@ dbManager.openConnection()
 /********* APIs *********/
 app.use("/api", hikeController);
 app.use("/api", authRoutes);
+app.use("/api", parkingController);
 
 
 // activate the server
