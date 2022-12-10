@@ -40,6 +40,25 @@ const getUserHikesLimits = async () => {
   }
 };
 
+const getUserHutsLimits = async () => {
+  try {
+    const response = await fetch(new URL("huts/limits", SERVER_BASE), {
+      //TODO: fix api call
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const getAllHikes = async () => {
   try {
     const response = await fetch(new URL("hikes", SERVER_BASE), {
@@ -135,6 +154,50 @@ const getFilteredUserHikes = async (
             minAscent,
             maxAscent,
             difficulty,
+            radius: radius / 1000,
+            baseLat,
+            baseLon,
+            pageSize,
+            pageNumber,
+          }),
+        SERVER_BASE
+      ),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw response.text();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
+const getFilteredUserHuts = async (
+  minNumOfBeds,
+  maxNumOfBeds,
+  hasWebSite,
+  radius,
+  baseLat,
+  baseLon,
+  pageSize,
+  pageNumber
+) => {
+  try {
+    const response = await fetch(
+      new URL(
+        "huts?" + //TODO: fix api call
+          new URLSearchParams({
+            minNumOfBeds,
+            maxNumOfBeds,
+            hasWebSite,
             radius: radius / 1000,
             baseLat,
             baseLon,
@@ -283,6 +346,8 @@ const API = {
   getUserInfo,
   getFilteredUserHikes,
   getUserHikesLimits,
+  getUserHutsLimits,
+  getFilteredUserHuts,
 };
 
 export default API;

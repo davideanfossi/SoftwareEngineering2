@@ -39,6 +39,10 @@ export const Layout = (props) => {
     navigate("/my-hikes");
   };
 
+  const goMyHuts = () => {
+    navigate("/my-huts");
+  };
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">
@@ -66,6 +70,13 @@ export const Layout = (props) => {
                   }}
                 >
                   My hikes
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    goMyHuts();
+                  }}
+                >
+                  My huts
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
