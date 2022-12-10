@@ -202,8 +202,8 @@ const logout = async () => {
 const getFilteredHut = async (
   minNumOfBeds,
   maxNumOfBeds,
-  lat,
-  lon,
+  baseLat,
+  baseLon,
   radius,
   pageNumber,
   pageSize,
@@ -217,8 +217,8 @@ const getFilteredHut = async (
           new URLSearchParams({
             minNumOfBeds,
             maxNumOfBeds,
-            lat,
-            lon,
+            baseLat,
+            baseLon,
             radius : radius/1000,
             pageNumber,
             pageSize,
