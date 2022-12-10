@@ -30,12 +30,7 @@ class HutService {
         // if radius = 0 or not present then the filter is not executed
         if ((radius !== 0 && radius !== undefined) && baseLat !== undefined && baseLon !== undefined) {
             // filter all huts with position inside the radius
-            huts = huts.filter(hut => {
-                if (isWithinCircle(baseLat, baseLon, hut.point.latitude, hut.point.longitude, radius))
-                    return true;
-                else
-                    return false;
-            });
+            huts = huts.filter(hut => isWithinCircle(baseLat, baseLon, hut.point.latitude, hut.point.longitude, radius));
         }
 
         if (minAltitude !== undefined || maxAltitude !== undefined) {
