@@ -116,7 +116,7 @@ export const HutRow = ({ hut, even }) => {
                   <Col className="fw-bold ">Email:</Col>
                 </Row>
                 <Row>
-                  <Col>{hut.email}m</Col>
+                  <Col>{hut.email}</Col>
                 </Row>
               </Container>
             </Col>

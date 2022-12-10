@@ -29,10 +29,12 @@ export const HutFilter = ({
   useEffect(() => {
     API.getHutsLimits()
       .then((limits) => {
-        setMaxNumOfBeds(limits.maxNumOfBeds)
-        setMaxAltitude(limits.maxAltitude)
-        setAbsoluteMaxBed(limits.maxNumOfBeds);
-        setAbsoluteMaxAltitude(limits.maxAltitude);
+        const maxBeds = Number.parseInt(limits.maxNumOfBeds);
+        const maxAlt = Number.parseInt(limits.maxAltitude);
+        setMaxNumOfBeds(maxBeds !== 0 ? maxBeds : 100);
+        setMaxAltitude(maxAlt !== 0 ? maxAlt : 100);
+        setAbsoluteMaxBed(maxBeds !== 0 ? maxBeds : 100);
+        setAbsoluteMaxAltitude(maxAlt !== 0 ? maxAlt : 100);
       })
       .catch((err) => console.log(err));
   }, []);
