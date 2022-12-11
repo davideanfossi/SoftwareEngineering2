@@ -14,7 +14,7 @@ class ParkingDAO {
         try {
             const sql = "SELECT * FROM Parking ORDER BY id;";
             const res = await this.dbManager.get(sql, []);
-            return res.map(r => new Parking(r.id, r.name, r.numSpots, r.hasFreeSpots, r.pointId, r.ownerId));
+            return res.map(r => new Parking(r.id, r.name, r.numSpots, r.hasFreeSpots, r.pointId, r.ownerId, r.imageName));
         } catch (err) {
             throw err;
         }

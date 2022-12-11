@@ -12,7 +12,7 @@ const config = require("../config.json");
 const { isWithinCircle, checkHutIsWithinCircle5, checkParkingIsWithinCircle5 } = require("../utils/positionUtils");
 
 class HikeService {
-    constructor(hikeDAO, pointDAO) {
+    constructor(hikeDAO, pointDAO, hutDAO, parkingDAO) {
         if (!hikeDAO)
             throw 'hikeDAO must be defined for hike service!';
         if (!pointDAO)
@@ -60,7 +60,11 @@ class HikeService {
     };
 
     getNearStart = async(hikeId) => {
-            const hike = await hikeDAO.getHike(hikeId);
+            const hike = await this.hikeDAO.getHike(hikeId);
+            if (!hike)
+                throw{
+                    returnCode: 404, msg: "hike not found"
+                }
             hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
             let parkings = await this.getParkingNearPoint(hike.startPoint);
             let huts = await this.getHutNearPoint(hike.startPoint);
@@ -70,7 +74,11 @@ class HikeService {
 
 
     getNearEnd = async(hikeId) => {
-            const hike = await hikeDAO.getHike(hikeId);
+            const hike = await this.hikeDAO.getHike(hikeId);
+            if (!hike)
+                throw{
+                    returnCode: 404, msg: "hike not found"
+                }
             hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
             let parkings = await this.getParkingNearPoint(hike.endPoint);
             let huts = await this.getHutNearPoint(hike.endPoint);
