@@ -18,6 +18,7 @@ const path = require("path");
 const DbManager = require("../database/dbManager");
 const HikeDAO = require("../daos/hikeDAO");
 const PointDAO = require("../daos/pointDAO");
+
 const HikeService = require("../services/hikeService");
 const config = require("../config.json");
 
@@ -136,8 +137,7 @@ router.get("/hikes/:id/nearStart", [query("id").isInt({ min: 0 })], async (req, 
       if (!errors.isEmpty()) {
         return res.status(400).send();
       }
-    const hike = await hikeDAO.getHike(req);
-    const result = await hikeService.getParkingsStart(hike);
+    const result = await hikeService.getNearStart(req.query.id);
     return res.status(200).json(result);
   } catch (err) {
     switch (err.returnCode) {
@@ -154,8 +154,7 @@ router.get("/hikes/:id/nearEnd", [query("id").isInt({ min: 0 })], async (req, re
       if (!errors.isEmpty()) {
         return res.status(400).send();
       }
-    const hike = await hikeDAO.getHike(req);
-    const result = await hikeService.getParkingsEnd(hike);
+    const result = await hikeService.getNearEnd(req.query.id);
     return res.status(200).json(result);
   } catch (err) {
     switch (err.returnCode) {
