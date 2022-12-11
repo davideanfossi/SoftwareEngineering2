@@ -34,7 +34,6 @@ describe('Hut Service unit test', () => {
         try { dbManager.closeConnection(); }
         catch (err) {/*foo*/ }
     });
-    
 
     describe('Constructor test', () => {
         expect(() => new HutService(undefined, pointDAO))

@@ -9,13 +9,8 @@ class HikeParkingService {
     }
 
     linkParkingToHike = async (hikeId,parkingId,startPoint,endPoint) => {
-        try {
                 const res = await this.hikeParkingDAO.insertHikeParking(hikeId,parkingId,startPoint,endPoint);
                 return res;
-           
-        } catch (err) {
-            throw err;
-        }
     }
 
 }

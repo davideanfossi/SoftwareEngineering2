@@ -8,10 +8,10 @@ const dbManager = new DBManager("TEST");
 dbManager.openConnection();
 const hutDAO = new HutDAO(dbManager);
 
-describe('Hut DAO unit test',() => {
+describe('Hut DAO unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
-        
+
         let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
         await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
         await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
@@ -34,7 +34,6 @@ describe('Hut DAO unit test',() => {
         try { dbManager.closeConnection(); }
         catch (err) {/*foo*/ }
     });
-    
 
     describe('Constructor test', () => {
         expect(() => new HutDAO())
@@ -55,8 +54,7 @@ describe('Hut DAO unit test',() => {
     testInsertHut("hut 4",9,point4.id,"hut desc4",'123456','test@test.com','www.test.com',2)
    // testInsertHut("hut 2",20,3,"hut desc2",'32146582','test2@test.com','www.test2.com',1)
 
-    testGetHutsbyUserId(1,[hut1, hut2]);
-
+   testGetMaxData({"maxAltitude": 250, "maxNumOfBeds": 50});
 });
 
 function testInsertHut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId){
@@ -85,6 +83,8 @@ function testGetHutsbyUserId(userId, expectedHuts) {
         expect(res).toEqual(expectedHuts);
     });
 }
+
+
 
 
 function testGetAllHut(testMsg, expectedHuts) {

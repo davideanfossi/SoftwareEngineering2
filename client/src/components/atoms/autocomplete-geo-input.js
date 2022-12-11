@@ -16,9 +16,10 @@ export default function AutocompleteGeoInput({
         placeholder="Choose a city..."
         options={listPlace}
         value={selectPosition}
-        onChange={(elem) => setSelectPosition(elem[0])}
-        labelKey={(elem) => elem.display_name}
-        onInputChange={(city) => {
+        onChange={function (elem) { setSelectPosition(elem[0]) }}
+        //labelKey={(elem) => elem.display_name}
+        labelKey={function (elem) { elem.display_name() }}
+        onInputChange={function (city) {
           const params = {
             city,
             format: "json",

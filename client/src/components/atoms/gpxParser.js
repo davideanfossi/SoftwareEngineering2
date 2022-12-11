@@ -1,6 +1,6 @@
 const togeojson = require('togeojson');
 const DOMParser = require('xmldom').DOMParser;
-const gpxParser = require('gpxparser');
+const gpxParser = require('./gpxParser');
 
 const parseGpx = (file) => {
     try {
@@ -14,7 +14,7 @@ const parseGpx = (file) => {
         const start = {"lat": gpx.tracks[0].points[0].lat, "lon": gpx.tracks[0].points[0].lon, "ele": gpx.tracks[0].points[0].ele};
         const end = {"lat": gpx.tracks[0].points[gpx.tracks[0].points.length - 1].lat, "lon": gpx.tracks[0].points[gpx.tracks[0].points.length - 1].lon, "ele": gpx.tracks[0].points[gpx.tracks[0].points.length - 1].ele};
 		const length = Math.round(parseFloat(gpx.tracks[0].distance.total).toFixed(2));
-		const ascent = Math.round(parseFloat(gpx.tracks[0].elevation.pos.toFixed(2)));
+		const ascent = Math.round(parseFloat(gpx.tracks[0].elevation.pos).toFixed(2));
         return {start, end, name, desc, length, ascent};
     } catch(err) {
         console.log(err);

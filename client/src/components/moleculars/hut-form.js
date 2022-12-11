@@ -219,7 +219,6 @@ function HutForm() {
                             onClick={() => {
                                 handleInputMehtod();
                                 handleSave(lat, lon, zoom);
-                                console.log(lat, lon, zoom);
                             }}
                         > {coordSelector ? "Use coordinates" : "Use map"}
                         </Button>

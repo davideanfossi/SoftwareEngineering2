@@ -8,31 +8,31 @@ dbManager.openConnection();
 const pointDAO = new PointDAO(dbManager);
 
 
-describe('Point DAO unit test',() => {
+describe('Point DAO unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
         let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
-        let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
-        res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
-        res = await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "address 3"]);
-        res = await dbManager.query(sql, ["45.574405", "7.455193", 300, "point 4", null]);
-        
+        await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
+        await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
+        await dbManager.query(sql, ["45.119817", "7.565056", 250, "point 3", "address 3"]);
+        await dbManager.query(sql, ["45.574405", "7.455193", 300, "point 4", null]);
+
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        res = await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
+        await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
 
         sql = "INSERT INTO Hike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        res = await dbManager.query(sql, ["title 1", 1000, 120, 300, "Hiker", 1, 4, "description 1", null, 1]);
-        
+        await dbManager.query(sql, ["title 1", 1000, 120, 300, "Hiker", 1, 4, "description 1", null, 1]);
+
         sql = "INSERT INTO ReferencePoints(hikeId, pointId) VALUES (?, ?);";
-        res = await dbManager.query(sql, [1, 2]);
-        res = await dbManager.query(sql, [1, 3]);
+        await dbManager.query(sql, [1, 2]);
+        await dbManager.query(sql, [1, 3]);
     });
 
     afterAll(async () => {
         try { dbManager.closeConnection(); }
         catch (err) {/*foo*/ }
     });
-    
+
     describe('Constructor test', () => {
         expect(() => new PointDAO())
             .toThrow('DBManager must be defined for Point dao!');
@@ -44,8 +44,8 @@ describe('Point DAO unit test',() => {
     testGetPoint(1, point1);
     testgetReferencePointsOfHike(1, [point2, point3]);
 
-    testInsertPoint(44.0703393, 71.686864, 2000, "point A","address A")
-    testInsertPoint(54.0703393, 44.686864, 200, "point B",null)
+    testInsertPoint(44.0703393, 71.686864, 2000, "point A", "address A")
+    testInsertPoint(54.0703393, 44.686864, 200, "point B", null)
 
 });
 
@@ -64,10 +64,10 @@ function testgetReferencePointsOfHike(hikeId, expectedPoints) {
     });
 }
 
-function testInsertPoint(latitude,longitude,altitude,name,address){
-    test('add new point', async() => {
+function testInsertPoint(latitude, longitude, altitude, name, address) {
+    test('add new point', async () => {
 
-        let lastID = await pointDAO.insertPoint({latitude,longitude,altitude,name,address});
+        let lastID = await pointDAO.insertPoint(new Point(undefined, latitude, longitude, altitude, name, address));
         expect(lastID).toBeTruthy();
 
         const res = await pointDAO.getPoint(lastID);
