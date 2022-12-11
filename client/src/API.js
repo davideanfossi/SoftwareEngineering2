@@ -388,6 +388,38 @@ const getUserHutsLimits = async () => {
   }
 };
 
+const getParkingHutStartPoint=async (id)=>{ 
+   const response = await fetch(new URL("hikes/"+id+"/near-start", SERVER_BASE), {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  credentials: "include",
+});
+if (response.ok) {
+  return await response.json();
+} else {
+  throw await response.text();
+}
+
+}
+const getParkingHutEndPoint = async (id) => {
+    const response = await fetch(
+      new URL("hikes/" + id + "/near-end", SERVER_BASE),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw await response.text();
+    }
+};
 const API = {
   getHikesLimits,
   getAllHikes,
@@ -408,6 +440,8 @@ const API = {
   getAltitudeFromCoordinates,
   getFilteredUserHuts,
   getUserHutsLimits,
+  getParkingHutStartPoint,
+  getParkingHutEndPoint,
 };
 
 export default API;

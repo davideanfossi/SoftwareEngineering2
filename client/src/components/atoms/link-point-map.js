@@ -23,8 +23,7 @@ export const LinkPointMap = ({
     longitude: 7.6348208,
   });
   const [map, setMap] = useState(undefined);
-  const [selectedHut, setSelectedHut] = useState(-1);
-  const [selectedParking, setSelectedParking] = useState(-1);
+  const [selected, setSelected] = useState({ type: undefined, id: -1 });
   // eslint-disable-next-line no-unused-vars
   const [huts, setHuts] = useState([
     { id: 1, latitude: 45.319959, longitude: 7.304834, name: "hut1" },
@@ -52,6 +51,19 @@ export const LinkPointMap = ({
   }, [end, id, start, changed]);
 
   useEffect(() => {
+    start &&
+      API.getParkingHutStartPoint().then((res) => {
+        setHuts(res.huts);
+        setParkings(res.parkings);
+      });
+    end &&
+      API.getParkingHutEndPoint((res) => {
+        setHuts(res.huts);
+        setParkings(res.parkings);
+      });
+  }, [end, start]);
+
+  useEffect(() => {
     if (map) {
       map.setView(center);
     }
@@ -64,16 +76,24 @@ export const LinkPointMap = ({
     }
   });
   const onClickHut = (id) => {
-    setSelectedHut((prev) => (prev !== id ? id : -1));
+    setSelected((prev) =>
+      prev.type === "hut" && prev.id === id
+        ? { type: undefined, id: -1 }
+        : { type: "hut", id }
+    );
   };
   const onClickParking = (id) => {
-    setSelectedParking((prev) => (prev !== id ? id : -1));
+    setSelected((prev) =>
+      prev.type === "parking" && prev.id === id
+        ? { type: undefined, id: -1 }
+        : { type: "parking", id }
+    );
   };
   return (
     <div style={{ width: "100%" }}>
       <MapContainer
         center={center}
-        zoom={15}
+        zoom={14}
         scrollWheelZoom={false}
         zoomControl={false}
         doubleClickZoom={false}
@@ -85,13 +105,13 @@ export const LinkPointMap = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <Circle center={center} radius={500} />
+        <Circle center={center} radius={1000} />
         <Polyline positions={track} />
         {huts.map((point) => (
           <MarkerPoint
             key={point.id}
             point={point}
-            selected={point.id === selectedHut}
+            selected={selected.type === "hut" && point.id === selected.id}
             onClickHandle={() => onClickHut(point.id)}
           />
         ))}
@@ -100,7 +120,7 @@ export const LinkPointMap = ({
           <MarkerPoint
             key={point.id}
             point={point}
-            selected={point.id === selectedParking}
+            selected={selected.type === "parking" && point.id === selected.id}
             onClickHandle={() => onClickParking(point.id)}
             isParking
           />
@@ -114,31 +134,18 @@ export const LinkPointMap = ({
       <Container className="hike-row">
         <Row>
           <Col className="d-flex justify-content-center fw-bold">
-            {selectedHut !== -1
-              ? "You selected this hut:"
-              : "Click on a red marker to select an hut"}
+            {selected.type !== undefined
+              ? `You selected this ${selected.type}:`
+              : "Click on a red marker to select an hut or on a blue marker to select a parking"}
           </Col>
         </Row>
-        {selectedHut !== -1 && (
+        {selected.type !== undefined && (
           <Row>
             <Col className="d-flex justify-content-center">
-              {huts.filter((elem) => elem.id === selectedHut)[0].name}
-            </Col>
-          </Row>
-        )}
-      </Container>
-      <Container className="hike-row-even">
-        <Row>
-          <Col className="d-flex justify-content-center fw-bold">
-            {selectedParking !== -1
-              ? "You selected this parking:"
-              : "Click on a blue marker to select a parking"}
-          </Col>
-        </Row>
-        {selectedParking !== -1 && (
-          <Row>
-            <Col className="d-flex justify-content-center">
-              {parkings.filter((elem) => elem.id === selectedParking)[0].name}
+              {selected.type === "hut" &&
+                huts.filter((elem) => elem.id === selected.id)[0].name}
+              {selected.type === "parking" &&
+                parkings.filter((elem) => elem.id === selected.id)[0].name}
             </Col>
           </Row>
         )}
@@ -146,3 +153,4 @@ export const LinkPointMap = ({
     </div>
   );
 };
+//huts.filter((elem) => elem.id === selectedHut)[0].name
