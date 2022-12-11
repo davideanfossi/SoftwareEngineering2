@@ -5,7 +5,7 @@ import { UserContext } from "../../context/user-context";
 import { PersonCircle } from "react-bootstrap-icons";
 import API from "../../API";
 
-export const Layout = (props) => {
+export const Layout = () => {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
   const goHome = () => {
@@ -20,7 +20,7 @@ export const Layout = (props) => {
 
   const handleLogout = () => {
     API.logout()
-      .then((res) => {
+      .then(() => {
         userContext.setUser({
           id: undefined,
           role: undefined,
@@ -34,6 +34,9 @@ export const Layout = (props) => {
   const goInsertHike = () => {
     navigate("/insert-hike");
   };
+  const goMyHikes = () => {
+    navigate("/my-hikes");
+  };
   const goInsertParking = () => {
     navigate("/insertparking");
   };
@@ -42,14 +45,19 @@ export const Layout = (props) => {
   };
   const goSearchHut = () => {
     navigate("/search-hut");
+  }
+  const goMyHuts = () => {
+    navigate("/my-huts");
   };
-
+  
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">
         <Container fluid>
           <Navbar.Toggle className="me-2" />
-          <Navbar.Brand onClick={goHome}>Hike Tracker</Navbar.Brand>
+          <Navbar.Brand onClick={goHome}>
+            <div className="brand">Hike Tracker</div>
+          </Navbar.Brand>
           {userContext.user.id !== undefined && (
             <div className="d-flex justify-content-end">
               <NavDropdown
@@ -63,6 +71,20 @@ export const Layout = (props) => {
                 }
                 id="basic-nav-dropdown"
               >
+                <NavDropdown.Item
+                  onClick={() => {
+                    goMyHikes();
+                  }}
+                >
+                  My hikes
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    goMyHuts();
+                  }}
+                >
+                  My huts
+                </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
                     handleLogout();

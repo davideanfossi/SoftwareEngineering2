@@ -1,5 +1,5 @@
 
-class hut{
+class Hut {
 
     constructor(id, name, numOfBeds, phoneNumber, email, description, website, point, userId, imageName) {
         this.id = id;
@@ -15,4 +15,4 @@ class hut{
     }
 }
 
-module.exports=hut;
+module.exports = Hut;

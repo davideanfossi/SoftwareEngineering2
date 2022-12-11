@@ -51,7 +51,17 @@ class HikeDAO {
             const res = await this.dbManager.get(sql, [], true);
             return res;
         } catch (err) {
+            throw err;
+        }
+    }
 
+    getUserMaxData = async (userId) => {
+        try {
+            const sql = "SELECT max(length) AS maxLength, max(expectedTime) as maxExpectedTime, max(ascent) AS maxAscent FROM Hike WHERE userId = ?";
+            const res = await this.dbManager.get(sql, [userId], true);
+            return res;
+        } catch (err) {
+            throw err;
         }
     }
 

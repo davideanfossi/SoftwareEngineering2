@@ -280,4 +280,13 @@ router.post(
   }
 );
 
+router.get("/hikes/limits", async (req, res) => {
+  try {
+    const result = await hikeService.getHikesLimits();
+    return res.status(200).json(result);
+  } catch (err) {
+        return res.status(500).send();
+  }
+});
+
 module.exports = router;
