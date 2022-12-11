@@ -18,7 +18,7 @@ const path = require("path");
 const DbManager = require("../database/dbManager");
 const HikeDAO = require("../daos/hikeDAO");
 const PointDAO = require("../daos/pointDAO");
-const HikeHutDAO=require("../daos/hikeHutDAO");
+const HikeHutDAO=require("../daos/HikeHutDAO");
 const HikeParkingDAO=require("../daos/hikeParkingDAO");
 
 const HikeService = require("../services/hikeService");
