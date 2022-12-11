@@ -267,7 +267,8 @@ const getFilteredHut = async (
   pageNumber,
   pageSize,
   minAltitude,
-  maxAltitude
+  maxAltitude,
+  name
 ) => {
   const response = await fetch(
     new URL(
@@ -282,6 +283,7 @@ const getFilteredHut = async (
           pageSize,
           minAltitude,
           maxAltitude,
+          name
         }),
       SERVER_BASE
     ),
@@ -339,7 +341,8 @@ const getFilteredUserHuts = async (
   pageNumber,
   pageSize,
   minAltitude,
-  maxAltitude
+  maxAltitude,
+  name
 ) => {
   const response = await fetch(
     new URL(
@@ -354,6 +357,7 @@ const getFilteredUserHuts = async (
           pageSize,
           minAltitude,
           maxAltitude,
+          name
         }),
       SERVER_BASE
     ),
