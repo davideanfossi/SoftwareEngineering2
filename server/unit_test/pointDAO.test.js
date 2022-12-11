@@ -67,7 +67,7 @@ function testgetReferencePointsOfHike(hikeId, expectedPoints) {
 function testInsertPoint(latitude,longitude,altitude,name,address){
     test('add new point', async() => {
 
-        let lastID = await pointDAO.insertPoint(latitude,longitude,altitude,name,address);
+        let lastID = await pointDAO.insertPoint({latitude,longitude,altitude,name,address});
         expect(lastID).toBeTruthy();
 
         const res = await pointDAO.getPoint(lastID);
