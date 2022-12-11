@@ -27,6 +27,8 @@ function HutForm() {
         })
     }, [])
 
+
+
     const [selectedPosition, setSelectedPosition] = useState(undefined);
     const [lat, setLat] = useState(45.0702899); //it is Turin!
     const [lon, setLon] = useState(7.6348208);
@@ -36,6 +38,14 @@ function HutForm() {
         setLon(lon);
         setZoom(zoom);
     };
+
+    useEffect(() => {
+        API.getAltitudeFromCoordinates(lat, lon)
+        .then((res) => {
+          setAltitude(res.elevation);
+        })
+        .catch((err) => setAltitude(''));
+    }, [lat, lon]);
 
     const handleInputMehtod = () => {
         setCoordSelector(current => !current);
@@ -188,13 +198,14 @@ function HutForm() {
                                     <Form.Group>
                                         <Form.Label>Altitude *</Form.Label>
                                         <Form.Control
-                                            isInvalid={altitude === null || parseFloat(altitude) < 0}
-                                            type='number' step={"any"}
-                                            placeholder="altitude of hut position"
+                                            isInvalid={altitude === null || altitude < 0}
+                                            type="number"
+                                            placeholder="Altitude"
                                             value={altitude == null ? '' : altitude}
-                                            onChange={event => { setAltitude(event.target.value); }} />
+                                            onChange={event => { setAltitude(event.target.value); }}
+                                            disabled />
                                         <Form.Control.Feedback type="invalid">
-                                            Invalid altitude Format
+                                            Altitude number must be greater than 0
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
