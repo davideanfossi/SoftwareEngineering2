@@ -36,7 +36,6 @@ fileUpload({createParentPath: true}),
     body('longitude').optional().isString().trim(), 
     body('latitude').optional().isString().trim(),  
     body('altitude').optional().isString().trim(), 
-    body('pointLabel').optional().isString().trim(), 
     body('address').optional().isString().trim(),
 
     body('image').optional()
@@ -79,7 +78,7 @@ fileUpload({createParentPath: true}),
             const latitude=req.body.latitude;
             const longitude=req.body.longitude;
             const altitude=req.body.altitude;
-            const pointLabel=req.body.pointLabel;
+            const pointLabel=req.body.name;
             const address=req.body.address;
             
             
