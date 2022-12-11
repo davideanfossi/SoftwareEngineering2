@@ -69,6 +69,13 @@ function testGetSingleHut(testMsg, hutId, expectedHut) {
     });
 }
 
+/* function testGetHutImages(testMsg, hutId, expectedImageList) {
+    test(testMsg, async () => {
+        const res = await hutDAO.getHutImages(hutId);
+        expect(res).toEqual(expect.arrayContaining(expectedImageList));
+    });
+} */
+
 function testGetMaxData(expectedObj) {
     test('test get max data', async () => {
         const res = await hutDAO.getMaxData();

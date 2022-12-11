@@ -305,7 +305,7 @@ function HikeForm() {
             </div>
           </Form.Group>
 
-          <Button type="submit" style={{ "marginTop": "12px", "backgroundColor": 'blue', "borderColor": 'blue' }}>Submit</Button>
+          <Button type="submit" variant="warning" >Submit</Button>
         </Form>
       </Container>
     </Container>

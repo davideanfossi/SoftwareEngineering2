@@ -5,7 +5,7 @@ import { UserContext } from "../../context/user-context";
 import { PersonCircle } from "react-bootstrap-icons";
 import API from "../../API";
 
-export const Layout = (props) => {
+export const Layout = () => {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
   const goHome = () => {
@@ -20,7 +20,7 @@ export const Layout = (props) => {
 
   const handleLogout = () => {
     API.logout()
-      .then((res) => {
+      .then(() => {
         userContext.setUser({
           id: undefined,
           role: undefined,
@@ -34,17 +34,22 @@ export const Layout = (props) => {
   const goInsertHike = () => {
     navigate("/insert-hike");
   };
-
   const goMyHikes = () => {
     navigate("/my-hikes");
   };
   const goInsertParking = () => {
     navigate("/insertparking");
   };
+  const goInsertHut = () => {
+    navigate("/inserthut");
+  };
   const goSearchHut = () => {
     navigate("/search-hut");
   }
-
+  const goMyHuts = () => {
+    navigate("/my-huts");
+  };
+  
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">
@@ -75,6 +80,13 @@ export const Layout = (props) => {
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
+                    goMyHuts();
+                  }}
+                >
+                  My huts
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
                     handleLogout();
                   }}
                 >
@@ -90,11 +102,13 @@ export const Layout = (props) => {
                 <Nav.Link onClick={goSearchHut}>Search Hut</Nav.Link>
               )}
               {["Local Guide"].includes(userContext.user.role) && (
-                <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
+                <>
+                  <Nav.Link onClick={goInsertParking}>New Parking</Nav.Link>
+                  <Nav.Link onClick={goInsertHut}>New Hut</Nav.Link>
+                  <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
+                </>
               )}
-              {["Local Guide"].includes(userContext.user.role) && (
-                <Nav.Link onClick={goInsertParking}>New Parking</Nav.Link>
-              )}
+
               {userContext.user.id === undefined && (
                 <>
                   <Nav.Link onClick={goLogin}>Login</Nav.Link>

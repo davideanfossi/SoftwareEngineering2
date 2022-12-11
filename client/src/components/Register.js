@@ -52,7 +52,6 @@ function Register(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(username, password, confPassword, name, surname, phoneNumber);
         
         const flag= validateData();
         if (flag) return;
@@ -77,6 +76,18 @@ function Register(props) {
 
     };
 
+    function resetAlert() { setShowAlert('') }
+    function handleHikerClick() { setAdditionalData(false); setRole('Hiker'); setName(""); setSurname(""); setUsername(""); setPhoneNumber("") }
+    function handleLocalGuideClick() { setAdditionalData(true); setRole('Local Guide'); }
+    function handleHutWorkerClick() { setAdditionalData(true); setRole('Hut Worker'); }
+    function handleName(ev) { setName(ev.target.value) }
+    function handleSurname(ev) { setSurname(ev.target.value) }
+    function handleUsername(ev) { setUsername(ev.target.value) }
+    function handlePhoneNumber(ev) { setPhoneNumber(ev.target.value) }
+    function handleEmail(ev) { setEmail(ev.target.value) }
+    function handlePassword(ev) { setPassword(ev.target.value) }
+    function handleConfPassword(ev) { setConfPassword(ev.target.value) }
+
     return (
         <>
             <Container className='mt-3'>
@@ -88,7 +99,7 @@ function Register(props) {
                         :
                         <>{
                             showAlert === "error" ?
-                                <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
+                                <Alert variant="danger" onClose={resetAlert} dismissible>
                                     <Alert.Heading>{alertMsg}</Alert.Heading>
                                 </Alert>
                                 : <></>
@@ -108,7 +119,7 @@ function Register(props) {
                                 type='radio'
                                 id='inline-radio-1'
                                 defaultChecked
-                                onClick={() => { setAdditionalData(false); setRole('Hiker'); setName(""); setSurname(""); setUsername(""); setPhoneNumber("") }}
+                                onClick={handleHikerClick}
                             />
                             <Form.Check
                                 inline
@@ -116,7 +127,7 @@ function Register(props) {
                                 name='group1'
                                 type='radio'
                                 id='inline-radio-2'
-                                onClick={() => { setAdditionalData(true); setRole('Local Guide'); }}
+                                onClick={handleLocalGuideClick}
                             />
                             <Form.Check
                                 inline
@@ -124,7 +135,7 @@ function Register(props) {
                                 name='group1'
                                 type='radio'
                                 id='inline-radio-3'
-                                onClick={() => { setAdditionalData(true); setRole('Hut Worker'); }}
+                                onClick={handleHutWorkerClick}
                             />
                         </Form.Group>
                         {additionalData ?
@@ -135,7 +146,7 @@ function Register(props) {
                                         type="text"
                                         minLength={1}
                                         value={name}
-                                        onChange={(ev) => setName(ev.target.value)}
+                                        onChange={handleName}
                                         required={true}
                                         placeholder="Your name here"
                                         maxLength={20} />
@@ -146,7 +157,7 @@ function Register(props) {
                                         type='text'
                                         minLength={1}
                                         value={surname}
-                                        onChange={(ev) => setSurname(ev.target.value)}
+                                        onChange={handleSurname}
                                         required={true}
                                         placeholder="Your surname here"
                                         maxLength={20} />
@@ -158,7 +169,7 @@ function Register(props) {
                                         type="text"
                                         isInvalid={phoneNumber && isNaN(Number.parseInt(phoneNumber))}
                                         value={phoneNumber}
-                                        onChange={(ev) => setPhoneNumber(ev.target.value)}
+                                        onChange={handlePhoneNumber}
                                         required={true}
                                         placeholder="Your phone number here"
                                         minLength={10}
@@ -175,7 +186,7 @@ function Register(props) {
                                 type='text'
                                 value={username}
                                 minLength={1}
-                                onChange={(ev) => setUsername(ev.target.value)}
+                                onChange={handleUsername}
                                 required={true}
                                 placeholder="Create a fancy username"
                                 maxLength={30} />
@@ -186,7 +197,7 @@ function Register(props) {
                                 type='email'
                                 placeholder="name@example.com"
                                 value={email}
-                                onChange={(ev) => setEmail(ev.target.value)}
+                                onChange={handleEmail}
                                 required={true}
                                 maxLength={50} />
                         </Form.Group>
@@ -195,7 +206,7 @@ function Register(props) {
                             <Form.Control
                                 type='password'
                                 value={password}
-                                onChange={(ev) => setPassword(ev.target.value)}
+                                onChange={handlePassword}
                                 required={true}
                                 minLength={6}
                                 maxLength={15}
@@ -211,7 +222,7 @@ function Register(props) {
                                 type='password'
                                 isInvalid={confPassword && confPassword !== password}
                                 value={confPassword}
-                                onChange={(ev) => setConfPassword(ev.target.value)}
+                                onChange={handleConfPassword}
                                 required={true}
                                 minLength={6}
                                 maxLength={15}

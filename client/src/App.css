@@ -18,22 +18,22 @@ body {
 .brand{
   cursor: pointer;
 }
-.hike-row {
+.hike-row, .hut-row {
   background-color: rgb(243, 231, 201);
   border: 0.4em solid rgb(239, 208, 131);
   margin: 1em;
 }
-.hike-row-even {
+.hike-row-even, .hut-row-even {
   background-color: rgb(238, 234, 223);
   border: 0.4em solid rgb(239, 208, 131);
   margin: 1em;
 }
 
-.hike-table-container {
+.hike-table-container, .hut-table-container {
   padding: 1em;
 }
 
-.hike-filter-container {
+.hike-filter-container, .hut-filter-container {
   background-color: rgb(239, 208, 131);
   margin: 1em;
   padding: 1em;
