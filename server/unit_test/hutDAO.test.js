@@ -2,7 +2,6 @@ const DBManager = require('../database/dbManager');
 const HutDAO = require('../daos/hutDAO');
 const Hut = require('../models/hutModel');
 const { purgeAllTables } = require('./purgeUtils');
-const hut = require('../models/hutModel');
 
 const dbManager = new DBManager("TEST");
 dbManager.openConnection();
@@ -21,12 +20,15 @@ describe('Hut DAO unit test',() => {
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         res = await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
         res = await dbManager.query(sql, ["user2@test.it", "user 2", "local guide", "password", "salt", null, null, null, 1, null, null]);
-        
-        sql = "INSERT INTO Hut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-        res = await dbManager.query(sql, ["hut 1", 10, 1, "hut 1", '123468', "hut1@test.com", "www.hut1.com", 1]);
-        res = await dbManager.query(sql, ["hut 2", 20, 2, "hut 2", '9876541', "hut2@test.com", "www.hut2.com", 1]);
-        res = await dbManager.query(sql, ["hut 3", 30, 3, "hut 3", '235698', "hut3@test.com",  "www.hut3.com", 2]);
-  
+    
+        sql = "INSERT INTO Hut(name, numOfBeds, description, phoneNumber, email, website, pointId, userId) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        res = await dbManager.query(sql, ["hut 1", 10, "description 1", "1234567890", "hut1@mail.com", null, 2, 1]);
+        res = await dbManager.query(sql, ["hut 2", 50, "description 2", "0987654321", "hut2@mail.com", "www.hut2.com", 3, 1]);
+        res = await dbManager.query(sql, ["hut 3", 20, "description 3", "0192837465", "hut3@mail.com", "www.hut3.com", 1, 2]);
+
+       // sql = "INSERT INTO hutImages(hutId, imageName) VALUES(?, ?)";
+       // res = await dbManager.query(sql, [2, "image1.png"]);
+       // res = await dbManager.query(sql, [2, "image2.png"]);
     });
 
     afterAll(async () => {
@@ -34,16 +36,27 @@ describe('Hut DAO unit test',() => {
         catch (err) {/*foo*/ }
     });
     
+
     describe('Constructor test', () => {
         expect(() => new HutDAO())
             .toThrow('DBManager must be defined for hutdao!');
     });
 
+    const hut1 = new Hut(1, "hut 1", 10, "1234567890", "hut1@mail.com", "description 1", "", 2, 1);
+    const hut2 = new Hut(2, "hut 2", 50, "0987654321", "hut2@mail.com", "description 2", "www.hut2.com", 3, 1);
+    const hut3 = new Hut(3, "hut 3", 20, "0192837465", "hut3@mail.com", "description 3", "www.hut3.com", 1, 2);
+
+    testGetSingleHut('test get single hut', 2, hut2);
+    //testGetHutImages('test get images of hut', 2, ["image1.png", "image2.png"]);
+    testGetAllHut('test get all huts', [hut1, hut2, hut3]);
+    testGetHuts('test get huts with filters', 20, 100, [hut2, hut3]);
+    testGetHuts('test get huts without filters', undefined, undefined, [hut1, hut2, hut3]);
+    testGetMaxData({"maxNumOfBeds": 50});
+
+
     testInsertHut("hut 1",9,4,"hut desc1",'123456','test@test.com','www.test.com',2)
    // testInsertHut("hut 2",20,3,"hut desc2",'32146582','test2@test.com','www.test2.com',1)
 
-    const hut1 = new hut(1, "hut 1", 10, 1, "hut 1", '123468', "hut1@test.com", "www.hut1.com", 1);
-    const hut2 = new hut(2,"hut 2", 20, 2, "hut 2", '9876541', "hut2@test.com", "www.hut2.com", 1);
     testGetHutsbyUserId(1,[hut1, hut2]);
 
 });
@@ -75,3 +88,39 @@ function testGetHutsbyUserId(userId, expectedHuts) {
     });
 }
 
+
+function testGetAllHut(testMsg, expectedHuts) {
+    test(testMsg, async () => {
+        const res = await hutDAO.getAllHuts();
+        expect(res).toEqual(expect.arrayContaining(expectedHuts));
+    });
+}
+
+function testGetHuts(testMsg, minNumOfBeds, maxNumOfBeds, expectedHuts) {
+    test(testMsg, async () => {
+        const res = await hutDAO.getHuts(minNumOfBeds, maxNumOfBeds);
+        expect(res).toEqual(expect.arrayContaining(expectedHuts));
+    });
+}
+
+
+function testGetSingleHut(testMsg, hutId, expectedHut) {
+    test(testMsg, async () => {
+        const res = await hutDAO.getHut(hutId);
+        expect(res).toEqual(expectedHut);
+    });
+}
+
+/* function testGetHutImages(testMsg, hutId, expectedImageList) {
+    test(testMsg, async () => {
+        const res = await hutDAO.getHutImages(hutId);
+        expect(res).toEqual(expect.arrayContaining(expectedImageList));
+    });
+} */
+
+function testGetMaxData(expectedObj) {
+    test('test get max data', async () => {
+        const res = await hutDAO.getMaxData();
+        expect(res).toEqual(expectedObj);
+    });
+}

@@ -49,3 +49,26 @@ CREATE TABLE "ReferencePoints" (
 	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
 	FOREIGN KEY("pointId") REFERENCES "Points"("id")
 );
+
+CREATE TABLE "Hut" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"name"	TEXT NOT NULL,
+	"numOfBeds"	INTEGER NOT NULL,
+	"description"	TEXT NOT NULL,
+	"phoneNumber"	TEXT NOT NULL,
+	"email"	TEXT NOT NULL,
+	"website"	TEXT,
+	"pointId"	INTEGER NOT NULL,
+	"ownerId"	INTEGER NOT NULL,
+	FOREIGN KEY("pointId") REFERENCES "Points"("id"),
+	FOREIGN KEY("ownerId") REFERENCES "User"("id"),
+	PRIMARY KEY("id")
+);
+
+CREATE TABLE "HutImages" (
+	"imageId"	INTEGER NOT NULL UNIQUE,
+	"hutId"	INTEGER NOT NULL,
+	"imageName"	TEXT NOT NULL,
+	PRIMARY KEY("imageId" AUTOINCREMENT),
+	FOREIGN KEY("hutId") REFERENCES "Hut"("id")
+);
