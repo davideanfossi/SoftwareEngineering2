@@ -117,7 +117,7 @@ const getHikeDetails = async (hike) => {
     if (response.ok) {
       return await response.json();
     } else {
-      throw await response.text();
+      throw response.status;
     }
 };
 

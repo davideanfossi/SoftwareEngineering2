@@ -1,4 +1,3 @@
-//import logo from './logo.svg';
 import './App.css';
 import "./main.scss";
 import "react-range-slider-input/dist/style.css";

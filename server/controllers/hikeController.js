@@ -25,6 +25,8 @@ const HikeService = require("../services/hikeService");
 const HikeHutService = require("../services/hikeHutService");
 const HikeParkingService = require("../services/hikeParkingService");
 
+const { Hike } = require("../models/hikeModel");
+const Point = require("../models/pointModel");
 const config = require("../config.json");
 
 const dbManager = new DbManager("PROD");
@@ -100,18 +102,12 @@ router.get(
         ? Number.parseInt(req.query.pageSize)
         : undefined;
       const result = await hikeService.getHikes(
-        pageNumber,
-        pageSize,
-        minLen,
-        maxLen,
-        minTime,
-        maxTime,
-        minAscent,
-        maxAscent,
+        { minLen, maxLen },
+        { minTime, maxTime },
+        { minAscent, maxAscent },
         difficulty,
-        baseLat,
-        baseLon,
-        radius
+        { baseLat, baseLon, radius },
+        { pageNumber, pageSize },
       );
       // remove additional data
       result.pageItems.map((hike) => {
@@ -124,7 +120,7 @@ router.get(
       return res.status(200).json(result);
     } catch (err) {
       console.log(err);
-          return res.status(500).send();
+      return res.status(500).send();
     }
   }
 );
@@ -134,7 +130,7 @@ router.get("/hikes/limits", express.json(), async (req, res) => {
     const result = await hikeService.getHikesLimits();
     return res.status(200).json(result);
   } catch (err) {
-        return res.status(500).send();
+    return res.status(500).send();
   }
 });
 
@@ -168,20 +164,12 @@ router.post(
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).end();
+        return res.status(400).send();
       }
-
-      //hike
-      const title = req.body.title;
-      const length = Number.parseInt(req.body.length);
-      const expectedTime = Number.parseInt(req.body.expectedTime);
-      const ascent = Number.parseInt(req.body.ascent);
-      const difficulty = req.body.difficulty;
-      const description = req.body.description;
 
       const rootPath = config.gpxPath;
       if (!rootPath) {
-        return res.status(500).json("error in reading gpxPath from config");
+        return res.status(500).send("error in reading gpxPath from config");
       }
       const trackingfile = req.files ? req.files.trackingfile : null;
       const gpxFileName = trackingfile
@@ -190,56 +178,34 @@ router.post(
       const gpxPath = trackingfile ? rootPath + gpxFileName : null;
 
       if (path.extname(trackingfile.name) != ".gpx")
-        return res.status(400).json("wrong file type");
+        return res.status(400).send("wrong file type");
 
       if (trackingfile) {
         //  mv() method places the file inside public directory
         trackingfile.mv(gpxPath, function (err) {
           if (err) {
-            return res.status(500).json(err.message);
+            return res.status(500).send();
           }
         });
       }
-      const userId = req.user ? req.user.id : 1;
 
-      //startPoint
-      const startLatitude = req.body.startLatitude;
-      const startLongitude = req.body.startLongitude;
-      const startAltitude = req.body.startAltitude;
-      const startPointLabel = req.body.startPointLabel;
-      const startAddress = req.body.startAddress;
+      // define hike
+      const hike = new Hike(undefined, req.body.title, Number.parseInt(req.body.length), Number.parseInt(req.body.expectedTime),
+        Number.parseInt(req.body.ascent), req.body.difficulty, req.body.description, req.user.id, gpxFileName);
 
-      //endPoint
-      const endLatitude = req.body.endLatitude;
-      const endLongitude = req.body.endLongitude;
-      const endAltitude = req.body.endAltitude;
-      const endPointLabel = req.body.endPointLabel;
-      const endAddress = req.body.endAddress;
+      // define startPoint
+      const startPoint = new Point(undefined, req.body.startLatitude, req.body.startLongitude, req.body.startAltitude,
+        req.body.startPointLabel, req.body.startAddress);
 
-      const result = await hikeService.addHike(
-        title,
-        length,
-        expectedTime,
-        ascent,
-        difficulty,
-        description,
-        gpxFileName,
-        userId,
-        startLatitude,
-        startLongitude,
-        startAltitude,
-        startPointLabel,
-        startAddress,
-        endLatitude,
-        endLongitude,
-        endAltitude,
-        endPointLabel,
-        endAddress
-      );
-      if (!result) return res.status(500).end();
-      return res.status(201).json(result);
+      // define endPoint
+      const endPoint = new Point(undefined, req.body.endLatitude, req.body.endLongitude, req.body.endAltitude,
+        req.body.endPointLabel, req.body.endAddress);
+
+      const result = await hikeService.addHike(hike, startPoint, endPoint);
+      return res.status(200).json(result);
     } catch (err) {
-          return res.status(500).json(err.message);
+      console.log(err);
+      return res.status(500).send();
     }
   }
 );
@@ -258,12 +224,11 @@ router.get(
       const result = await hikeService.getHikeGpx(req.params.id);
       return res.status(200).json(result);
     } catch (err) {
-      console.log(err);
       switch (err.returnCode) {
         case 404:
           return res.status(404).send(err.message);
         default:
-          return res.status(500).end();
+          return res.status(500).send();
       }
     }
   }

@@ -7,7 +7,7 @@ class UserDAO {
 
     constructor(dbManager) {
         if (!dbManager)
-            throw 'DBManager must be defined for User dao!';
+            throw new Error('DBManager must be defined for User dao!');
         this.dbManager = dbManager;
     }
 
@@ -32,36 +32,29 @@ class UserDAO {
     }
 
     async loginUser(email, password) {
-        try {
-            const sql = "SELECT * FROM User WHERE email = ? ";
-            const user = await this.dbManager.get(sql, [email], true);
-            if (user === undefined) {
-                // user does not exist
-                throw { err: 401, msg: "Incorrect username and/or password." };
-            }
-            if(user.isVerified === 0)
-                throw { err: 401, msg: "Account must be verified" };
-            const login = await verifyPassword(
-                user.password,
-                user.salt,
-                password
-            );
-            if (!login)
-                throw { err: 401, msg: "Incorrect username and/or password." };
-            return {"id": user.id, "username": user.username, "email": user.email, "role": user.role};
-        } catch (err) {
-            throw err;
+        const sql = "SELECT * FROM User WHERE email = ? ";
+        const user = await this.dbManager.get(sql, [email], true);
+        if (user === undefined) {
+            // user does not exist
+            throw new Error("Incorrect username and/or password. Error code: " + 401);
         }
+        if(user.isVerified === 0)
+            throw new Error("Account must be verified. Error code: " + 401);
+        const login = await verifyPassword(
+            user.password,
+            user.salt,
+            password
+        );
+        if (!login)
+            throw new Error("Incorrect username and/or password. Error code: " + 401)
+        return {"id": user.id, "username": user.username, "email": user.email, "role": user.role};
     }
 
 }
 
 async function verifyPassword(passwordStored, saltStored, password) {
     let encryptedPass = crypto.pbkdf2Sync(password, saltStored, 1000, 64, `sha512`).toString(`hex`);
-    if (encryptedPass === passwordStored)
-        // check if digest stored in the DB is equal to digest computed above
-        return true;
-    return false;
+    return encryptedPass === passwordStored;
 }
 
 module.exports = UserDAO;
