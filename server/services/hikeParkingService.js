@@ -8,6 +8,11 @@ class HikeParkingService {
         this.hikeParkingDAO = hikeParkingDAO;
     }
 
+    getParkingLinkedToHike = async (hikeId) => {
+        const res = await this.hikeParkingDAO.getHikeLinkedParkings(hikeId);
+        return res;
+    };
+
     linkParkingToHike = async (hikeId,parkingId,startPoint,endPoint) => {
                 const res = await this.hikeParkingDAO.insertHikeParking(hikeId,parkingId,startPoint,endPoint);
                 return res;

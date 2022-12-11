@@ -12,4 +12,4 @@ class HikeHut{
 }
 
 
-module.exports = {HikeHut};
+module.exports = HikeHut;

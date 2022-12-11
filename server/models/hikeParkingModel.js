@@ -11,4 +11,4 @@ class HikeParking{
 }
 
 
-module.exports = {HikeParking};
+module.exports = HikeParking;
