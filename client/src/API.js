@@ -353,7 +353,7 @@ const getFilteredUserHuts = async (
 ) => {
   const response = await fetch(
     new URL(
-      "huts?" +
+      "userhuts?" +
         new URLSearchParams({
           minNumOfBeds,
           maxNumOfBeds,
@@ -372,7 +372,7 @@ const getFilteredUserHuts = async (
       headers: {
         "Content-Type": "application/json",
       },
-      credentials:"include"
+      credentials: "include",
     }
   );
   if (response.ok) {
