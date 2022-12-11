@@ -33,6 +33,7 @@ export const MarkerPoint = ({
   onClickHandle,
   isParking = false,
 }) => {
+  console.log(point);
   const icon = isParking ? parkingIcon : hutIcon;
   const selectedIcon = isParking ? selectedParkingIcon : selectedHutIcon;
   return (

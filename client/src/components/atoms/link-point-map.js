@@ -26,15 +26,39 @@ export const LinkPointMap = ({
   const [selected, setSelected] = useState({ type: undefined, id: -1 });
   // eslint-disable-next-line no-unused-vars
   const [huts, setHuts] = useState([
-    { id: 1, latitude: 45.319959, longitude: 7.304834, name: "hut1" },
-    { id: 2, latitude: 45.316959, longitude: 7.306834, name: "hut2" },
-    { id: 3, latitude: 45.313959, longitude: 7.302834, name: "hut3" },
+    {
+      id: 1,
+      point: { latitude: 45.319959, longitude: 7.304834 },
+      name: "hut1",
+    },
+    {
+      id: 2,
+      point: { latitude: 45.316959, longitude: 7.306834 },
+      name: "hut2",
+    },
+    {
+      id: 3,
+      point: { latitude: 45.313959, longitude: 7.302834 },
+      name: "hut3",
+    },
   ]);
   // eslint-disable-next-line no-unused-vars
   const [parkings, setParkings] = useState([
-    { id: 1, latitude: 45.319959, longitude: 7.302834, name: "parking1" },
-    { id: 2, latitude: 45.316959, longitude: 7.301834, name: "parking2" },
-    { id: 3, latitude: 45.313959, longitude: 7.306834, name: "parking3" },
+    {
+      id: 1,
+      point: { latitude: 45.319959, longitude: 7.302834 },
+      name: "parking1",
+    },
+    {
+      id: 2,
+      point: { latitude: 45.316959, longitude: 7.301834 },
+      name: "parking2",
+    },
+    {
+      id: 3,
+      point: { latitude: 45.313959, longitude: 7.306834 },
+      name: "parking3",
+    },
   ]);
   let { id } = useParams();
 
@@ -52,16 +76,22 @@ export const LinkPointMap = ({
 
   useEffect(() => {
     start &&
-      API.getParkingHutStartPoint().then((res) => {
+      API.getParkingHutStartPoint(id).then((res) => {
         setHuts(res.huts);
         setParkings(res.parkings);
+        if(res.selected){
+          setSelected(res.selected[0]);
+        }
       });
     end &&
-      API.getParkingHutEndPoint((res) => {
+      API.getParkingHutEndPoint(id).then((res) => {
         setHuts(res.huts);
         setParkings(res.parkings);
+        if (res.selected) {
+          setSelected(res.selected[0]);
+        }
       });
-  }, [end, start]);
+  }, [end, id, start]);
 
   useEffect(() => {
     if (map) {
@@ -107,21 +137,21 @@ export const LinkPointMap = ({
 
         <Circle center={center} radius={1000} />
         <Polyline positions={track} />
-        {huts.map((point) => (
+        {huts.map((hut) => (
           <MarkerPoint
-            key={point.id}
-            point={point}
-            selected={selected.type === "hut" && point.id === selected.id}
-            onClickHandle={() => onClickHut(point.id)}
+            key={hut.id}
+            point={hut.point}
+            selected={selected.type === "hut" && hut.id === selected.id}
+            onClickHandle={() => onClickHut(hut.id)}
           />
         ))}
 
-        {parkings.map((point) => (
+        {parkings.map((parking) => (
           <MarkerPoint
-            key={point.id}
-            point={point}
-            selected={selected.type === "parking" && point.id === selected.id}
-            onClickHandle={() => onClickParking(point.id)}
+            key={parking.id}
+            point={parking.point}
+            selected={selected.type === "parking" && parking.id === selected.id}
+            onClickHandle={() => onClickParking(parking.id)}
             isParking
           />
         ))}
