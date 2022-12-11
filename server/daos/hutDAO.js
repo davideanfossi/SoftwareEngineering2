@@ -37,25 +37,17 @@ class HutDAO {
     }
 
     insertHut=async (name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image) =>{
-        try{
             const sql="insert into hut(name,numOfBeds,pointId,description,phoneNumber,email,website,ownerId,imageName) values(?,?,?,?,?,?,?,?,?)";
             const res = await this.dbManager.query(sql, [name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image]);
             return res;
-        }
-        catch(err){
-            throw err;
-        }
+
     }
 
     getHutsbyUserId=async(userId)=>{
-        try {
             const sql = "SELECT * FROM Hut WHERE ownerId = ? ORDER BY id";
             const res = await this.dbManager.get(sql, [userId]);
             let huts= res.map(r => new Hut(r.id, r.name, r.numOfBeds, r.phoneNumber, r.email, r.description, r.website, r.pointId, r.ownerId, r.imageName));
             return huts;
-        } catch (err) {
-            throw err;
-        }
     }
 
     getUserHuts = async (userId,minNumOfBeds = 0, maxNumOfBeds = 10000) => {

@@ -18,7 +18,6 @@ const getHikesLimits = async () => {
 };
 
 const getUserHikesLimits = async () => {
-  try {
     const response = await fetch(new URL("user-hikes/limits", SERVER_BASE), {
       method: "GET",
       headers: {
@@ -31,9 +30,7 @@ const getUserHikesLimits = async () => {
     } else {
       throw response.text();
     }
-  } catch (e) {
-    throw e;
-  }
+
 };
 
 const getAllHikes = async () => {
@@ -111,7 +108,6 @@ const getFilteredUserHikes = async (
   pageSize,
   pageNumber
 ) => {
-  try {
     const response = await fetch(
       new URL(
         "user-hikes?" + //TODO: fix api call
@@ -144,9 +140,7 @@ const getFilteredUserHikes = async (
     } else {
       throw response.text();
     }
-  } catch (e) {
-    throw e;
-  }
+
 };
 
 const registerUser = async (formData) => {
@@ -206,7 +200,6 @@ const newHike = async (formData) => {
 };
 
 const newHut = async (formData) => {
-  try {
     const response = await fetch(new URL("hut", SERVER_BASE), {
       method: "POST",
       credentials: "include",
@@ -217,9 +210,6 @@ const newHut = async (formData) => {
     } else {
       throw await response.text();
     }
-  } catch (e) {
-    throw e;
-  }
 };
 
 const login = async (credentials) => {

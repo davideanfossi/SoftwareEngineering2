@@ -87,7 +87,6 @@ router.post(
       if (!result) return res.status(500).send();
       return res.status(200).json(result);
     } catch (err) {
-      console.log(err);
       switch (err.returnCode) {
         default:
           return res.status(500).send(err.message);

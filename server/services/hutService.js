@@ -14,7 +14,6 @@ class HutService {
     }
 
     addHut = async (name,numOfBeds,description,phoneNumber,email,website, userId,latitude,longitude,altitude,pointLabel,address,imageName) => {
-        try {
             //TODO :  add transaction or delete points in catch when insertHike returns err
             //first insert Point 
             const pointId=await this.pointDAO.insertPoint({latitude,longitude,altitude,name:pointLabel,address})
@@ -27,22 +26,15 @@ class HutService {
             else
                 return false;
            
-        } catch (err) {
-            throw err;
-        }
     }
 
     getHut=async (id)=>{
-        try{
             const res = await this.hutDAO.getHut(id);
             return res;
-        } catch(err){
-            throw err;
-        }
+
     }
 
     getHutbyUserId=async({userId},{ minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius = 0 }, { pageNumber = 1, pageSize = 10 })=>{
-        try{
             let huts;
             let returnedHuts;
             const offset = (pageNumber - 1) * pageSize; // offset of the page
@@ -71,10 +63,6 @@ class HutService {
             const totalPages = Math.ceil(huts.length / pageSize);
 
             return { "totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHuts };
-            } catch(err){
-                console.log(err)
-                throw err;
-            }
     }
 
     getHuts = async ({ minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius = 0 }, { pageNumber = 1, pageSize = 10 }) => {

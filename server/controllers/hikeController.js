@@ -119,7 +119,6 @@ router.get(
       });
       return res.status(200).json(result);
     } catch (err) {
-      console.log(err);
       return res.status(500).send();
     }
   }
@@ -204,7 +203,6 @@ router.post(
       const result = await hikeService.addHike(hike, startPoint, endPoint);
       return res.status(200).json(result);
     } catch (err) {
-      console.log(err);
       return res.status(500).send();
     }
   }
@@ -269,7 +267,6 @@ router.post(
 
       return res.status(200).json(result);
     } catch (err) {
-      console.log(err);
       switch (err.returnCode) {
         case 404:
           return res.status(404).send(err.message);

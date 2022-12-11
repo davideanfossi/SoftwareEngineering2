@@ -193,7 +193,6 @@ router.get("/huts",
             });
             return res.status(200).json(result);
         } catch (err) {
-            console.log(err);
             switch (err.returnCode) {
                 default:
                     return res.status(500).send();
@@ -208,7 +207,6 @@ router.get("/huts/limits", async (req, res) => {
         const result = await hutService.getHutsLimits();
         return res.status(200).json(result);
     } catch (err) {
-        console.log(err);
         return res.status(500).send();
     }
 });
