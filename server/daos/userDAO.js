@@ -7,7 +7,7 @@ class UserDAO {
 
     constructor(dbManager) {
         if (!dbManager)
-            throw new Error('DBManager must be defined for User dao!');
+            throw 'DBManager must be defined for User dao!';
         this.dbManager = dbManager;
     }
 
@@ -36,17 +36,20 @@ class UserDAO {
         const user = await this.dbManager.get(sql, [email], true);
         if (user === undefined) {
             // user does not exist
-            throw new Error("Incorrect username and/or password. Error code: " + 401);
+            throw {msg:"Incorrect username and/or password. Error code: ",err: 401};
         }
         if(user.isVerified === 0)
-            throw new Error("Account must be verified. Error code: " + 401);
+            throw { msg: "Account must be verified. Error code: ", err: 401 };
         const login = await verifyPassword(
             user.password,
             user.salt,
             password
         );
         if (!login)
-            throw new Error("Incorrect username and/or password. Error code: " + 401)
+            throw {
+              msg: "Incorrect username and/or password. Error code: ",
+              err: 401,
+            };
         return {"id": user.id, "username": user.username, "email": user.email, "role": user.role};
     }
 
