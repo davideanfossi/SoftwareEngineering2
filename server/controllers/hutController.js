@@ -22,8 +22,8 @@ const hutService = new HutService(hutDAO, pointDAO);
 
 
 router.post('/hut',
-//isLoggedIn,
-//getPermission(["Local Guide"]),
+isLoggedIn,
+getPermission(["Local Guide"]),
 fileUpload({createParentPath: true}),
 [
     body('name').notEmpty().isString().trim(), 
@@ -97,28 +97,49 @@ fileUpload({createParentPath: true}),
     router.get("/userhuts",
     isLoggedIn,
     getPermission(["Local Guide"]),
-    express.json(), async (req, res) => {
+    express.json(), 
+    [query("minNumOfBeds").optional().isInt({ min: 0 }),
+    query("maxNumOfBeds").optional().isInt({ min: 0 }),
+    query("minAltitude").optional().isInt({ min: 0 }),
+    query("maxAltitude").optional().isInt({ min: 0 }),
+    query("baseLat").optional().isNumeric(),
+    query("baseLon").optional().isNumeric(),
+    query("radius").optional().isInt({ min: 0 }),
+    query("pageNumber").optional().isInt({ min: 1 }),
+    query("pageSize").optional().isInt({ min: 1 })],
+    async (req, res) => {
         try {
-            if(req.user)
-            {
-                const result = await hutService.getHutbyUserId(req.user.id);
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                    return res.status(400).send("Bad request");
+                }
+                const minNumOfBeds = req.query.minNumOfBeds ? Number.parseInt(req.query.minNumOfBeds) : undefined;
+                const maxNumOfBeds = req.query.maxNumOfBeds ? Number.parseInt(req.query.maxNumOfBeds) : undefined;
+                const minAltitude = req.query.minAltitude ? Number.parseInt(req.query.minAltitude) : undefined;
+                const maxAltitude = req.query.maxAltitude ? Number.parseInt(req.query.maxAltitude) : undefined;
+                const baseLat = req.query.baseLat ? Number.parseFloat(req.query.baseLat) : undefined;
+                const baseLon = req.query.baseLon ? Number.parseFloat(req.query.baseLon) : undefined;
+                const radius = req.query.radius ? Number.parseInt(req.query.radius) : undefined;
+                const pageNumber = req.query.pageNumber ? Number.parseInt(req.query.pageNumber) : undefined;
+                const pageSize = req.query.pageSize ? Number.parseInt(req.query.pageSize) : undefined;
+
+                const userId=req.user.id;
+                const result = await hutService.getHutbyUserId({userId},{ minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius }, { pageNumber, pageSize });
+                // remove additional data
+                result.pageItems.map((hut) => {
+                    delete hut.userId;
+                });
                 return res.status(200).json(result);
-            }
-            else
-                return res.status(401).send();
           
         } catch (err) {
-          switch (err.returnCode) {
-            default:
               return res.status(500).send();
-          }
         }
       });
 
     router.get(
         "/hut/:id",
-       // isLoggedIn,
-       // getPermission(["Hiker", "Local Guide"]),
+        isLoggedIn,
+        getPermission(["Local Guide"]),
         [param("id").exists().isInt({ min: 1 })],
         async (req, res) => {
           try {
@@ -129,11 +150,7 @@ fileUpload({createParentPath: true}),
             const result = await hutService.getHut(req.params.id);
             return res.status(200).json(result);
           } catch (err) {
-            console.log(err);
-            switch (err.returnCode) {
-              default:
                 return res.status(500).end();
-            }
           }
         }
       );

@@ -85,8 +85,8 @@ class HikeService {
         try {
             //TODO :  add transaction or delete points in catch when insertHike returns err
             //first insert startPoint and endPoint
-            const startPointId = await this.pointDAO.insertPoint(startLatitude, startLongitude, startAltitude, startPointLabel, startAddress)
-            const endPointId = await this.pointDAO.insertPoint(endLatitude, endLongitude, endAltitude, endPointLabel, endAddress)
+            const startPointId = await this.pointDAO.insertPoint({latitude:startLatitude, longitude:startLongitude, altitude:startAltitude, name:startPointLabel, address:startAddress})
+            const endPointId = await this.pointDAO.insertPoint({latitude:endLatitude, longitude:endLongitude, altitude:endAltitude, name:endPointLabel, address:endAddress})
             if (startPointId > 0 && endPointId > 0) {
                 const res = await this.hikeDAO.insertHike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId);
                 return res;
