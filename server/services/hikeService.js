@@ -7,9 +7,8 @@ const path = require('path');
 const {difficultyType} = require("../models/hikeModel");
 
 const config = require("../config.json");
-//const ParkingDAO = require("../daos/parkingDAO");
-//const parkingDAO = new ParkingDAO(dbManager);
 const { getAllParkings } = require("../daos/parkingDAO");
+const { isWithinCircle, checkHikeIsWithinCircle, checkParkingIsWithinCircle5 } = require("../utils/positionUtils");
 
 class HikeService {
     constructor(hikeDAO, pointDAO) {
@@ -95,6 +94,29 @@ class HikeService {
             throw err;
         }
     };
+
+
+    getParkingsEnd = async(hike) => {
+        try {
+            let parkings = await getAllParkings();
+            let returnedParkings = [];
+
+            hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+            
+            // get parkings
+            for (const parking of parkings) {
+                parking.point = await parking.pointDAO.getPoint(parking.point);
+                if (checkParkingIsWithinCircle5(hike.startPoint, parking.point))
+                    returnedParkings.push(parking);
+            }
+
+            return returnedParkings;
+
+        }catch (err) {
+            throw err;
+        }
+    };
+
 
 
     getHikesLimits = async () => {

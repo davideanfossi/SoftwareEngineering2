@@ -130,8 +130,9 @@ router.get("/hikes/limits", express.json(), async (req, res) => {
   }
 });
 
-router.get("/hikes", express.json(), async (req, res) => {
+router.get("/startParkings", express.json(), async (req, res) => {
   try {
+    const hike = await hikeDAO.getHike(req);
     const result = await hikeService.getParkingsStart(hike);
     return res.status(200).json(result);
   } catch (err) {
@@ -141,6 +142,21 @@ router.get("/hikes", express.json(), async (req, res) => {
     }
   }
 });
+
+
+router.get("/endParkings", express.json(), async (req, res) => {
+  try {
+    const hike = await hikeDAO.getHike(req);
+    const result = await hikeService.getParkingsEnd(hike);
+    return res.status(200).json(result);
+  } catch (err) {
+    switch (err.returnCode) {
+      default:
+        return res.status(500).send();
+    }
+  }
+});
+
 
 router.post(
   "/hike",
