@@ -8,9 +8,8 @@ export const HutFilter = ({
   handleServerResponseChangePage,
   pageSize,
   pageNumber,
-  setNameSearch,
   apiCall,
-  getLimits,
+  getLimits
 }) => {
   const [radius, setRadius] = useState(0);
   const [lat, setLat] = useState(45.0702899); //it is Turin!
@@ -51,12 +50,13 @@ export const HutFilter = ({
       pageNumber,
       pageSize,
       minAltitude,
-      maxAltitude
+      maxAltitude,
+      name
     )
       .then((huts) => handleServerResponse(huts))
       .catch((err) => console.log(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxAltitude, minAltitude, maxNumOfBeds, minNumOfBeds, radius, lat, lon]);
+  }, [maxAltitude, minAltitude, maxNumOfBeds, minNumOfBeds, radius, lat, lon, name]);
 
   //this handle the page change
   useEffect(() => {
@@ -69,7 +69,8 @@ export const HutFilter = ({
       pageNumber,
       pageSize,
       minAltitude,
-      maxAltitude
+      maxAltitude,
+      name
     )
       .then((huts) => handleServerResponseChangePage(huts))
       .catch((err) => console.log(err));
@@ -84,11 +85,6 @@ export const HutFilter = ({
     setLon(lon);
     setRadius(radius);
     setZoom(zoom);
-  };
-
-  const handleChangeName = (event) => {
-    setName(event.target.value);
-    setNameSearch(event.target.value);
   };
 
   return (
@@ -137,7 +133,7 @@ export const HutFilter = ({
                 type="text"
                 placeholder="Name of the hut"
                 value={name}
-                onChange={handleChangeName}
+                onChange={(event) => setName(event.target.value)}
               />
             </Col>
             <Col
