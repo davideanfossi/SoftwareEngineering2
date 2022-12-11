@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import API from './API'
 
 import { UserContext } from "./context/user-context";
+import { SearchHut } from './components/organism/searchHut';
 
 function App() {
   const [user, setUser] = useState({
@@ -52,8 +53,14 @@ function App() {
             {/* <Route path="insertparking" element={<InsertParking />} /> */}
             <Route path="inserthut" element={<InsertHut/>} />
             {["Local Guide"].includes(user.role) && (
+            <Route path="insertparking" element={<InsertParking />} />
+            )}
+            {["Local Guide"].includes(user.role) && (
               <Route path="insert-hike" element={<InsertHike />} />
             )}
+            {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) &&
+              <Route path="search-hut" element={<SearchHut />} />
+            }
             <Route path="register" index element={<Register register={API.registerUser}/>} />
             <Route path="login" index element={<Login/>} />
             <Route path='authentication/activate/*' index element={<EmailActivate/>}/>

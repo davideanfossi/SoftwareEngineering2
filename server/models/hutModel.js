@@ -1,18 +1,17 @@
 
 class hut{
 
-    constructor(id,name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image)
-    {
-        this.id=id;
-        this.name=name;
-        this.numOfBeds=numOfBeds;
-        this.pointId=pointId;
-        this.description=description;
-        this.phoneNumber=phoneNumber;
-        this.email=email;
-        this.website=website;
-        this.userId=userId;
-        this.image=image;
+    constructor(id, name, numOfBeds, phoneNumber, email, description, website, point, userId, imageName) {
+        this.id = id;
+        this.name = name;
+        this.numOfBeds = numOfBeds;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.description = description;
+        this.website = website ? website : "";
+        this.point = point;
+        this.userId = userId;
+        this.imageName = imageName;
     }
 }
 

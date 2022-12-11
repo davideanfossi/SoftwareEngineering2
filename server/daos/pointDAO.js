@@ -30,10 +30,10 @@ class PointDAO {
         }
     };
 
-    insertPoint=async (latitude,longitude,altitude,name,address) =>{
+    insertPoint=async (point) =>{
         try{
             const sql="insert into Points(latitude,longitude,altitude,name,address) values(?,?,?,?,?)";
-            const res = await this.dbManager.query(sql, [latitude,longitude,altitude,name,address]);
+            const res = await this.dbManager.query(sql, [point.latitude,point.longitude,point.altitude,point.name,point.address]);
             return res;
         }
         catch(err){

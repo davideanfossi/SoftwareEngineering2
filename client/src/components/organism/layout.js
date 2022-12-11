@@ -34,6 +34,13 @@ export const Layout = (props) => {
   const goInsertHike = () => {
     navigate("/insert-hike");
   };
+  const goInsertParking = () => {
+    navigate("/insertparking");
+  };
+  const goSearchHut = () => {
+    navigate("/search-hut");
+  }
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">
@@ -66,8 +73,14 @@ export const Layout = (props) => {
           <Navbar.Collapse>
             <Nav className="me-auto">
               <Nav.Link onClick={goHome}>Home</Nav.Link>
+              {["Hiker", "Local Guide"].includes(userContext.user.role) && (
+                <Nav.Link onClick={goSearchHut}>Search Hut</Nav.Link>
+              )}
               {["Local Guide"].includes(userContext.user.role) && (
                 <Nav.Link onClick={goInsertHike}>New Hike</Nav.Link>
+              )}
+              {["Local Guide"].includes(userContext.user.role) && (
+                <Nav.Link onClick={goInsertParking}>New Parking</Nav.Link>
               )}
               {userContext.user.id === undefined && (
                 <>

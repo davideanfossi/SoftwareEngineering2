@@ -17,21 +17,17 @@ describe('Hut Service unit test', () => {
         await purgeAllTables(dbManager);
 
         let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
-        let res = await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
-        res = await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
-        res = await dbManager.query(sql, ["47.574405", "8.455193", 300, "point 3", "address 3"]);
+        await dbManager.query(sql, ["45.0703393", "7.686864", 200, "point 1", null]);
+        await dbManager.query(sql, ["45.070254", "7.702042", 250, "point 2", "address 2"]);
+        await dbManager.query(sql, ["47.574405", "8.455193", 300, "point 3", "address 3"]);
 
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        res = await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
+        await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
 
-        sql = "INSERT INTO Hut(name, numOfBeds, description, phoneNumber, email, website, pointId, ownerId) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        res = await dbManager.query(sql, ["hut 1", 10, "description 1", "1234567890", "hut1@mail.com", null, 2, 1]);
-        res = await dbManager.query(sql, ["hut 2", 50, "description 2", "0987654321", "hut2@mail.com", "www.hut2.com", 3, 1]);
-        res = await dbManager.query(sql, ["hut 3", 20, "description 3", "0192837465", "hut3@mail.com", "www.hut3.com", 1, 1]);
-
-        sql = "INSERT INTO hutImages(hutId, imageName) VALUES(?, ?)";
-        res = await dbManager.query(sql, [2, "image1.png"]);
-        res = await dbManager.query(sql, [2, "image2.png"]);
+        sql = "INSERT INTO Hut(name, numOfBeds, description, phoneNumber, email, website, pointId, ownerId, imageName) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        await dbManager.query(sql, ["hut 1", 10, "description 1", "1234567890", "hut1@mail.com", null, 2, 1, null]);
+        await dbManager.query(sql, ["hut 2", 50, "description 2", "0987654321", "hut2@mail.com", "www.hut2.com", 3, 1, "image1.png"]);
+        await dbManager.query(sql, ["hut 3", 20, "description 3", "0192837465", "hut3@mail.com", "www.hut3.com", 1, 1, null]);
     });
 
     afterAll(async () => {
@@ -51,9 +47,9 @@ describe('Hut Service unit test', () => {
     const point2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
     const point3 = new Point(3, 47.574405, 8.455193, 300, "point 3", "address 3");
 
-    const hut1 = new Hut(1, "hut 1", 10, "1234567890", "hut1@mail.com", "description 1", "", point2, 1);
-    const hut2 = new Hut(2, "hut 2", 50, "0987654321", "hut2@mail.com", "description 2", "www.hut2.com", point3, 1);
-    const hut3 = new Hut(3, "hut 3", 20, "0192837465", "hut3@mail.com", "description 3", "www.hut3.com", point1, 1);
+    const hut1 = new Hut(1, "hut 1", 10, "1234567890", "hut1@mail.com", "description 1", "", point2, 1, null);
+    const hut2 = new Hut(2, "hut 2", 50, "0987654321", "hut2@mail.com", "description 2", "www.hut2.com", point3, 1, "image1.png");
+    const hut3 = new Hut(3, "hut 3", 20, "0192837465", "hut3@mail.com", "description 3", "www.hut3.com", point1, 1, null);
 
     let page = 1;
     let pageSize = 2;
@@ -78,7 +74,7 @@ describe('Hut Service unit test', () => {
     testGetHuts('test get huts radius', page, pageSize, undefined, undefined, undefined, undefined, 47.5715101, 8.456101, 10,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2] });
 
-    testGetHutsLimits({ "maxNumOfBeds": 50 });
+    testGetHutsLimits({ "maxAltitude": 300, "maxNumOfBeds": 50 });
 
 
 

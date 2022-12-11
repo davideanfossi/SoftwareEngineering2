@@ -4,9 +4,8 @@ const togeojson = require('togeojson');
 const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
 const path = require('path');
-const {difficultyType} = require("../models/hikeModel");
-const {isWithinCircle} = require("../utils/positionUtils");
-
+const { difficultyType } = require("../models/hikeModel");
+const { checkHikeIsWithinCircle } = require("../utils/positionUtils");
 
 const config = require("../config.json");
 
@@ -128,6 +127,5 @@ class HikeService {
     };
 
 }
-
 
 module.exports = HikeService;

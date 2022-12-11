@@ -3,7 +3,7 @@ CREATE TABLE "Points" (
 	"latitude" TEXT NOT NULL,
 	"longitude" TEXT NOT NULL,
 	"altitude" INTEGER NOT NULL,
-	"name" TEXT NOT NULL,
+	"name" TEXT,
 	"address" TEXT,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
@@ -45,6 +45,7 @@ CREATE TABLE "Hike" (
 CREATE TABLE "ReferencePoints" (
 	"hikeId" INTEGER NOT NULL,
 	"pointId" INTEGER NOT NULL,
+	"label" TEXT NOT NULL,
 	PRIMARY KEY("hikeId","pointId"),
 	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
 	FOREIGN KEY("pointId") REFERENCES "Points"("id")
@@ -60,15 +61,39 @@ CREATE TABLE "Hut" (
 	"website"	TEXT,
 	"pointId"	INTEGER NOT NULL,
 	"ownerId"	INTEGER NOT NULL,
+	"imageName" TEXT,
 	FOREIGN KEY("pointId") REFERENCES "Points"("id"),
 	FOREIGN KEY("ownerId") REFERENCES "User"("id"),
 	PRIMARY KEY("id")
 );
 
-CREATE TABLE "HutImages" (
-	"imageId"	INTEGER NOT NULL UNIQUE,
-	"hutId"	INTEGER NOT NULL,
-	"imageName"	TEXT NOT NULL,
-	PRIMARY KEY("imageId" AUTOINCREMENT),
+
+CREATE TABLE "Parking" (
+	"id" INTEGER NOT NULL UNIQUE,
+	"name" TEXT NOT NULL,
+	"numSpots" INTEGER NOT NULL,
+	"hasFreeSpots" INTEGER NOT NULL,
+	"pointId" INTEGER NOT NULL,
+	"ownerId" INTEGER NOT NULL,
+	PRIMARY KEY("id"),
+	FOREIGN KEY("pointId") REFERENCES "Points"("id"),
+	FOREIGN KEY("ownerId") REFERENCES "User"("id")
+);
+
+
+CREATE TABLE "HutLinkHike" (
+	"hutId" INTEGER NOT NULL,
+	"hikeId" INTEGER NOT NULL,
+	PRIMARY KEY("hutId","hikeId"),
 	FOREIGN KEY("hutId") REFERENCES "Hut"("id")
+	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
+);
+
+
+CREATE TABLE "ParkingLinkHike" (
+	"parkingId" INTEGER NOT NULL,
+	"hikeId" INTEGER NOT NULL,
+	PRIMARY KEY("parkingId","hikeId"),
+	FOREIGN KEY("parkingId") REFERENCES "Parking"("id")
+	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
 );
