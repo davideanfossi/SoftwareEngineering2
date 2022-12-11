@@ -23,12 +23,19 @@ export const LinkPointMap = ({
     longitude: 7.6348208,
   });
   const [map, setMap] = useState(undefined);
-  const [selected, setSelected] = useState(-1);
+  const [selectedHut, setSelectedHut] = useState(-1);
+  const [selectedParking, setSelectedParking] = useState(-1);
   // eslint-disable-next-line no-unused-vars
-  const [referencePointList, setReferencePointsList] = useState([
-    { id: 1, latitude: 45.319959, longitude: 7.304834, name: "test1" },
-    { id: 2, latitude: 45.316959, longitude: 7.306834, name: "test2" },
-    { id: 3, latitude: 45.313959, longitude: 7.302834, name: "test3" },
+  const [huts, setHuts] = useState([
+    { id: 1, latitude: 45.319959, longitude: 7.304834, name: "hut1" },
+    { id: 2, latitude: 45.316959, longitude: 7.306834, name: "hut2" },
+    { id: 3, latitude: 45.313959, longitude: 7.302834, name: "hut3" },
+  ]);
+  // eslint-disable-next-line no-unused-vars
+  const [parkings, setParkings] = useState([
+    { id: 1, latitude: 45.319959, longitude: 7.302834, name: "parking1" },
+    { id: 2, latitude: 45.316959, longitude: 7.301834, name: "parking2" },
+    { id: 3, latitude: 45.313959, longitude: 7.306834, name: "parking3" },
   ]);
   let { id } = useParams();
 
@@ -56,8 +63,11 @@ export const LinkPointMap = ({
       setChanged(false);
     }
   });
-  const onClickHandle = (id) => {
-    setSelected((prev) => (prev !== id ? id : -1));
+  const onClickHut = (id) => {
+    setSelectedHut((prev) => (prev !== id ? id : -1));
+  };
+  const onClickParking = (id) => {
+    setSelectedParking((prev) => (prev !== id ? id : -1));
   };
   return (
     <div style={{ width: "100%" }}>
@@ -77,14 +87,25 @@ export const LinkPointMap = ({
 
         <Circle center={center} radius={500} />
         <Polyline positions={track} />
-        {referencePointList.map((point) => (
+        {huts.map((point) => (
           <MarkerPoint
             key={point.id}
             point={point}
-            selected={point.id === selected}
-            onClickHandle={() => onClickHandle(point.id)}
+            selected={point.id === selectedHut}
+            onClickHandle={() => onClickHut(point.id)}
           />
         ))}
+
+        {parkings.map((point) => (
+          <MarkerPoint
+            key={point.id}
+            point={point}
+            selected={point.id === selectedParking}
+            onClickHandle={() => onClickParking(point.id)}
+            isParking
+          />
+        ))}
+
         {start && (
           <MarkerReferencePoint point={startPoint} isReference={false} />
         )}
@@ -93,18 +114,31 @@ export const LinkPointMap = ({
       <Container className="hike-row">
         <Row>
           <Col className="d-flex justify-content-center fw-bold">
-            {selected !== -1
-              ? "You selected:"
-              : "Click on a marker to select it"}
+            {selectedHut !== -1
+              ? "You selected this hut:"
+              : "Click on a red marker to select an hut"}
           </Col>
         </Row>
-        {selected !== -1 && (
+        {selectedHut !== -1 && (
           <Row>
             <Col className="d-flex justify-content-center">
-              {
-                referencePointList.filter((elem) => elem.id === selected)[0]
-                  .name
-              }
+              {huts.filter((elem) => elem.id === selectedHut)[0].name}
+            </Col>
+          </Row>
+        )}
+      </Container>
+      <Container className="hike-row-even">
+        <Row>
+          <Col className="d-flex justify-content-center fw-bold">
+            {selectedParking !== -1
+              ? "You selected this parking:"
+              : "Click on a blue marker to select a parking"}
+          </Col>
+        </Row>
+        {selectedParking !== -1 && (
+          <Row>
+            <Col className="d-flex justify-content-center">
+              {parkings.filter((elem) => elem.id === selectedParking)[0].name}
             </Col>
           </Row>
         )}

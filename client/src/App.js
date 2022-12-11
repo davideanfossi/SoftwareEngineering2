@@ -1,4 +1,4 @@
-import './App.css';
+import "./App.css";
 import "./main.scss";
 import "react-range-slider-input/dist/style.css";
 import { BrowserRouter } from "react-router-dom";
@@ -59,6 +59,7 @@ function App() {
                 <Route path="my-hikes" element={<MyHikes />} />
                 <Route path="my-huts" element={<MyHuts />} />
                 <Route path="insertparking" element={<InsertParking />} />
+                <Route path="link-start-end/:id" element={<LinkStartEnd />} />
               </>
             )}
             {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) && (
@@ -75,8 +76,6 @@ function App() {
               index
               element={<EmailActivate />}
             />
-
-            <Route path='link-start-end/:id' index element={<LinkStartEnd/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

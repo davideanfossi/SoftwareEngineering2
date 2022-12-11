@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { ChevronCompactDown, ChevronCompactUp } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import API from "../../API";
 import { UserContext } from "../../context/user-context";
 import { HikeMap } from "./hike-map";
@@ -21,7 +20,7 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
   });
   const [referencesPoints, setReferencePoints] = useState([]);
   const [track, setTrack] = useState([]);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const toggleDrop = () => {
     setDropped((prev) => !prev);
@@ -29,13 +28,14 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
 
   useEffect(() => {
     if (isLogged && dropped) {
-      API.getHikeDetails(hike).then((elem) => {
-        setStartPoint(elem.startPoint);
-        setEndPoint(elem.endPoint);
-        setReferencePoints(elem.referencePoints);
-        setTrack(elem.track);
-      }).catch(err => {
-      }) ;
+      API.getHikeDetails(hike)
+        .then((elem) => {
+          setStartPoint(elem.startPoint);
+          setEndPoint(elem.endPoint);
+          setReferencePoints(elem.referencePoints);
+          setTrack(elem.track);
+        })
+        .catch((err) => {});
     }
   }, [dropped, hike, isLogged]);
 
@@ -140,6 +140,17 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
                 </Row>
               </Container>
             </Col>
+            {isUserHike && (
+              <Col
+                xs={12}
+                md={1}
+                className="d-flex justify-content-center align-items-center my-3 text-center"
+              >
+                <Button onClick={() => navigate("/link-start-end/" + hike.id)}>
+                  Link start/end
+                </Button>
+              </Col>
+            )}
           </Row>
           {dropped && (
             <>
@@ -162,20 +173,6 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
                   )}
                 </Col>
               </Row>
-              {isUserHike && (
-                <Row>
-                  <Col
-                    className="d-flex justify-content-center align-items-center my-3"
-                    xs={12}
-                  >
-                    <Button
-                      onClick={() => navigate("/link-start-end/" + hike.id)}
-                    >
-                      Link start/end point
-                    </Button>
-                  </Col>
-                </Row>
-              )}
             </>
           )}
         </Container>
