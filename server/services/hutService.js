@@ -17,7 +17,7 @@ class HutService {
         try {
             //TODO :  add transaction or delete points in catch when insertHike returns err
             //first insert Point 
-            const pointId=await this.pointDAO.insertPoint(latitude,longitude,altitude,pointLabel,address)
+            const pointId=await this.pointDAO.insertPoint({latitude,longitude,altitude,name:pointLabel,address})
           
             if(pointId>0)
             {

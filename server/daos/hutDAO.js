@@ -44,7 +44,7 @@ class HutDAO {
 
     insertHut=async (name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image) =>{
         try{
-            const sql="insert into hut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image) values(?,?,?,?,?,?,?,?,?)";
+            const sql="insert into hut(name,numOfBeds,pointId,description,phoneNumber,email,website,ownerId,imageName) values(?,?,?,?,?,?,?,?,?)";
             const res = await this.dbManager.query(sql, [name,numOfBeds,pointId,description,phoneNumber,email,website,userId,image]);
             return res;
         }
