@@ -5,7 +5,7 @@ import { UserContext } from "../../context/user-context";
 import { PersonCircle } from "react-bootstrap-icons";
 import API from "../../API";
 
-export const Layout = (props) => {
+export const Layout = () => {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
   const goHome = () => {
@@ -20,7 +20,7 @@ export const Layout = (props) => {
 
   const handleLogout = () => {
     API.logout()
-      .then((res) => {
+      .then(() => {
         userContext.setUser({
           id: undefined,
           role: undefined,
@@ -34,7 +34,6 @@ export const Layout = (props) => {
   const goInsertHike = () => {
     navigate("/insert-hike");
   };
-
   const goMyHikes = () => {
     navigate("/my-hikes");
   };
@@ -47,6 +46,7 @@ export const Layout = (props) => {
   const goMyHuts = () => {
     navigate("/my-huts");
   };
+  
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">

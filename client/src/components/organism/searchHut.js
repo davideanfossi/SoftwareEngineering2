@@ -88,8 +88,8 @@ export const SearchHut = () => {
           hutList={
             nameSearch === ""
               ? hutList
-              : hutList.filter((hut) => hut.name.includes(nameSearch))
-          }
+              : hutList.filter((hut) => hut.name.toLowerCase().includes(nameSearch.toLowerCase()))
+          }      
         />
       </div>
       <Paging
