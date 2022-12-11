@@ -19,11 +19,9 @@ function Registration() {
     return (
         <Form.Group className='mb-3' controlId='click-here'>
             <Row>
-                <Col xs={6} md={3} lg={2}>
-                    If not registered:
-                </Col>
-                <Col xs={4} md={2} lg={2}>
-                    <Link to='/register' style={{ textDecoration: 'none' }}>click here</Link>
+                <Col xs={6} md={3} lg={4}>
+                    If not registered: {' '}
+                    <Link to='/register'>click here</Link>
                 </Col>
             </Row>
         </Form.Group>
@@ -62,18 +60,22 @@ function Login() {
             });
     }
 
+    function resetAlert() { setShowAlert('') }
+    function handleEmail(ev) { setEmail(ev.target.value) }
+    function handlePassword(ev) { setPassword(ev.target.value) }
+
     return (
         <>
             <Container className='mt-3'>
+                {
+                    showAlert === true ?
+                        <Alert variant="danger" onClose={resetAlert} dismissible>
+                            <Alert.Heading>Incorrect username and/or password</Alert.Heading>
+                        </Alert> : null
+                }
                 <Row>
                     <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Login</b>
                 </Row>
-                {
-                    showAlert === true ?
-                        <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
-                            <Alert.Heading>Registration occurred with errors!</Alert.Heading>
-                        </Alert> : null
-                }
                 <Container className="border border-4 rounded" style={{ "marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white" }}>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className='mb-2' controlId='email'>
@@ -81,7 +83,7 @@ function Login() {
                             <Form.Control
                                 type="email"
                                 value={email}
-                                onChange={(ev) => setEmail(ev.target.value)}
+                                onChange={handleEmail}
                                 required={true}
                                 placeholder="Enter email" />
                         </Form.Group>
@@ -90,15 +92,16 @@ function Login() {
                             <Form.Control
                                 type='password'
                                 value={password}
-                                onChange={(ev) => setPassword(ev.target.value)}
+                                onChange={handlePassword}
                                 required={true}
-                                minLength={8}
+                                minLength={6}
+                                maxLength={15}
                                 placeholder="Password" />
                         </Form.Group>
                         <Checkbox />
                         <Registration />
                         <Form.Group>
-                            <Button variant='warning' type='submit' size='lg' onSubmit={() => { handleSubmit() }}>
+                            <Button variant='warning' type='submit' size='lg' onSubmit={handleSubmit}>
                                 Login
                             </Button>
                         </Form.Group>

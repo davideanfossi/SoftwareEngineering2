@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import API from '../API';
+import { CardMessage } from './atoms/card-message';
 
 
 function Register(props) {
@@ -16,10 +17,23 @@ function Register(props) {
 
     const [additionalData, setAdditionalData] = useState(false);
     const [showAlert, setShowAlert] = useState('');
+    const [alertMsg, setAlertMsg] = useState('');
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log(username, password, confPassword, name, surname, phoneNumber);
+    const handleCancel = () => {
+        setName('');
+        setSurname('');
+        setUsername('');
+        setPhoneNumber('');
+        setEmail('');
+        setPassword('');
+        setConfPassword('');
+        setShowAlert('');
+        setAlertMsg('');
+    };
+
+
+    const validateData= ()=>{
+
         let flag = false;
 
         if (username === '') { setUsername(''); flag = true; }
@@ -27,13 +41,19 @@ function Register(props) {
         if (confPassword === '') { setConfPassword(''); flag = true; }
         if (password !== confPassword) { setPassword(''); setConfPassword(''); flag = true; }
 
-        console.log(flag);
         if (role !== 'Hiker') {
             if (name === '') { setName(''); flag = true; }
             if (surname === '') { setSurname(''); flag = true; }
             if (phoneNumber === '') { setPhoneNumber(''); flag = true; }
         }
 
+        return flag;
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        
+        const flag= validateData();
         if (flag) return;
 
         let formData =
@@ -46,36 +66,48 @@ function Register(props) {
             'surname': surname ? surname : "",
             'phoneNumber': phoneNumber ? phoneNumber : ""
         }
-        //const credentials = { email, username, role, password, name, surname, phoneNumber };
 
         API.registerUser(formData)
             .then(() => { setShowAlert('success'); })
             .catch((err) => {
+                setAlertMsg(err);
                 setShowAlert('error');
             });
 
     };
 
+    function resetAlert() { setShowAlert('') }
+    function handleHikerClick() { setAdditionalData(false); setRole('Hiker'); setName(""); setSurname(""); setUsername(""); setPhoneNumber("") }
+    function handleLocalGuideClick() { setAdditionalData(true); setRole('Local Guide'); }
+    function handleHutWorkerClick() { setAdditionalData(true); setRole('Hut Worker'); }
+    function handleName(ev) { setName(ev.target.value) }
+    function handleSurname(ev) { setSurname(ev.target.value) }
+    function handleUsername(ev) { setUsername(ev.target.value) }
+    function handlePhoneNumber(ev) { setPhoneNumber(ev.target.value) }
+    function handleEmail(ev) { setEmail(ev.target.value) }
+    function handlePassword(ev) { setPassword(ev.target.value) }
+    function handleConfPassword(ev) { setConfPassword(ev.target.value) }
+
     return (
         <>
             <Container className='mt-3'>
-                <Row>
-                    <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Register</b>
-                </Row>
                 {
                     showAlert === "success" ?
-                        <Alert variant="success" onClose={() => setShowAlert('')} dismissible>
-                            <Alert.Heading>Registration has been successful!</Alert.Heading>
-                        </Alert>
+                        <Row className='justify-content-center align-items-center mt-4 mb-4'>
+                            <CardMessage className="text-center" style={{ width: '60vw' }} title="Please check your email" subtitle="We've sent you a verification message" />
+                        </Row>
                         :
                         <>{
                             showAlert === "error" ?
-                                <Alert variant="danger" onClose={() => setShowAlert('')} dismissible>
-                                    <Alert.Heading>Registration occurred with errors!</Alert.Heading>
+                                <Alert variant="danger" onClose={resetAlert} dismissible>
+                                    <Alert.Heading>{alertMsg}</Alert.Heading>
                                 </Alert>
                                 : <></>
                         }</>
                 }
+                <Row>
+                    <b style={{ "fontSize": "2rem", "color": 'black', "paddingBottom": "0.3rem" }}>Register</b>
+                </Row>
                 <Container className="border border-4 rounded" style={{ "marginTop": "0.5rem", "padding": "1rem", "backgroundColor": "white" }}>
                     <Form onSubmit={handleSubmit}>
                         <Form.Label>Select your profile:</Form.Label>
@@ -87,7 +119,7 @@ function Register(props) {
                                 type='radio'
                                 id='inline-radio-1'
                                 defaultChecked
-                                onClick={() => { setAdditionalData(false); setRole('Hiker'); setName(""); setSurname(""); setPhoneNumber("") }}
+                                onClick={handleHikerClick}
                             />
                             <Form.Check
                                 inline
@@ -95,7 +127,7 @@ function Register(props) {
                                 name='group1'
                                 type='radio'
                                 id='inline-radio-2'
-                                onClick={() => { setAdditionalData(true); setRole('Local Guide') }}
+                                onClick={handleLocalGuideClick}
                             />
                             <Form.Check
                                 inline
@@ -103,7 +135,7 @@ function Register(props) {
                                 name='group1'
                                 type='radio'
                                 id='inline-radio-3'
-                                onClick={() => { setAdditionalData(true); setRole('Hut Worker') }}
+                                onClick={handleHutWorkerClick}
                             />
                         </Form.Group>
                         {additionalData ?
@@ -114,7 +146,7 @@ function Register(props) {
                                         type="text"
                                         minLength={1}
                                         value={name}
-                                        onChange={(ev) => setName(ev.target.value)}
+                                        onChange={handleName}
                                         required={true}
                                         placeholder="Your name here"
                                         maxLength={20} />
@@ -125,7 +157,7 @@ function Register(props) {
                                         type='text'
                                         minLength={1}
                                         value={surname}
-                                        onChange={(ev) => setSurname(ev.target.value)}
+                                        onChange={handleSurname}
                                         required={true}
                                         placeholder="Your surname here"
                                         maxLength={20} />
@@ -137,7 +169,7 @@ function Register(props) {
                                         type="text"
                                         isInvalid={phoneNumber && isNaN(Number.parseInt(phoneNumber))}
                                         value={phoneNumber}
-                                        onChange={(ev) => setPhoneNumber(ev.target.value)}
+                                        onChange={handlePhoneNumber}
                                         required={true}
                                         placeholder="Your phone number here"
                                         minLength={10}
@@ -146,14 +178,15 @@ function Register(props) {
                                 </Form.Group>
                             </>
                             :
-                            <></>}
+                            <></>
+                        }
                         <Form.Group className='mb-2' controlId='username'>
                             <Form.Label>Username:</Form.Label>
                             <Form.Control
                                 type='text'
                                 value={username}
                                 minLength={1}
-                                onChange={(ev) => setUsername(ev.target.value)}
+                                onChange={handleUsername}
                                 required={true}
                                 placeholder="Create a fancy username"
                                 maxLength={30} />
@@ -164,7 +197,7 @@ function Register(props) {
                                 type='email'
                                 placeholder="name@example.com"
                                 value={email}
-                                onChange={(ev) => setEmail(ev.target.value)}
+                                onChange={handleEmail}
                                 required={true}
                                 maxLength={50} />
                         </Form.Group>
@@ -173,7 +206,7 @@ function Register(props) {
                             <Form.Control
                                 type='password'
                                 value={password}
-                                onChange={(ev) => setPassword(ev.target.value)}
+                                onChange={handlePassword}
                                 required={true}
                                 minLength={6}
                                 maxLength={15}
@@ -189,7 +222,7 @@ function Register(props) {
                                 type='password'
                                 isInvalid={confPassword && confPassword !== password}
                                 value={confPassword}
-                                onChange={(ev) => setConfPassword(ev.target.value)}
+                                onChange={handleConfPassword}
                                 required={true}
                                 minLength={6}
                                 maxLength={15}
@@ -201,7 +234,7 @@ function Register(props) {
                                 <Col>
                                     <Button variant="warning" type="submit" size='lg'>Register</Button>
                                     &ensp; &ensp;
-                                    <Button variant='light' size='lg'>Cancel</Button>
+                                    <Button variant='light' size='lg' onClick={handleCancel}>Cancel</Button>
                                 </Col>
                             </Row>
                         </Form.Group>

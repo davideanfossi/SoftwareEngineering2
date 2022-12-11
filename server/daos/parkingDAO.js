@@ -20,15 +20,10 @@ class ParkingDAO {
         }
     };
 
-    insertParking = async (name, ownerId, pointId, numSpots, hasFreeSpots, imageName) => {
-        try{
+    insertParking = async (parking) => {
             const sql= "insert into Parking (name, ownerId, pointId, numSpots, hasFreeSpots, imageName) values(?,?,?,?,?,?)";
-            const res = await this.dbManager.query(sql, [name, ownerId, pointId, numSpots, hasFreeSpots, imageName]);
+            const res = await this.dbManager.query(sql, [parking.name, parking.ownerId, parking.point.id, parking.numSpots, parking.hasFreeSpots, parking.imageName]);
             return res;
-        }
-        catch(err){
-            throw err;
-        }
        }    
 }
 

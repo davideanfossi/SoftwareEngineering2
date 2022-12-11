@@ -8,7 +8,9 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
   const [map, setMap] = useState(undefined);
 
-  console.log(center);
+  function handleClick(event) { event.stopPropagation() }
+  function handleChange(event) { setShowReferencePoints(event.target.checked) }
+
   useEffect(() => {
     if (startPoint !== undefined && endPoint !== undefined) {
       setCenter([
@@ -24,7 +26,7 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
     }
   }, [center, map]);
   return (
-    <Container>
+    <Container onClick={handleClick}>
       <Row>
         <Col>
           <div style={{ width: "100%", padding: "1rem" }}>
@@ -42,13 +44,13 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
                 //TODO:decide if keep or not
 
                 showReferencePoints &&
-                  referencesPoints.map((point, index) => (
-                    <MarkerReferencePoint
-                      point={point}
-                      key={index}
-                      isReference={true}
-                    />
-                  ))
+                referencesPoints.map((point, index) => (
+                  <MarkerReferencePoint
+                    point={point}
+                    key={index}
+                    isReference={true}
+                  />
+                ))
               }
               <Polyline positions={track} />
               <TileLayer
@@ -65,16 +67,11 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
             type="checkbox"
             label="Show reference points"
             value={showReferencePoints}
-            onChange={(event) => {
-              setShowReferencePoints(event.target.checked);
-            }}
+            onClick={handleClick}
+            onChange={handleChange}
           />
         </Col>
       </Row>
     </Container>
   );
 };
-/*
-        <Marker
-          position={startPoint !== undefined && startPoint.coordinates}
-        />;*/

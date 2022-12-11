@@ -10,21 +10,17 @@ class ParkingService {
         this.pointDAO = pointDAO;
     }
 
-    addParking = async (name, ownerId, numSpots, hasFreeSpots, latitude,longitude,altitude,pointLabel,address, imageName) => {
-        try {
-            const pointId = await this.pointDAO.insertPoint(latitude,longitude,altitude,pointLabel,address)
+    addParking = async (parking) => {
+            parking.point.id = await this.pointDAO.insertPoint(parking.point);
             
-            if (PointId > 0)
+            if (parking.point.id > 0)
             {
-                const res = await this.parkingDAO.insertParking(name, ownerId, pointId, numSpots, hasFreeSpots, imageName);
+                const res = await this.parkingDAO.insertParking(parking);
                 return res;
             }
             else
                 return false;
-           
-        } catch (err) {
-            throw err;
-        }
+
     }
 
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import API from "../../API";
 import { MapModal } from "./map-modal";
 import { MultiRangeSlider } from "../atoms/multi-range-slider/multi-range-slider";
 
@@ -9,6 +8,8 @@ export const HikeFilter = ({
   handleServerResponseChangePage,
   pageSize,
   pageNumber,
+  apiCall,
+  getLimits,
 }) => {
   const [radius, setRadius] = useState(0);
   const [lat, setLat] = useState(45.0702899); //it is Turin!
@@ -30,7 +31,7 @@ export const HikeFilter = ({
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    API.getHikesLimits()
+    getLimits()
       .then((limits) => {
         setMaxLength(limits.maxLength);
         setMaxHeight(limits.maxAscent);
@@ -46,11 +47,12 @@ export const HikeFilter = ({
         });
       })
       .catch((err) => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //this handle the change of a filter so it will set the pageNuber to 1
   useEffect(() => {
-    API.getFilteredHikes(
+    apiCall(
       minLength,
       maxLength,
       minExpectedTime,
@@ -82,7 +84,7 @@ export const HikeFilter = ({
 
   //this handle the page change
   useEffect(() => {
-    API.getFilteredHikes(
+    apiCall(
       minLength,
       maxLength,
       minExpectedTime,

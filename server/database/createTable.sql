@@ -51,18 +51,20 @@ CREATE TABLE "ReferencePoints" (
 	FOREIGN KEY("pointId") REFERENCES "Points"("id")
 );
 
-
 CREATE TABLE "Hut" (
-	"id" INTEGER NOT NULL UNIQUE,
-	"name" TEXT NOT NULL,
-	"numBeds" INTEGER NOT NULL,
-	"phoneNumber" TEXT NOT NULL,
-	"email" TEXT NOT NULL,
-	"pointId" INTEGER NOT NULL,
-	"ownerId" INTEGER NOT NULL,
-	PRIMARY KEY("id"),
+	"id"	INTEGER NOT NULL UNIQUE,
+	"name"	TEXT NOT NULL,
+	"numOfBeds"	INTEGER NOT NULL,
+	"description"	TEXT NOT NULL,
+	"phoneNumber"	TEXT NOT NULL,
+	"email"	TEXT NOT NULL,
+	"website"	TEXT,
+	"pointId"	INTEGER NOT NULL,
+	"ownerId"	INTEGER NOT NULL,
+	"imageName" TEXT,
 	FOREIGN KEY("pointId") REFERENCES "Points"("id"),
-	FOREIGN KEY("ownerId") REFERENCES "User"("id")
+	FOREIGN KEY("ownerId") REFERENCES "User"("id"),
+	PRIMARY KEY("id")
 );
 
 
@@ -76,15 +78,6 @@ CREATE TABLE "Parking" (
 	PRIMARY KEY("id"),
 	FOREIGN KEY("pointId") REFERENCES "Points"("id"),
 	FOREIGN KEY("ownerId") REFERENCES "User"("id")
-);
-
-
-CREATE TABLE "HutImages" (
-	"imageId" INTEGER NOT NULL UNIQUE,
-	"hutId" INTEGER NOT NULL,
-	"imageName" TEXT NOT NULL,
-	PRIMARY KEY("imageId" AUTOINCREMENT),
-	FOREIGN KEY("hutId") REFERENCES "Hut"("id")
 );
 
 

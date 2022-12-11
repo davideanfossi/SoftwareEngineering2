@@ -3,6 +3,7 @@ import { HikeTable } from "../moleculars/hike-table";
 import { useState } from "react";
 import { HikeFilter } from "../moleculars/hike-filter";
 import { Paging } from "../atoms/paging";
+import API from "../../API";
 
 export const Home = () => {
   const [hikeList, setHikeList] = useState([]);
@@ -64,6 +65,8 @@ export const Home = () => {
         handleServerResponseChangePage={handleServerResponseChangePage}
         pageSize={pageSize}
         pageNumber={pageNumber}
+        apiCall={API.getFilteredHikes}
+        getLimits={API.getHikesLimits}
       />
       <div className="hike-table-container">
         <HikeTable hikeList={hikeList} />
