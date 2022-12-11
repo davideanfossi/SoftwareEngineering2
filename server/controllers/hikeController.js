@@ -20,8 +20,8 @@ const HikeDAO = require("../daos/hikeDAO");
 const PointDAO = require("../daos/pointDAO");
 const HutDAO = require("../daos/hutDAO");
 const ParkingDAO = require("../daos/parkingDAO");
-const HikeHutDAO=require("../daos/hikeHutDAO");
-const HikeParkingDAO=require("../daos/hikeParkingDAO");
+const HikeHutDAO = require("../daos/hikeHutDAO");
+const HikeParkingDAO = require("../daos/hikeParkingDAO");
 
 const HikeService = require("../services/hikeService");
 const HikeHutService = require("../services/hikeHutService");
@@ -36,12 +36,12 @@ const hikeDAO = new HikeDAO(dbManager);
 const pointDAO = new PointDAO(dbManager);
 const hutDAO = new HutDAO(dbManager);
 const parkingDAO = new ParkingDAO(dbManager);
-const hikeHutDAO=new HikeHutDAO(dbManager);
-const hikeParkingDAO=new HikeParkingDAO(dbManager);
+const hikeHutDAO = new HikeHutDAO(dbManager);
+const hikeParkingDAO = new HikeParkingDAO(dbManager);
 
 const hikeService = new HikeService(hikeDAO, pointDAO, hutDAO, parkingDAO);
-const hikeHutService=new HikeHutService(hikeHutDAO);
-const hikeParkingService=new HikeParkingService(hikeParkingDAO);
+const hikeHutService = new HikeHutService(hikeHutDAO);
+const hikeParkingService = new HikeParkingService(hikeParkingDAO);
 
 const { isLoggedIn, getPermission } = require("./loginController");
 
@@ -137,43 +137,47 @@ router.get("/hikes/limits", express.json(), async (req, res) => {
   }
 });
 
-router.get("/hikes/:id/nearStart", [param("id").isInt({ min: 0 })], async (req, res) => {
-  try {
-    const errors = validationResult(req);
+router.get("/hikes/:id/near-start",
+  [param("id").exists().isInt({ min: 1 })],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).send();
       }
-    const result = await hikeService.getNearStart(req.param.id);
-    return res.status(200).json(result);
-  } catch (err) {
-    console.log(err)
-    switch (err.returnCode) {
-      case 404:
-        return res.status(404).send(err.msg);
-      default:
-        return res.status(500).send();
+      const result = await hikeService.getNearStart(Number.parseInt(req.params.id));
+      return res.status(200).json(result);
+    } catch (err) {
+      console.log(err)
+      switch (err.returnCode) {
+        case 404:
+          return res.status(404).send(err.msg);
+        default:
+          return res.status(500).send();
+      }
     }
-  }
-});
+  });
 
 
-router.get("/hikes/:id/nearEnd", [param("id").isInt({ min: 0 })], async (req, res) => {
-  try {
-    const errors = validationResult(req);
+router.get("/hikes/:id/near-end",
+  [param("id").exists().isInt({ min: 1 })],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).send();
       }
-    const result = await hikeService.getNearEnd(req.param.id);
-    return res.status(200).json(result);
-  } catch (err) {
-    switch (err.returnCode) {
-      case 404:
-        return res.status(404).send(err.msg);
-      default:
-        return res.status(500).send();
+      const result = await hikeService.getNearEnd(Number.parseInt(req.params.id));
+      return res.status(200).json(result);
+    } catch (err) {
+      switch (err.returnCode) {
+        case 404:
+          return res.status(404).send(err.msg);
+        default:
+          return res.status(500).send();
+      }
     }
-  }
-});
+  });
 
 
 router.post(
@@ -277,14 +281,14 @@ router.get(
 
 router.post(
   "/hikes/:id/startArrival",
- // isLoggedIn,
+  // isLoggedIn,
   //getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 }),
   body("startType").optional().isString().trim(),
   body("startId").optional().isInt({ min: 0 }),
   body("endType").optional().isString().trim(),
   body("endId").optional().isInt({ min: 0 })
-],
+  ],
   async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -292,21 +296,21 @@ router.post(
         return res.status(400).end();
       }
 
-      const hikeId=Number.parseInt(req.params.id);
-      const startType = req.body.startType? req.body.startType : undefined;
-      const endType=req.body.endType? req.body.endType : undefined;
-      const startId=req.body.startId? Number.parseInt(req.body.startId) : undefined;
-      const endId=req.body.endId? Number.parseInt(req.body.endId) : undefined;
-      
+      const hikeId = Number.parseInt(req.params.id);
+      const startType = req.body.startType ? req.body.startType : undefined;
+      const endType = req.body.endType ? req.body.endType : undefined;
+      const startId = req.body.startId ? Number.parseInt(req.body.startId) : undefined;
+      const endId = req.body.endId ? Number.parseInt(req.body.endId) : undefined;
+
       let result;
-      if (startType=="hut")
-          result = await hikeHutService.linkHutToHike(hikeId,startId,true,undefined);
-      if (endType=="hut")
-          result = await hikeHutService.linkHutToHike(hikeId,endId,undefined,true);
-      if (startType=="parking")
-          result = await hikeParkingService.linkParkingToHike(hikeId,startId,true,undefined);
-      if (endType=="parking")
-          result = await hikeParkingService.linkParkingToHike(hikeId,endId,undefined,true);
+      if (startType == "hut")
+        result = await hikeHutService.linkHutToHike(hikeId, startId, true, undefined);
+      if (endType == "hut")
+        result = await hikeHutService.linkHutToHike(hikeId, endId, undefined, true);
+      if (startType == "parking")
+        result = await hikeParkingService.linkParkingToHike(hikeId, startId, true, undefined);
+      if (endType == "parking")
+        result = await hikeParkingService.linkParkingToHike(hikeId, endId, undefined, true);
 
       return res.status(200).json(result);
     } catch (err) {
@@ -325,7 +329,7 @@ router.get("/hikes/limits", async (req, res) => {
     const result = await hikeService.getHikesLimits();
     return res.status(200).json(result);
   } catch (err) {
-        return res.status(500).send();
+    return res.status(500).send();
   }
 });
 

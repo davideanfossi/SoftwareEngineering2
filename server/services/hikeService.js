@@ -6,10 +6,9 @@ const fs = require('fs');
 const DOMParser = require('xmldom').DOMParser;
 const path = require('path');
 const { difficultyType } = require("../models/hikeModel");
-const { checkHikeIsWithinCircle } = require("../utils/positionUtils");
+const { isWithinCircle, checkHikeIsWithinCircle } = require("../utils/positionUtils");
 
 const config = require("../config.json");
-const { isWithinCircle, checkHutIsWithinCircle5, checkParkingIsWithinCircle5 } = require("../utils/positionUtils");
 
 class HikeService {
     constructor(hikeDAO, pointDAO, hutDAO, parkingDAO) {
@@ -20,7 +19,7 @@ class HikeService {
         if (!parkingDAO)
             throw 'parkingDAO must be defined for hike service!';
         if (!hutDAO)
-            throw 'hutDAO must be defined for hike service!';    
+            throw 'hutDAO must be defined for hike service!';
         this.hikeDAO = hikeDAO;
         this.pointDAO = pointDAO;
         this.parkingDAO = parkingDAO;
@@ -36,8 +35,8 @@ class HikeService {
             hikes = await this.hikeDAO.getAllHikes();
         else
             hikes = await this.hikeDAO.getHikes(minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty);
-            
-            // get points
+
+        // get points
         for (const hike of hikes) {
             hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
             hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
@@ -59,58 +58,60 @@ class HikeService {
 
     };
 
-    getNearStart = async(hikeId) => {
-            const hike = await this.hikeDAO.getHike(hikeId);
-            if (!hike)
-                throw{
-                    returnCode: 404, msg: "hike not found"
-                }
-            hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
-            let parkings = await this.getParkingNearPoint(hike.startPoint);
-            let huts = await this.getHutNearPoint(hike.startPoint);
-           
-            return { parkings: parkings, huts: huts };
+    getNearStart = async (hikeId) => {
+        const hike = await this.hikeDAO.getHike(hikeId);
+        const radius = 1;
+        if (!hike)
+            throw {
+                returnCode: 404, msg: "hike not found"
+            }
+        hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+        let parkings = await this.getParkingNearPoint(hike.startPoint, radius);
+        let huts = await this.getHutNearPoint(hike.startPoint, radius);
+
+        return { parkings: parkings, huts: huts };
     };
 
 
-    getNearEnd = async(hikeId) => {
-            const hike = await this.hikeDAO.getHike(hikeId);
-            if (!hike)
-                throw{
-                    returnCode: 404, msg: "hike not found"
-                }
-            hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
-            let parkings = await this.getParkingNearPoint(hike.endPoint);
-            let huts = await this.getHutNearPoint(hike.endPoint);
-           
-            return { parkings: parkings, huts: huts };
+    getNearEnd = async (hikeId) => {
+        const hike = await this.hikeDAO.getHike(hikeId);
+        const radius = 1;
+        if (!hike)
+            throw {
+                returnCode: 404, msg: "hike not found"
+            }
+        hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
+        let parkings = await this.getParkingNearPoint(hike.endPoint, radius);
+        let huts = await this.getHutNearPoint(hike.endPoint, radius);
+
+        return { parkings: parkings, huts: huts };
     };
 
-    getHutNearPoint = async (point) => {
+    getHutNearPoint = async (point, radius) => {
         let huts = await this.hutDAO.getAllHuts();
         let returnedHuts = [];
 
         for (const hut of huts) {
-            hut.point = await hut.pointDAO.getPoint(hut.point);
-            if (checkHutIsWithinCircle5(point, hut.point))
+            hut.point = await this.pointDAO.getPoint(hut.point);
+            if (isWithinCircle(point.latitude, point.longitude, hut.point.latitude, hut.point.longitude, radius))
                 returnedHuts.push(hut);
         }
 
         return returnedHuts;
     }
 
-    getParkingNearPoint = async (point) => {
+    getParkingNearPoint = async (point, radius) => {
         let parkings = await this.parkingDAO.getAllParkings();
         let returnedParkings = [];
 
         for (const parking of parkings) {
-            parking.point = await parking.pointDAO.getPoint(parking.point);
-            if (checkParkingIsWithinCircle5(point, parking.point))
+            parking.point = await this.pointDAO.getPoint(parking.point);
+            if (isWithinCircle(point.latitude, point.longitude, parking.point.latitude, parking.point.longitude, radius))
                 returnedParkings.push(parking);
 
         }
         return returnedParkings;
-    }       
+    }
 
     getHikesLimits = async () => {
         const res = await this.hikeDAO.getMaxData();
@@ -130,7 +131,7 @@ class HikeService {
             return res;
         }
         else
-           throw "generic error";
+            throw "generic error";
     }
 
     getHikeGpx = async (hikeId) => {
