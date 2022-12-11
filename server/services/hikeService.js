@@ -63,7 +63,7 @@ class HikeService {
         //first insert startPoint and endPoint
         const startPointId = await this.pointDAO.insertPoint(startPoint);
         const endPointId = await this.pointDAO.insertPoint(endPoint);
-        if (startPointId > 0 & endPointId > 0) {
+        if (startPointId > 0 && endPointId > 0) {
             hike.startPoint = startPointId;
             hike.endPoint = endPointId;
             const res = await this.hikeDAO.insertHike(hike);
