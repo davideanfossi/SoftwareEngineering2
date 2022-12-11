@@ -132,8 +132,13 @@ fileUpload({createParentPath: true}),
                 return res.status(200).json(result);
           
         } catch (err) {
-              return res.status(500).send();
+            switch (err.returnCode) {
+                case 401:
+                  return res.status(401).send(err.message);
+                default:
+                  return res.status(500).end();
         }
+    }
       });
 
     router.get(
