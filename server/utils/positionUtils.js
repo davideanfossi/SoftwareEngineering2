@@ -48,5 +48,9 @@ function checkParkingIsWithinCircle5(hike, parking){
     return isWithinCircle(hike.startPoint.latitude, hike.startPoint.longitude, parking.latitude, parking.longitude, 5)
 }
 
+function checkHutIsWithinCircle5(hike, hut){
+    return isWithinCircle(hike.startPoint.latitude, hike.startPoint.longitude, hut.latitude, hut.longitude, 5)
+}
 
-module.exports = { isWithinCircle, checkHikeIsWithinCircle, checkParkingIsWithinCircle5 };
+
+module.exports = { isWithinCircle, checkHikeIsWithinCircle, checkParkingIsWithinCircle5, checkHutIsWithinCircle5 };

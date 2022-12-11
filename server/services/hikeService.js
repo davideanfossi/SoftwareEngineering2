@@ -7,8 +7,7 @@ const path = require('path');
 const {difficultyType} = require("../models/hikeModel");
 
 const config = require("../config.json");
-const { getAllParkings } = require("../daos/parkingDAO");
-const { isWithinCircle, checkHikeIsWithinCircle, checkParkingIsWithinCircle5 } = require("../utils/positionUtils");
+const { isWithinCircle, checkHutIsWithinCircle5, checkParkingIsWithinCircle5 } = require("../utils/positionUtils");
 
 class HikeService {
     constructor(hikeDAO, pointDAO) {
@@ -16,8 +15,14 @@ class HikeService {
             throw 'hikeDAO must be defined for hike service!';
         if (!pointDAO)
             throw 'pointDAO must be defined for hike service!';
+        if (!parkingDAO)
+            throw 'parkingDAO must be defined for hike service!';
+        if (!hutDAO)
+            throw 'hutDAO must be defined for hike service!';    
         this.hikeDAO = hikeDAO;
         this.pointDAO = pointDAO;
+        this.parkingDAO = parkingDAO;
+        this.hutDAO = hutDAO;
     }
 
     getHikes = async (pageNumber=1, pageSize=10, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius=0, city, province) => {
@@ -74,21 +79,28 @@ class HikeService {
         }
     };
 
-    getParkingsStart = async(hike) => {
+    getNearStart = async(hike) => {
         try {
-            let parkings = await getAllParkings();
+            let parkings = await this.parkingDAO.getAllParkings();
+            let huts = await this.hutDAO.getAllHuts();
             let returnedParkings = [];
+            let returnedHuts = [];
 
             hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
             
-            // get parkings
+            // get parkings and huts near start point
             for (const parking of parkings) {
                 parking.point = await parking.pointDAO.getPoint(parking.point);
                 if (checkParkingIsWithinCircle5(hike.startPoint, parking.point))
                     returnedParkings.push(parking);
             }
+            for (const hut of huts) {
+                hut.point = await hut.pointDAO.getPoint(hut.point);
+                if (checkHutIsWithinCircle5(hike.startPoint, hut.point))
+                    returnedHuts.push(hut);
+            }
 
-            return returnedParkings;
+            return returnedParkings, returnedHuts;  //return entrambi
 
         }catch (err) {
             throw err;
@@ -96,21 +108,28 @@ class HikeService {
     };
 
 
-    getParkingsEnd = async(hike) => {
+    getNearEnd = async(hike) => {
         try {
-            let parkings = await getAllParkings();
+            let parkings = await this.parkingDAO.getAllParkings();
+            let huts = await this.hutDAO.getAllHuts();
             let returnedParkings = [];
+            let returnedHuts = [];
 
-            hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+            hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
             
-            // get parkings
+            // get parkings and huts near end point
             for (const parking of parkings) {
                 parking.point = await parking.pointDAO.getPoint(parking.point);
-                if (checkParkingIsWithinCircle5(hike.startPoint, parking.point))
+                if (checkParkingIsWithinCircle5(hike.endPoint, parking.point))
                     returnedParkings.push(parking);
             }
+            for (const hut of huts) {
+                hut.point = await hut.pointDAO.getPoint(hut.point);
+                if (checkHutIsWithinCircle5(hike.endPoint, hut.point))
+                    returnedHuts.push(hut);
+            }
 
-            return returnedParkings;
+            return returnedParkings, returnedHuts;
 
         }catch (err) {
             throw err;
@@ -173,41 +192,6 @@ class HikeService {
         }
     };
 
-}
-
-// compute the distance in kilometers between two points
-function computeDistance(lat1, lon1, lat2, lon2) {
-    const deg2rad = (deg) => deg * (Math.PI/180);
-    const rad2deg = (rad) => rad * (180.0 / Math.PI);
-    if ((lat1 === lat2) && (lon1 === lon2)) {
-        return 0;
-    }
-    else {
-        const theta = lon1 - lon2;
-        let dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        dist = rad2deg(Math.acos(dist));
-        let km = dist * 60 * 1.1515 * 1.609344;
-        return km;
-    }
-}
-
-
-
-/**
- * @param {*} baseLat latitude of the center of the circle
- * @param {*} baseLng longitude of the center of the circle
- * @param {*} lat latitude of the point to check
- * @param {*} lng longitude of the point to check
- * @param {*} radius radius in km
- * @returns true if the point is inside the radius, otherwise false
- */
-function isWithinCircle(baseLat, baseLng, lat, lng, radius){
-    return computeDistance(baseLat, baseLng, lat, lng) <= radius;
-}
-
-
-function checkParkingIsWithinCircle5(hike, parking){
-    return isWithinCircle(hike.startPoint.latitude, hike.startPoint.longitude, parking.latitude, parking.longitude, 5)
 }
 
 

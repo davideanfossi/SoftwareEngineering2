@@ -130,8 +130,12 @@ router.get("/hikes/limits", express.json(), async (req, res) => {
   }
 });
 
-router.get("/startParkings", express.json(), async (req, res) => {
+router.get("/hikes/:id/nearStart", [query("id").isInt({ min: 0 })], async (req, res) => {
   try {
+    const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send();
+      }
     const hike = await hikeDAO.getHike(req);
     const result = await hikeService.getParkingsStart(hike);
     return res.status(200).json(result);
@@ -144,8 +148,12 @@ router.get("/startParkings", express.json(), async (req, res) => {
 });
 
 
-router.get("/endParkings", express.json(), async (req, res) => {
+router.get("/hikes/:id/nearEnd", [query("id").isInt({ min: 0 })], async (req, res) => {
   try {
+    const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send();
+      }
     const hike = await hikeDAO.getHike(req);
     const result = await hikeService.getParkingsEnd(hike);
     return res.status(200).json(result);
