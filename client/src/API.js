@@ -24,6 +24,7 @@ const getUserHikesLimits = async () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials:"include"
     });
     if (response.ok) {
       return response.json();
@@ -354,6 +355,7 @@ const getFilteredUserHuts = async (
       headers: {
         "Content-Type": "application/json",
       },
+      credentials:"include"
     }
   );
   if (response.ok) {
@@ -369,6 +371,7 @@ const getUserHutsLimits = async () => {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
   });
   if (response.ok) {
     return await response.json();
