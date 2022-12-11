@@ -12,7 +12,7 @@ class HikeParkingDAO {
 
     getHikeLinkedParkings = async (hikeId) => {
             const sql = "SELECT * FROM HikeParking WHERE hikeId = ?";
-            const res = await this.dbManager.get(sql, [hikeId], true);
+            const res = await this.dbManager.get(sql, [hikeId]);
             return res.map(rs=> new HikeParking(rs.hikeId, rs.parkingId, rs.startPoint,rs.endPoint)) ;
     };
 

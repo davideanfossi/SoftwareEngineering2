@@ -138,6 +138,8 @@ router.get("/hikes/limits", express.json(), async (req, res) => {
 });
 
 router.get("/hikes/:id/near-start",
+  isLoggedIn,
+  getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 })],
   async (req, res) => {
     try {
@@ -145,10 +147,17 @@ router.get("/hikes/:id/near-start",
       if (!errors.isEmpty()) {
         return res.status(400).send();
       }
-      const result = await hikeService.getNearStart(Number.parseInt(req.params.id));
+      const hikeId = Number.parseInt(req.params.id);
+      const result = await hikeService.getNearStart(hikeId);
+      let hutLinked = await hikeHutService.getHutLinkedToHike(hikeId);
+      hutLinked = hutLinked.filter(hikeHut => hikeHut.startPoint == 1).map(h => {return {id: h.hutId, type: "hut"}});
+      let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
+      parkingLinked = parkingLinked.filter(parkingHut => parkingHut.startPoint == 1).map(p => {return {id: p.parkingId, type: "parking"}});
+
+      result.selected = [...hutLinked, ...parkingLinked];
+
       return res.status(200).json(result);
     } catch (err) {
-      console.log(err)
       switch (err.returnCode) {
         case 404:
           return res.status(404).send(err.msg);
@@ -160,6 +169,8 @@ router.get("/hikes/:id/near-start",
 
 
 router.get("/hikes/:id/near-end",
+  // isLoggedIn,
+  // getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 })],
   async (req, res) => {
     try {
@@ -167,7 +178,14 @@ router.get("/hikes/:id/near-end",
       if (!errors.isEmpty()) {
         return res.status(400).send();
       }
-      const result = await hikeService.getNearEnd(Number.parseInt(req.params.id));
+      const hikeId = Number.parseInt(req.params.id);
+      const result = await hikeService.getNearEnd(hikeId);
+      let hutLinked = await hikeHutService.getHutLinkedToHike(hikeId);
+      hutLinked = hutLinked.filter(hikeHut => hikeHut.endPoint == 1).map(h => {return {id: h.hutId, type: "hut"}});
+      let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
+      parkingLinked = parkingLinked.filter(parkingHut => parkingHut.endPoint == 1).map(p => {return {id: p.parkingId, type: "parking"}});
+
+      result.selected = [...hutLinked, ...parkingLinked];
       return res.status(200).json(result);
     } catch (err) {
       switch (err.returnCode) {
