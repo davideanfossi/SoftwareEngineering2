@@ -56,3 +56,6 @@ content-type: application/json
     "address": ""
     
 }
+
+###
+GET http://localhost:3001/api/hikes/1/nearStart

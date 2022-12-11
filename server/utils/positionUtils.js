@@ -44,4 +44,4 @@ function checkHikeIsWithinCircle(baseLat, baseLon, radius, hike) {
 }
 
 
-module.exports = { isWithinCircle, checkHikeIsWithinCircle };
+module.exports = { isWithinCircle, checkHikeIsWithinCircle};
