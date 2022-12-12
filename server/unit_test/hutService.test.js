@@ -50,27 +50,30 @@ describe('Hut Service unit test', () => {
     const hut2 = new Hut(2, "hut 2", 50, "0987654321", "hut2@mail.com", "description 2", "www.hut2.com", point3, 1, "image1.png");
     const hut3 = new Hut(3, "hut 3", 20, "0192837465", "hut3@mail.com", "description 3", "www.hut3.com", point1, 1, null);
 
-    let page = 1;
+    const numBedsUndefined = { minNumOfBeds: undefined, maxNumOfBeds: undefined };
+    const altitudeUndefined = { minAltitude: undefined, maxAltitude: undefined };
+    const radUndefined = { baseLat: undefined, baseLon: undefined, radius: undefined };
+    let pageNumber = 1;
     let pageSize = 2;
-    testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-        { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut1, hut2] });
-    page = 2;
-    testGetHuts('test get huts page and pageSize', page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-        { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hut3] });
-    page = undefined;
+    testGetHuts('test get huts page and pageSize', { pageNumber, pageSize }, undefined, numBedsUndefined, altitudeUndefined, radUndefined,
+        { "totalPages": 2, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": [hut1, hut2] });
+    pageNumber = 2;
+    testGetHuts('test get huts page and pageSize', { pageNumber, pageSize }, undefined, numBedsUndefined, altitudeUndefined, radUndefined,
+        { "totalPages": 2, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": [hut3] });
+    pageNumber = undefined;
     pageSize = undefined;
-    testGetHuts('test get huts page and pageSize undefined', page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts page and pageSize undefined', { pageNumber, pageSize }, undefined, numBedsUndefined, altitudeUndefined, radUndefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut2, hut3] });
 
-    testGetHuts('test get huts min number of beds', page, pageSize, 20, undefined, undefined, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts min number of beds', { pageNumber, pageSize }, undefined, {minNumOfBeds: 20, maxNumOfBeds: undefined}, altitudeUndefined, radUndefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2, hut3] });
-    testGetHuts('test get huts max number of beds', page, pageSize, undefined, 20, undefined, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts max number of beds', { pageNumber, pageSize }, undefined, {minNumOfBeds: undefined, maxNumOfBeds: 20}, altitudeUndefined, radUndefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut1, hut3] });
-    testGetHuts('test get huts min altitude', page, pageSize, undefined, undefined, 270, undefined, undefined, undefined, undefined,
+    testGetHuts('test get huts min altitude', { pageNumber, pageSize }, undefined, numBedsUndefined, {minAltitude: 270, maxAltitude: undefined}, radUndefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2] });
-    testGetHuts('test get huts max altitude', page, pageSize, undefined, undefined, undefined, 220, undefined, undefined, undefined,
+    testGetHuts('test get huts max altitude', { pageNumber, pageSize }, undefined, numBedsUndefined, {minAltitude: undefined, maxAltitude: 220}, radUndefined,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut3] });
-    testGetHuts('test get huts radius', page, pageSize, undefined, undefined, undefined, undefined, 47.5715101, 8.456101, 10,
+    testGetHuts('test get huts radius', { pageNumber, pageSize }, undefined, numBedsUndefined, altitudeUndefined, {baseLat: 47.5715101, baseLon: 8.456101, radius: 10},
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hut2] });
 
     testGetHutsLimits({ "maxAltitude": 300, "maxNumOfBeds": 50 });
@@ -91,9 +94,9 @@ function testAddHut(name,numOfBeds,description,phoneNumber,email,website,userId,
 }   
 
 
-function testGetHuts(testMsg, pageNumber, pageSize, minNumOfBeds, maxNumOfBeds, minAltitude, maxAltitude, baseLat, baseLon, radius, expectedObj) {
+function testGetHuts(testMsg, { pageNumber, pageSize }, name, { minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius }, expectedObj) {
     test(testMsg, async () => {
-        const res = await hutService.getHuts({ minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius }, { pageNumber, pageSize });
+        const res = await hutService.getHuts(name, { minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius }, { pageNumber, pageSize });
         expect(res).toEqual(expectedObj);
     })
 }

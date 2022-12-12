@@ -1,6 +1,8 @@
 const DBManager = require('../database/dbManager');
 const HikeDAO = require('../daos/hikeDAO');
 const PointDAO = require('../daos/pointDAO');
+const ParkingDAO = require("../daos/parkingDAO");
+const HutDAO = require("../daos/hutDAO");
 const Point = require('../models/pointModel');
 const { Hike, difficultyType } = require('../models/hikeModel');
 const HikeService = require("../services/hikeService");
@@ -15,7 +17,9 @@ const dbManager = new DBManager("TEST");
 dbManager.openConnection();
 const hikeDAO = new HikeDAO(dbManager);
 const pointDAO = new PointDAO(dbManager);
-const hikeService = new HikeService(hikeDAO, pointDAO);
+const parkingDAO = new ParkingDAO(dbManager);
+const hutDAO = new HutDAO(dbManager);
+const hikeService = new HikeService(hikeDAO, pointDAO, hutDAO, parkingDAO);
 
 const low = difficultyType.low;
 const mid = difficultyType.mid;
@@ -69,6 +73,10 @@ describe('Hike DAO unit test', () => {
             .toThrow('hikeDAO must be defined for hike service!');
         expect(() => new HikeService(hikeDAO, undefined))
             .toThrow('pointDAO must be defined for hike service!');
+        expect(() => new HikeService(hikeDAO, pointDAO, undefined))
+            .toThrow('hutDAO must be defined for hike service!');
+        expect(() => new HikeService(hikeDAO, pointDAO, hutDAO))
+            .toThrow('parkingDAO must be defined for hike service!');
     });
 
     const point1 = new Point(1, 45.0703393, 7.686864, 200, "point 1", null);

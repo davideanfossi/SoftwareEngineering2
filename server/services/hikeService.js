@@ -16,14 +16,14 @@ class HikeService {
             throw 'hikeDAO must be defined for hike service!';
         if (!pointDAO)
             throw 'pointDAO must be defined for hike service!';
-        if (!parkingDAO)
-            throw 'parkingDAO must be defined for hike service!';
         if (!hutDAO)
             throw 'hutDAO must be defined for hike service!';
+        if (!parkingDAO)
+            throw 'parkingDAO must be defined for hike service!';
         this.hikeDAO = hikeDAO;
         this.pointDAO = pointDAO;
-        this.parkingDAO = parkingDAO;
         this.hutDAO = hutDAO;
+        this.parkingDAO = parkingDAO;
     }
 
     getHikes = async ({ minLen, maxLen }, { minTime, maxTime }, { minAscent, maxAscent }, difficulty, { baseLat, baseLon, radius = 0 }, { pageNumber = 1, pageSize = 10 }) => {

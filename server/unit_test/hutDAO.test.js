@@ -46,15 +46,14 @@ describe('Hut DAO unit test', () => {
 
     testGetSingleHut('test get single hut', 2, hut2);
     testGetAllHut('test get all huts', [hut1, hut2, hut3]);
-    testGetHuts('test get huts with filters', 20, 100, [hut2, hut3]);
-    testGetHuts('test get huts without filters', undefined, undefined, [hut1, hut2, hut3]);
-    testGetMaxData({"maxNumOfBeds": 50});
+    testGetHuts('test get huts with filters', undefined, 20, 100, [hut2, hut3]);
+    testGetHuts('test get huts without filters', undefined, undefined, undefined, [hut1, hut2, hut3]);
 
     const point4 = new Point(4, "45.574405", "7.455193", 300, "point 4", "");
     testInsertHut("hut 4",9,point4.id,"hut desc4",'123456','test@test.com','www.test.com',2)
    // testInsertHut("hut 2",20,3,"hut desc2",'32146582','test2@test.com','www.test2.com',1)
 
-   testGetMaxData({"maxAltitude": 250, "maxNumOfBeds": 50});
+   testGetMaxData({"maxAltitude": 300, "maxNumOfBeds": 50});
 });
 
 function testInsertHut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId){
@@ -94,9 +93,9 @@ function testGetAllHut(testMsg, expectedHuts) {
     });
 }
 
-function testGetHuts(testMsg, minNumOfBeds, maxNumOfBeds, expectedHuts) {
+function testGetHuts(testMsg, name, minNumOfBeds, maxNumOfBeds, expectedHuts) {
     test(testMsg, async () => {
-        const res = await hutDAO.getHuts(minNumOfBeds, maxNumOfBeds);
+        const res = await hutDAO.getHuts(name, minNumOfBeds, maxNumOfBeds);
         expect(res).toEqual(expect.arrayContaining(expectedHuts));
     });
 }
@@ -105,7 +104,6 @@ function testGetHuts(testMsg, minNumOfBeds, maxNumOfBeds, expectedHuts) {
 function testGetSingleHut(testMsg, hutId, expectedHut) {
     test(testMsg, async () => {
         const res = await hutDAO.getHut(hutId);
-        console.log(res);
         expect(res).toEqual(expectedHut);
     });
 }
