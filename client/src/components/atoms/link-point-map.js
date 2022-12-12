@@ -13,6 +13,7 @@ export const LinkPointMap = ({
   setChanged,
   selected,
   setSelected,
+  markerUpdate
 }) => {
   const [track, setTrack] = useState([]);
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
@@ -93,7 +94,7 @@ export const LinkPointMap = ({
           setAlreadySelected(res.selected);
         }
       });
-  }, [end, id, start]);
+  }, [end, id, start, markerUpdate]);
 
   useEffect(() => {
     if (map) {

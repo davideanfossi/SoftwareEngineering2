@@ -11,16 +11,17 @@ function LinkStartEnd() {
   const [startPoint, setStartPoint] = useState({ type: undefined, id: -1 });
   const [endPoint, setEndPoint] = useState({ type: undefined, id: -1 });
   const [showAlert, setShowAlert] = useState('');
+  const [markerUpdate, setMarkerUpdate] = useState(false);
   const { id } = useParams();
 
   return (
     <Container className="mt-2" fluid>
       {
         showAlert === "success" ?
-        <Row
-        className="justify-content-center align-items-center text-center mt-3"
-        style={{ margin: "0px" }}
-      >
+          <Row
+            className="justify-content-center align-items-center text-center mt-3"
+            style={{ margin: "0px" }}
+          >
             <Alert variant="success" onClose={() => { setShowAlert(""); }} dismissible>
               <Alert.Heading>Link Successful!</Alert.Heading>
             </Alert>
@@ -28,10 +29,10 @@ function LinkStartEnd() {
           :
           <>{
             showAlert === "error" ?
-            <Row
-            className="justify-content-center align-items-center mt-3"
-            style={{ margin: "0px" }}
-          >
+              <Row
+                className="justify-content-center align-items-center mt-3"
+                style={{ margin: "0px" }}
+              >
                 <Alert variant="danger" onClose={() => { setShowAlert(""); }} dismissible>
                   <Alert.Heading>Something went wrong!</Alert.Heading>
                 </Alert>
@@ -72,6 +73,7 @@ function LinkStartEnd() {
                 setChanged={setChanged}
                 selected={startPoint}
                 setSelected={setStartPoint}
+                markerUpdate={markerUpdate}
               />
             </Tab>
             <Tab eventKey="end" title="Link End">
@@ -81,6 +83,7 @@ function LinkStartEnd() {
                 setChanged={setChanged}
                 selected={endPoint}
                 setSelected={setEndPoint}
+                markerUpdate={markerUpdate}
               />
             </Tab>
           </Tabs>
@@ -90,7 +93,12 @@ function LinkStartEnd() {
           <Button
             onClick={() => {
               API.linkStartEndPoint(id, startPoint, endPoint).then(
-                () => { setShowAlert("success"); })
+                () => {
+                  setShowAlert("success");
+                  setMarkerUpdate(oldMarker => !oldMarker);
+                  setStartPoint({ type: undefined, id: -1 });
+                  setEndPoint({ type: undefined, id: -1 });
+                })
                 .catch(err => { setShowAlert("error"); });
             }}
             style={{

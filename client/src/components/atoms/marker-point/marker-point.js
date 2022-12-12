@@ -42,7 +42,7 @@ export const MarkerPoint = ({
   isParking = false,
 }) => {
   const icon = alreadySelected ? lockedIcon : (isParking ? parkingIcon : hutIcon);
-  const selectedIcon = isParking ? selectedParkingIcon : selectedHutIcon;
+  const selectedIcon = alreadySelected ? lockedIcon : (isParking ? selectedParkingIcon : selectedHutIcon);
   return (
     <Marker
       position={[point.latitude, point.longitude]}
