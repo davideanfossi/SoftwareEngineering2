@@ -36,7 +36,7 @@ function ParkingForm() {
         .catch((err) => setAltitude(''));
     }, [lat, lon]);
 
-    const [zoom, setZoom] = useState(6);
+    const [zoom, setZoom] = useState(10);
     const handleSave = (lat, lon, zoom) => {
         setLat(lat);
         setLon(lon);
@@ -235,7 +235,7 @@ function ParkingForm() {
                                         placeholder="Altitude"
                                         value={altitude == null ? '' : altitude}
                                         onChange={event => { setAltitude(event.target.value); }}
-                                        disabled />
+                                        />
                                     <Form.Control.Feedback type="invalid">
                                         Altitude number must be greater than 0
                                     </Form.Control.Feedback>

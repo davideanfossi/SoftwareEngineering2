@@ -32,7 +32,7 @@ function HutForm() {
     const [selectedPosition, setSelectedPosition] = useState(undefined);
     const [lat, setLat] = useState(45.0702899); //it is Turin!
     const [lon, setLon] = useState(7.6348208);
-    const [zoom, setZoom] = useState(6);
+    const [zoom, setZoom] = useState(10);
     const handleSave = (lat, lon, zoom) => {
         setLat(lat);
         setLon(lon);
@@ -203,7 +203,7 @@ function HutForm() {
                                             placeholder="Altitude"
                                             value={altitude == null ? '' : altitude}
                                             onChange={event => { setAltitude(event.target.value); }}
-                                            disabled />
+                                            />
                                         <Form.Control.Feedback type="invalid">
                                             Altitude number must be greater than 0
                                         </Form.Control.Feedback>

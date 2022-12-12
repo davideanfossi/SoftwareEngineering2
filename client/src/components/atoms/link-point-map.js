@@ -128,7 +128,6 @@ export const LinkPointMap = ({
         center={center}
         zoom={14}
         scrollWheelZoom={false}
-        zoomControl={false}
         doubleClickZoom={false}
         style={{ height: "50vh" }}
         ref={setMap}
