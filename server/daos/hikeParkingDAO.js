@@ -6,14 +6,14 @@ class HikeParkingDAO {
 
     constructor(dbManager) {
         if (!dbManager)
-            throw 'DBManager must be defined for Hike dao!';
+            throw 'DBManager must be defined for HikeParking dao!';
         this.dbManager = dbManager;
     }
 
     getHikeLinkedParkings = async (hikeId) => {
             const sql = "SELECT * FROM HikeParking WHERE hikeId = ?";
             const res = await this.dbManager.get(sql, [hikeId]);
-            return res.map(rs=> new HikeParking(rs.hikeId, rs.parkingId, rs.startPoint,rs.endPoint)) ;
+            return res.map(rs=> new HikeParking(rs.hikeId, rs.parkingId, !!rs.startPoint,!!rs.endPoint)) ;
     };
 
     insertHikeParking=async (hikeId,parkingId,startPoint,endPoint) =>{
