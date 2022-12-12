@@ -3,9 +3,15 @@ import { useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { LinkPointMap } from "../atoms/link-point-map";
+import { useNavigate, useParams } from "react-router";
+import API from "../../API";
 
 function LinkStartEnd() {
   const [changed, setChanged] = useState(true);
+  const [startPoint, setStartPoint] = useState({ type: undefined, id: -1 });
+  const [endPoint, setEndPoint] = useState({ type: undefined, id: -1 });
+  const { id } = useParams();
+  const navigate = useNavigate();
   return (
     <>
       <Row
@@ -35,16 +41,31 @@ function LinkStartEnd() {
             onSelect={() => setChanged(true)}
           >
             <Tab eventKey="start" title="Link Start">
-              <LinkPointMap start changed={changed} setChanged={setChanged} />
+              <LinkPointMap
+                start
+                changed={changed}
+                setChanged={setChanged}
+                selected={startPoint}
+                setSelected={setStartPoint}
+              />
             </Tab>
             <Tab eventKey="end" title="Link End">
-              <LinkPointMap end changed={changed} setChanged={setChanged} />
+              <LinkPointMap
+                end
+                changed={changed}
+                setChanged={setChanged}
+                selected={endPoint}
+                setSelected={setEndPoint}
+              />
             </Tab>
           </Tabs>
 
           {/* <Map/> */}
 
           <Button
+            onClick={() => {
+              API.linkStartEndPoint(id, startPoint, endPoint).then(() => {navigate("my-hikes");});
+            }}
             style={{
               backgroundColor: "rgb(239, 208, 131)",
               width: "auto",

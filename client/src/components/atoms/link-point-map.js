@@ -11,6 +11,8 @@ export const LinkPointMap = ({
   end = false,
   changed,
   setChanged,
+  selected,
+  setSelected,
 }) => {
   const [track, setTrack] = useState([]);
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
@@ -23,7 +25,7 @@ export const LinkPointMap = ({
     longitude: 7.6348208,
   });
   const [map, setMap] = useState(undefined);
-  const [selected, setSelected] = useState({ type: undefined, id: -1 });
+  const [alreadySelected, setAlreadySelected] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [huts, setHuts] = useState([
     {
@@ -60,7 +62,7 @@ export const LinkPointMap = ({
       name: "parking3",
     },
   ]);
-  let { id } = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     if (changed)
@@ -79,16 +81,16 @@ export const LinkPointMap = ({
       API.getParkingHutStartPoint(id).then((res) => {
         setHuts(res.huts);
         setParkings(res.parkings);
-        if(res.selected){
-          setSelected(res.selected[0]);
+        if (res.selected.length !== 0) {
+          setAlreadySelected(res.selected);
         }
       });
     end &&
       API.getParkingHutEndPoint(id).then((res) => {
         setHuts(res.huts);
         setParkings(res.parkings);
-        if (res.selected) {
-          setSelected(res.selected[0]);
+        if (res.selected.length !== 0) {
+          setAlreadySelected(res.selected);
         }
       });
   }, [end, id, start]);
@@ -141,6 +143,11 @@ export const LinkPointMap = ({
           <MarkerPoint
             key={hut.id}
             point={hut.point}
+            alreadySelected={
+              alreadySelected.filter(
+                (elem) => elem.type === "hut" && elem.id === hut.id
+              ).length > 0
+            }
             selected={selected.type === "hut" && hut.id === selected.id}
             onClickHandle={() => onClickHut(hut.id)}
           />
@@ -150,6 +157,11 @@ export const LinkPointMap = ({
           <MarkerPoint
             key={parking.id}
             point={parking.point}
+            alreadySelected={
+              alreadySelected.filter(
+                (elem) => elem.type === "parking" && elem.id === parking.id
+              ).length > 0
+            }
             selected={selected.type === "parking" && parking.id === selected.id}
             onClickHandle={() => onClickParking(parking.id)}
             isParking

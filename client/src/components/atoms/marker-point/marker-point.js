@@ -4,6 +4,13 @@ import ParkingIconUrl from "./marker-parking-icon.svg";
 import ParkingIconSelectedUrl from "./marker-parking-icon-selected.svg";
 import HutIconUrl from "./marker-hut-icon.svg";
 import HutIconSelectedUrl from "./marker-hut-icon-selected.svg";
+import LockedIconSelectedUrl from "./marker-icon-locked.svg";
+
+const lockedIcon = Leaflet.icon({
+  iconUrl: LockedIconSelectedUrl,
+  iconAnchor: [25, 50],
+  iconSize: [50, 50],
+});
 
 const hutIcon = Leaflet.icon({
   iconUrl: HutIconUrl,
@@ -30,17 +37,23 @@ const selectedParkingIcon = Leaflet.icon({
 export const MarkerPoint = ({
   point,
   selected,
+  alreadySelected,
   onClickHandle,
   isParking = false,
 }) => {
-  console.log(point);
-  const icon = isParking ? parkingIcon : hutIcon;
+  const icon = alreadySelected ? lockedIcon : (isParking ? parkingIcon : hutIcon);
   const selectedIcon = isParking ? selectedParkingIcon : selectedHutIcon;
   return (
     <Marker
       position={[point.latitude, point.longitude]}
       icon={selected ? selectedIcon : icon}
-      eventHandlers={{ click: () => onClickHandle() }}
+      eventHandlers={{
+        click: () => {
+          if (!alreadySelected) {
+            onClickHandle();
+          }
+        },
+      }}
     ></Marker>
   );
 };
