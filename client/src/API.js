@@ -467,7 +467,7 @@ const API = {
   getUserHutsLimits,
   getParkingHutStartPoint,
   getParkingHutEndPoint,
-  linkStartEndPoint,
+  linkStartEndPoint
 };
 
 export default API;

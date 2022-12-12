@@ -1,19 +1,44 @@
-import { Row, Button } from "react-bootstrap";
+import { Row, Button, Container, Alert } from "react-bootstrap";
 import { useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { LinkPointMap } from "../atoms/link-point-map";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import API from "../../API";
 
 function LinkStartEnd() {
   const [changed, setChanged] = useState(true);
   const [startPoint, setStartPoint] = useState({ type: undefined, id: -1 });
   const [endPoint, setEndPoint] = useState({ type: undefined, id: -1 });
+  const [showAlert, setShowAlert] = useState('');
   const { id } = useParams();
-  const navigate = useNavigate();
+
   return (
-    <>
+    <Container className="mt-2" fluid>
+      {
+        showAlert === "success" ?
+        <Row
+        className="justify-content-center align-items-center text-center mt-3"
+        style={{ margin: "0px" }}
+      >
+            <Alert variant="success" onClose={() => { setShowAlert(""); }} dismissible>
+              <Alert.Heading>Link Successful!</Alert.Heading>
+            </Alert>
+          </Row>
+          :
+          <>{
+            showAlert === "error" ?
+            <Row
+            className="justify-content-center align-items-center mt-3"
+            style={{ margin: "0px" }}
+          >
+                <Alert variant="danger" onClose={() => { setShowAlert(""); }} dismissible>
+                  <Alert.Heading>Something went wrong!</Alert.Heading>
+                </Alert>
+              </Row>
+              : <></>
+          }</>
+      }
       <Row
         className="justify-content-center align-items-center"
         style={{ margin: "0px" }}
@@ -64,7 +89,9 @@ function LinkStartEnd() {
 
           <Button
             onClick={() => {
-              API.linkStartEndPoint(id, startPoint, endPoint).then(() => {navigate("my-hikes");});
+              API.linkStartEndPoint(id, startPoint, endPoint).then(
+                () => { setShowAlert("success"); })
+                .catch(err => { setShowAlert("error"); });
             }}
             style={{
               backgroundColor: "rgb(239, 208, 131)",
@@ -78,7 +105,7 @@ function LinkStartEnd() {
           </Button>
         </Row>
       </Row>
-    </>
+    </Container>
   );
 }
 

@@ -150,9 +150,9 @@ router.get("/hikes/:id/near-start",
       const hikeId = Number.parseInt(req.params.id);
       const result = await hikeService.getNearStart(hikeId);
       let hutLinked = await hikeHutService.getHutLinkedToHike(hikeId);
-      hutLinked = hutLinked.filter(hikeHut => hikeHut.startPoint == 1).map(h => {return {id: h.hutId, type: "hut"}});
+      hutLinked = hutLinked.filter(hikeHut => hikeHut.startPoint).map(h => {return {id: h.hutId, type: "hut"}});
       let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
-      parkingLinked = parkingLinked.filter(parkingHut => parkingHut.startPoint == 1).map(p => {return {id: p.parkingId, type: "parking"}});
+      parkingLinked = parkingLinked.filter(parkingHut => parkingHut.startPoint).map(p => {return {id: p.parkingId, type: "parking"}});
 
       result.selected = [...hutLinked, ...parkingLinked];
 
@@ -181,9 +181,9 @@ router.get("/hikes/:id/near-end",
       const hikeId = Number.parseInt(req.params.id);
       const result = await hikeService.getNearEnd(hikeId);
       let hutLinked = await hikeHutService.getHutLinkedToHike(hikeId);
-      hutLinked = hutLinked.filter(hikeHut => hikeHut.endPoint == 1).map(h => {return {id: h.hutId, type: "hut"}});
+      hutLinked = hutLinked.filter(hikeHut => hikeHut.endPoint).map(h => {return {id: h.hutId, type: "hut"}});
       let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
-      parkingLinked = parkingLinked.filter(parkingHut => parkingHut.endPoint == 1).map(p => {return {id: p.parkingId, type: "parking"}});
+      parkingLinked = parkingLinked.filter(parkingHut => parkingHut.endPoint).map(p => {return {id: p.parkingId, type: "parking"}});
 
       result.selected = [...hutLinked, ...parkingLinked];
       return res.status(200).json(result);
