@@ -59,6 +59,14 @@ We created new tasks for the uncompleted stories, to better estimate the additio
 - Code review
   - Total hours estimated: 4h
   - Total hours spent: 5h
+- Technical Debt management:
+  - Total hours estimated 
+  - Total hours spent
+  - Hours estimated for remediation by SonarQube
+  - Hours estimated for remediation by SonarQube only for the selected and planned issues 
+  - Hours spent on remediation 
+  - debt ratio (as reported by SonarQube under "Measures-Maintainability")
+  - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability )
   
 
 
@@ -90,7 +98,3 @@ We created new tasks for the uncompleted stories, to better estimate the additio
 - One thing you are proud of as a Team!!
 
       We succesfully delivered all the committed stories!
-
-
-## TECHNICAL DEBT MANAGEMENT
-We decided to manage technicnal debt using the following strategy:
