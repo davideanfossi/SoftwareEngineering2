@@ -8,7 +8,7 @@
     "apiTest": "mocha test --runInBand--timeout 10000 --exit > ./apiTestResult.txt",
     "testcoverage": "jest --runInBand --coverage > ./test_results/unitTestResult.txt",
     "test": "jest --runInBand",
-    "totalcoverage": "nyc mocha test --runInBand --timeout 10000 --exit"
+    "coverage": "jest --runInBand --coverage"
   },
   "author": "",
   "license": "ISC",

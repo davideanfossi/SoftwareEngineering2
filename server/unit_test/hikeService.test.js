@@ -28,6 +28,12 @@ const high = difficultyType.high;
 const testFileBasename = "testgpx.gpx";
 const testFileName = path.resolve("unit_test/files/", testFileBasename);
 
+const undefinedPage = {pageNumber: undefined, pageSize: undefined};
+const undefinedLen = { minLen: undefined, maxLen: undefined };
+const undefinedTime = { minTime: undefined, maxTime: undefined };
+const undefinedAscent = { minAscent: undefined, maxAscent: undefined };
+const undefinedRad = { baseLat: undefined, baseLon: undefined, radius: undefined };
+
 
 describe('Hike DAO unit test', () => {
     beforeAll(async () => {
@@ -91,38 +97,38 @@ describe('Hike DAO unit test', () => {
 
     testGetHikesLimits({ "maxLength": 2000, "maxExpectedTime": 180, "maxAscent": 500, "difficultyType": [low, mid, high] });
 
-    let page = 1;
+    let pageNumber = 1;
     let pageSize = 2;
-    testGetHikes("test get hikes page and pageSize", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-        { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hike1, hike2] });
-    page = 2;
-    testGetHikes("test get hikes page and pageSize", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
-        { "totalPages": 2, "pageNumber": page, "pageSize": pageSize, "pageItems": [hike3, hike4] });
-    page = undefined;
+    testGetHikes("test get hikes page and pageSize", { pageNumber, pageSize }, undefinedLen, undefinedTime, undefinedAscent, undefined, undefinedRad,
+        { "totalPages": 2, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": [hike1, hike2] });
+    pageNumber = 2;
+    testGetHikes("test get hikes page and pageSize", { pageNumber, pageSize }, undefinedLen, undefinedTime, undefinedAscent, undefined, undefinedRad,
+        { "totalPages": 2, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": [hike3, hike4] });
+    pageNumber = undefined;
     pageSize = undefined;
-    testGetHikes("test get hikes page and pageSize undefined", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    testGetHikes("test get hikes page and pageSize undefined", { pageNumber, pageSize }, undefinedLen, undefinedTime, undefinedAscent, undefined, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike1, hike2, hike3, hike4] });
 
-    testGetHikes("test get hikes minLen", page, pageSize, 1500, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    testGetHikes("test get hikes minLen", { pageNumber, pageSize }, { minLen: 1500, maxLen: undefined }, undefinedTime, undefinedAscent, undefined, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4] });
-    testGetHikes("test get hikes maxLen", page, pageSize, undefined, 1500, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    testGetHikes("test get hikes maxLen", { pageNumber, pageSize }, { minLen: undefined, maxLen: 1500 }, undefinedTime, undefinedAscent, undefined, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike1, hike3] });
-    testGetHikes("test get hikes minTime", page, pageSize, undefined, undefined, 150, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
+    testGetHikes("test get hikes minTime", { pageNumber, pageSize }, undefinedLen, { minTime: 150, maxTime: undefined }, undefinedAscent, undefined, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2] });
-    testGetHikes("test get hikes maxTime", page, pageSize, undefined, undefined, undefined, 150, undefined, undefined, undefined, undefined, undefined, undefined,
+    testGetHikes("test get hikes maxTime", { pageNumber, pageSize }, undefinedLen, { minTime: undefined, maxTime: 150 }, undefinedAscent, undefined, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike1, hike3, hike4] });
-    testGetHikes("test get hikes minAscent", page, pageSize, undefined, undefined, undefined, undefined, 500, undefined, undefined, undefined, undefined, undefined,
+    testGetHikes("test get hikes minAscent", { pageNumber, pageSize }, undefinedLen, undefinedTime, { minAscent: 500, maxAscent: undefined }, undefined, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2] });
-    testGetHikes("test get hikes maxAscent", page, pageSize, undefined, undefined, undefined, undefined, undefined, 300, undefined, undefined, undefined, undefined,
+    testGetHikes("test get hikes maxAscent", { pageNumber, pageSize }, undefinedLen, undefinedTime, { minAscent: undefined, maxAscent: 300 }, undefined, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike1, hike3] });
-    testGetHikes("test get hikes difficulty", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, mid, undefined, undefined, undefined,
+    testGetHikes("test get hikes difficulty", { pageNumber, pageSize }, undefinedLen, undefinedTime, undefinedAscent, mid, undefinedRad,
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike1, hike4] });
-    testGetHikes("test get hikes radius", page, pageSize, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 47.5715101, 8.456101, 10,
+    testGetHikes("test get hikes radius", { pageNumber, pageSize }, undefinedLen, undefinedTime, undefinedAscent, undefined, { baseLat: 47.5715101, baseLon: 8.456101, radius: 10 },
         { "totalPages": 1, "pageNumber": 1, "pageSize": 10, "pageItems": [hike2, hike3, hike4] });
 
 
-    testAddHike("title 5", 1000, 120, 300, mid, "description 5", undefined, 1, "40.714", "65.714", 1000, "p1", "A1", "48.412", "98.714", 1400, "p2", "A2");
-    testAddHike("title 6", 2000, 220, 400, high, undefined, undefined, 1, "30.714", "35.714", 1000, "p1", undefined, "28.412", "55.714", 1400, "p2", "A2");
+    testAddHike(new Hike(undefined, "title 5", 1000, 120, 300, mid, "description 5", 1, undefined), new Point(undefined, "40.714", "65.714", 1000, "p1", "A1"), new Point(undefined, "48.412", "98.714", 1400, "p2", "A2"));
+    testAddHike(new Hike(undefined, "title 6", 2000, 220, 400, high, undefined, 1, undefined), new Point(undefined, "30.714", "35.714", 1000, "p1", undefined), new Point(undefined, "28.412", "55.714", 1400, "p2", "A2"));
 
     const gpx = new DOMParser().parseFromString(fs.readFileSync(testFileName, 'utf8'));
     const expectedTrack = togeojson.gpx(gpx).features[0].geometry.coordinates.map(p => { return { "lat": p[1], "lon": p[0] } });
@@ -132,8 +138,7 @@ describe('Hike DAO unit test', () => {
 });
 
 
-
-function testGetHikes(testMsg, pageNumber, pageSize, minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, baseLat, baseLon, radius = 0, expectedObj) {
+function testGetHikes(testMsg, { pageNumber, pageSize }, { minLen, maxLen }, { minTime, maxTime }, { minAscent, maxAscent }, difficulty, { baseLat, baseLon, radius }, expectedObj) {
     test(testMsg, async () => {
         const res = await hikeService.getHikes({ minLen, maxLen }, { minTime, maxTime }, { minAscent, maxAscent }, difficulty, { baseLat, baseLon, radius }, { pageNumber, pageSize });
         expect(res).toEqual(expectedObj);
@@ -147,17 +152,13 @@ function testGetHikesLimits(expectedObj) {
     });
 }
 
-function testAddHike(title, length, expectedTime, ascent, difficulty, description, gpxPath, userId, startLatitude, startLongitude, startAltitude, startPointLabel, startAddress, endLatitude, endLongitude, endAltitude, endPointLabel, endAddress) {
+function testAddHike(hike, startPoint, endPoint) {
     test('add new hike', async () => {
-        const hike = new Hike(undefined, title, length, expectedTime, ascent, difficulty, description, userId, gpxPath);
-        const startPoint = new Point(undefined, startLatitude, startLongitude, startAltitude, startPointLabel, startAddress);
-        const endPoint = new Point(undefined, endLatitude, endLongitude, endAltitude, endPointLabel, endAddress);
         let lastID = await hikeService.addHike(hike, startPoint, endPoint);
         expect(lastID).toBeTruthy();
 
-        const res = await hikeService.getHikes({ undefined, undefined }, { undefined, undefined }, { undefined, undefined }, difficulty, { undefined, undefined, undefined }, { undefined, undefined });
+        const res = await hikeService.getHikes(undefinedLen, undefinedTime, undefinedAscent, hike.difficulty, undefinedRad, undefinedPage);
         expect(res.pageItems.length).toBeGreaterThan(0);
-
     })
 }
 
