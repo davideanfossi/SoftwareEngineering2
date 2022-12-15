@@ -32,8 +32,8 @@ RETROSPECTIVE Sprint 3 (Team 16)
       estimated avg = 2,40 h
       actual avg = 2,43 h
       
-      estimated standard deviation = 6,36
-      actual standard deviation = 6,49 
+      estimated standard deviation = 1,24
+      actual standard deviation = 1,31
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1:
 
