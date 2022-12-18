@@ -4,12 +4,15 @@ import { HutFilter } from "../moleculars/hut-filter";
 import { Paging } from "../atoms/paging";
 import API from "../../API";
 import { Hut, Point } from "../../models/hut";
+import { useLocation } from "react-router";
+import { Alert } from "react-bootstrap";
 
 export const MyHuts = () => {
   const [hutList, setHutList] = useState([]);
   const [pageNumber, setPageNumer] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
+  const [show, setShow] = useState(true);
  const handleServerResponse = (huts) => {
    setPageNumer(1);
    setPageSize(huts.pageSize);
@@ -69,8 +72,16 @@ export const MyHuts = () => {
     setPageNumer(newPageNumber);
   };
 
+  const location = useLocation();
+
   return (
     <>
+    {
+      location.state && location.state.message === "Hut inserted succefully" && show &&
+      <Alert variant="success" onClose={() => setShow(false)} dismissible>
+        <Alert.Heading>Hut inserted succefully</Alert.Heading>
+      </Alert>
+    }
       <HutFilter
         handleServerResponse={handleServerResponse}
         handleServerResponseChangePage={handleServerResponseChangePage}

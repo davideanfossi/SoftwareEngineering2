@@ -138,11 +138,26 @@ export const HutFilter = ({
             </Col>
             <Col
               xs={12}
-              md={6}
+              md={3}
               className="d-flex justify-content-center align-items-center mt-3"
             >
               <Button className="w-100" variant="primary" onClick={handleShow}>
                 Select location
+              </Button>
+            </Col>
+            <Col
+            xs={12}
+            md={3}
+            className="d-flex justify-content-center align-items-center mt-3"
+            >
+            <Button className="w-100" variant="primary" onClick={ () => {
+              setMinNumOfBeds(0);
+              setMaxNumOfBeds(absoluteMaxBed);
+              setMinAltitude(0);
+              setMaxAltitude(absoluteMaxAltitude);
+              setName("");
+              }}>
+                Reset filters
               </Button>
             </Col>
           </Row>

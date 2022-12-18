@@ -191,11 +191,28 @@ export const HikeFilter = ({
             </Col>
             <Col
               xs={12}
-              md={6}
+              md={3}
               className="d-flex justify-content-center align-items-center mt-3"
             >
               <Button className="w-100" variant="primary" onClick={handleShow}>
                 Select location
+              </Button>
+            </Col>
+            <Col
+            xs={12}
+            md={3}
+            className="d-flex justify-content-center align-items-center mt-3"
+            >
+            <Button className="w-100" variant="primary" onClick={ () => {
+              setMinLength(0);
+              setMaxLength(absoluteMaxLength);
+              setMinExpectedTime(0);
+              setMaxExpectedTime(absoluteMaxExpectedTime);
+              setMinHeight(0);
+              setMaxHeight(absoluteMaxHeight);
+              setDifficulty(-1);
+              }}>
+                Reset filters
               </Button>
             </Col>
           </Row>
