@@ -17,7 +17,7 @@ class ProfileService {
         this.userDAO = userDAO;
     }
 
-    getUserHikes = async ({minLen, maxLen}, {minTime, maxTime}, {minAscent, maxAscent}, difficulty, userId, {baseLat, baseLon, radius = 0}, {pageNumber = 1, pageSize = 10}) => {
+    getUserHikes = async ({ minLen, maxLen }, { minTime, maxTime }, { minAscent, maxAscent }, difficulty, userId, { baseLat, baseLon, radius = 0 }, { pageNumber = 1, pageSize = 10 }) => {
         let hikes;
         let returnedHikes;
         //let user;
@@ -64,17 +64,30 @@ class ProfileService {
         const hike = await this.hikeDAO.getHike(hikeId);
         if (!hike)
             throw { returnCode: 404, message: "Hike not found" };
+
+        const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
         //TODO: check date format stored in the DB
         if (recordType === "start") {
+            if (recordedHike !== undefined)
+                throw { returnCode: 422, message: "Hike already started" };
             result = await this.userDAO.insertRecordedHike(new RecordedHike(undefined, hikeId, userId, dateTime, null));
         }
         else if (recordType === "end") {
-            const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
             recordedHike.endDateTime = dateTime;
             result = await this.userDAO.updateRecordedHike(recordedHike);
         }
 
         return result;
+    };
+
+    getRecordedHike = async (hikeId, userId) => {
+        const hike = await this.hikeDAO.getHike(hikeId);
+        if (!hike)
+            throw { returnCode: 422, message: "Hike not found" };
+        const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
+        if (recordedHike !== undefined)
+            throw { returnCode: 404, message: "Recorded Hike not found" };
+        return recordedHike
     };
 
 }

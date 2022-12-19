@@ -67,13 +67,13 @@ class UserDAO {
     async getRecordedHike(hikeId, userId) {
         const sql = "SELECT * FROM RecordedHike WHERE hikeId = ? AND userId = ?";
         const res = await this.dbManager.get(sql, [hikeId, userId], true);
-        return new RecordedHike(res.id, res.hikeId, res.userId, res.startDateTime, res.endDateTime);
+        return res ? new RecordedHike(res.id, res.hikeId, res.userId, res.startDateTime, res.endDateTime) : undefined;
     }
 
     async getRecordedHikeById(recordedHikeId) {
         const sql = "SELECT * FROM RecordedHike WHERE id = ?";
         const res = await this.dbManager.get(sql, [recordedHikeId], true);
-        return new RecordedHike(res.id, res.hikeId, res.userId, res.startDateTime, res.endDateTime);;
+        return res ? new RecordedHike(res.id, res.hikeId, res.userId, res.startDateTime, res.endDateTime) : undefined;
     }
 
 
