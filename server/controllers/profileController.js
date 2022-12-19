@@ -2,11 +2,11 @@
 
 const express = require("express");
 const router = express.Router();
-const path = require("path");
-const {
-    param,
-    validationResult,
-  } = require("express-validator");
+const { param, body, validationResult} = require("express-validator");
+
+const utc = require('dayjs/plugin/utc');
+const dayjs = require("dayjs");
+dayjs.extend(utc);
 
 const DbManager = require("../database/dbManager");
 const HikeDAO = require("../daos/hikeDAO");
@@ -68,21 +68,7 @@ router.get(
             const pageSize = req.query.pageSize
                 ? Number.parseInt(req.query.pageSize)
                 : undefined;
-            const result = await profileService.getUserHikes(
-                minLen,
-                maxLen,
-                minTime,
-                maxTime,
-                minAscent,
-                maxAscent,
-                difficulty, 
-                req.user.id, 
-                baseLat,
-                baseLon,
-                radius,
-                pageNumber,
-                pageSize,
-            );
+            const result = await profileService.getUserHikes({minLen, maxLen}, {minTime, maxTime}, {minAscent, maxAscent}, difficulty, req.user.id, {baseLat, baseLon, radius}, {pageNumber,pageSize});
             // remove additional data
             result.pageItems.map((hike) => {
                 delete hike.startPoint;
@@ -91,21 +77,78 @@ router.get(
                 delete hike.gpxPath;
             });
             return res.status(200).json(result);
-            } catch (err) {
-                return res.status(500).send();
-            }
+        } catch (err) {
+            return res.status(500).send();
+        }
     }
 );
 
-router.get("/user-hikes/limits", 
-isLoggedIn, getPermission(["Local Guide"]), 
-async (req, res) => {
-    try {
-      const result = await profileService.getUserHikesLimits(req.user.id);
-      return res.status(200).json(result);
-    } catch (err) {
-          return res.status(500).send();
-    }
-  });
+router.get("/user-hikes/limits",
+    isLoggedIn, getPermission(["Local Guide"]),
+    async (req, res) => {
+        try {
+            const result = await profileService.getUserHikesLimits(req.user.id);
+            return res.status(200).json(result);
+        } catch (err) {
+            return res.status(500).send();
+        }
+    });
 
-  module.exports = router;
+router.post("/user/record/hikes/:id",
+    // isLoggedIn, getPermission(["Hiker"]),
+    [param("id").exists().isInt({ min: 1 }),
+    body("type").exists().isString().isIn(["start", "end"]),
+    body("dateTime").exists().isISO8601()],
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).send();
+            }
+
+            const type = req.body.type;
+            const dateTime = dayjs(req.body.dateTime).utc().format();
+            await profileService.recordHike(Number.parseInt(req.params.id), req.user ? req.user.id : 3, type, dateTime);
+            // handle utc -> const local = dayjs(date);
+            // const utc = dayjs(date).utc().format();
+            return res.status(200).json();
+        } catch (err) {
+            console.log(err);
+            switch (err.returnCode) {
+                case 404:
+                    return res.status(404).send(err.message);
+                case 409:
+                    return res.status(409).send(err.message);
+                default:
+                    return res.status(500).send();
+            }
+        }
+    });
+
+    router.get("/user/record/hikes/:id",
+    // isLoggedIn, getPermission(["Hiker"]),
+    [param("id").exists().isInt({ min: 1 })],
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).send();
+            }
+            
+            const result = await profileService.getRecordedHike(Number.parseInt(req.params.id), req.user ? req.user.id : 3);
+            return res.status(200).json(result);
+        } catch (err) {
+            console.log(err);
+            switch (err.returnCode) {
+                case 404:
+                    return res.status(404).send(err.message);
+                case 422:
+                    return res.status(422).send(err.message);
+                default:
+                    return res.status(500).send();
+            }
+        }
+    });
+    
+
+module.exports = router;
