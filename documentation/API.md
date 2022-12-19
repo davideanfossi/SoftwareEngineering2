@@ -4,9 +4,14 @@
 - [GET hikes](#get-hikes)
 - [GET hikes limits](#get-hikes-limits)
 - [POST registration](#post-registration)
+    - [POST signup](#post-signup)
+    - [POST email activate](#post-email-activate)
 - [ADD new hike](#add-new-hike)
 - [GET hike track](#get-hike-track)
 - [GET huts](#get-huts)
+- [GET roles](#get-roles)
+- [POST record hike](#post-record-hike)
+- [GET recorded hike](#get-recorded-hike)
 
 --------------------------------------------------------------
 ## GET hikes
@@ -77,7 +82,10 @@
     }
     ```
 
+
 ## POST registration
+
+### POST signup 
 
 **`POST: /api/signup`**
 - Insert user information in DB with ```isVerified``` field to false, waiting for user to verify his email. 
@@ -108,6 +116,9 @@ In order to complete  the registration process the user must be redirect to a cu
 }   
 ```
 
+
+### POST email activate
+
 **`POST: /api/email-activate`**
 - Perform user's mail verification. Successful if token provided is correct.
 - Request body: 
@@ -130,6 +141,7 @@ In order to complete  the registration process the user must be redirect to a cu
     "isVerified": "true"
 }  
 ```
+
 
 ## ADD new hike
 **`POST: /api/hike`**
@@ -192,20 +204,22 @@ In order to complete  the registration process the user must be redirect to a cu
     }
     ```
 
+
+# GET roles
+
 **`GET: /api/roles`**
 - Return the list of all available roles for registration purposes
-- Request body: 
-```
-empty
-```
+- Request body: _None_
 - Response: `200 OK` (success)
 - Response body: 
 ```
-    [
-    "Hiker",
-    "Local Guide",
-    "Hut Worker"
-    ]
+    {
+        [
+        "Hiker",
+        "Local Guide",
+        "Hut Worker"
+        ]
+    }
 ```
 
 
@@ -255,3 +269,50 @@ empty
     }
 
     ```
+
+
+# POST record hike
+
+**`POST: /api/user/record/hikes/:id`**
+- start or end a registered hike linked to the user
+- Authorization:  _hiker_
+- Request params:
+    -  _id_: integer identifier of the hike
+- Request body params:
+    - _type_: one of the string `[start, end]`
+    - _dateTime_: date expressed as ISO-8601 in UTC format
+- Request body:
+   ```
+    {
+        "type": "start",
+        "dateTime": "2022-12-18T16:09:12Z",
+    }
+    ```
+- Response: `201 Created` (success), `400 Bad Request` (id param not correct), `404 Not Found` (no hike related to the id),
+`401 Unauthorized` (user not authenticated), `403 Forbidden` (user logged in but not authorized), `409 Conflicts` (hike already started or hike not started yet) and `500 Internal Server Error` (generic error).
+- Response body: _None_
+
+
+# GET recorded hike
+
+**`GET: /api/user/record/hikes/:id`**
+- get a recorded hike linked to the user
+- Authorization:  _hiker_
+- Request params:
+    -  _id_: integer identifier of the hike
+- Request body: _None_
+- Response: `200 OK` (success), `400 Bad Request` (id param not correct), `404 Not Found` (no hike related to the id),
+`401 Unauthorized` (user not authenticated), `403 Forbidden` (user logged in but not authorized), `409 Conflicts` (hike already started or hike not started yet) and `500 Internal Server Error` (generic error).
+- Response body:
+   ```
+    {
+        "id": 1,
+        "hikeId": 1,
+        "startDateTime": "2022-12-18T16:18:08Z",
+        "endDateTime": ""
+    }
+    ```
+- Request body params:
+    - _startDateTime_: date expressed as ISO-8601 in UTC format or empty string
+    - _endDateTime_: date expressed as ISO-8601 in UTC format or empty string
+ 

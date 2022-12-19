@@ -111,7 +111,7 @@ router.post("/user/record/hikes/:id",
             await profileService.recordHike(Number.parseInt(req.params.id), req.user ? req.user.id : 3, type, dateTime);
             // handle utc -> const local = dayjs(date);
             // const utc = dayjs(date).utc().format();
-            return res.status(200).json();
+            return res.status(201).json();
         } catch (err) {
             console.log(err);
             switch (err.returnCode) {
@@ -134,8 +134,8 @@ router.post("/user/record/hikes/:id",
             if (!errors.isEmpty()) {
                 return res.status(400).send();
             }
-            
             const result = await profileService.getRecordedHike(Number.parseInt(req.params.id), req.user ? req.user.id : 3);
+            delete result.userId;
             return res.status(200).json(result);
         } catch (err) {
             console.log(err);
