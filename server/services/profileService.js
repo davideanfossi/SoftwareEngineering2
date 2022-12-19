@@ -66,13 +66,17 @@ class ProfileService {
             throw { returnCode: 404, message: "Hike not found" };
 
         const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
-        //TODO: check date format stored in the DB
+        
         if (recordType === "start") {
             if (recordedHike !== undefined)
-                throw { returnCode: 422, message: "Hike already started" };
+                throw { returnCode: 409, message: "Hike already started" };
             result = await this.userDAO.insertRecordedHike(new RecordedHike(undefined, hikeId, userId, dateTime, null));
         }
         else if (recordType === "end") {
+            if (recordedHike === undefined)
+                throw { returnCode: 409, message: "Hike not started yet" };
+            if(recordedHike.endDateTime !== "")
+                throw { returnCode: 409, message: "Hike already terminated" };
             recordedHike.endDateTime = dateTime;
             result = await this.userDAO.updateRecordedHike(recordedHike);
         }
@@ -85,9 +89,9 @@ class ProfileService {
         if (!hike)
             throw { returnCode: 422, message: "Hike not found" };
         const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
-        if (recordedHike !== undefined)
+        if (recordedHike === undefined)
             throw { returnCode: 404, message: "Recorded Hike not found" };
-        return recordedHike
+        return recordedHike;
     };
 
 }

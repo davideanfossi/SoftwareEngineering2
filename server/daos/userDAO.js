@@ -54,7 +54,7 @@ class UserDAO {
 
     async insertRecordedHike(recordedHike) {
         const sql = "INSERT INTO RecordedHike(hikeId, userId, startDateTime, endDateTime) VALUES(?, ?, ?, ?)";
-        const res = await this.dbManager.query(sql, [recordedHike.hikeId, recordedHike.userId, recordedHike.startDateTime, recordedHike.endDateTime]);
+        const res = await this.dbManager.query(sql, [recordedHike.hikeId, recordedHike.userId, recordedHike.startDateTime, recordedHike.endDateTime ? recordedHike.endDateTime : null]);
         return res;
     }
 

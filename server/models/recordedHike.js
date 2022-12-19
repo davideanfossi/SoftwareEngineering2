@@ -7,7 +7,7 @@ class RecordedHike{
         this.hikeId = hikeId;
         this.userId = userId;
         this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.endDateTime = endDateTime ? endDateTime : "";
     }
 }
 
