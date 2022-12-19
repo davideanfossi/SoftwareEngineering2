@@ -2,6 +2,7 @@
 
 const { difficultyType } = require("../models/hikeModel");
 const { checkHikeIsWithinCircle } = require("../utils/positionUtils");
+const RecordedHike = require("../models/recordedHike");
 
 class ProfileService {
     constructor(hikeDAO, pointDAO, userDAO) {
@@ -16,7 +17,7 @@ class ProfileService {
         this.userDAO = userDAO;
     }
 
-    getUserHikes = async (minLen, maxLen, minTime, maxTime, minAscent, maxAscent, difficulty, userId, baseLat, baseLon, radius = 0, pageNumber = 1, pageSize = 10) => {
+    getUserHikes = async ({minLen, maxLen}, {minTime, maxTime}, {minAscent, maxAscent}, difficulty, userId, {baseLat, baseLon, radius = 0}, {pageNumber = 1, pageSize = 10}) => {
         let hikes;
         let returnedHikes;
         //let user;
@@ -50,12 +51,32 @@ class ProfileService {
 
         return { "totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes };
     }
-    
+
     getUserHikesLimits = async (userId) => {
         const res = await this.hikeDAO.getUserMaxData(userId);
         res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
         return res;
     }
+
+
+    recordHike = async (hikeId, userId, recordType, dateTime) => {
+        let result;
+        const hike = await this.hikeDAO.getHike(hikeId);
+        if (!hike)
+            throw { returnCode: 404, message: "Hike not found" };
+        //TODO: check date format stored in the DB
+        if (recordType === "start") {
+            result = await this.userDAO.insertRecordedHike(new RecordedHike(undefined, hikeId, userId, dateTime, null));
+        }
+        else if (recordType === "end") {
+            const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
+            recordedHike.endDateTime = dateTime;
+            result = await this.userDAO.updateRecordedHike(recordedHike);
+        }
+
+        return result;
+    };
+
 }
 
 
