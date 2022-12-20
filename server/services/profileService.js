@@ -4,14 +4,20 @@ const { difficultyType } = require("../models/hikeModel");
 const { checkHikeIsWithinCircle } = require("../utils/positionUtils");
 const RecordedHike = require("../models/recordedHike");
 
+const utc = require('dayjs/plugin/utc');
+const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
+const dayjs = require("dayjs");
+dayjs.extend(isSameOrAfter);
+dayjs.extend(utc);
+
 class ProfileService {
     constructor(hikeDAO, pointDAO, userDAO) {
         if (!hikeDAO)
-            throw 'hikeDAO must be defined for hike service!';
+            throw 'hikeDAO must be defined for profile service!';
         if (!pointDAO)
-            throw 'pointDAO must be defined for hike service!';
+            throw 'pointDAO must be defined for profile service!';
         if (!userDAO)
-            throw 'userDAO must be define for user hike service!';
+            throw 'userDAO must be define for profile service!';
         this.hikeDAO = hikeDAO;
         this.pointDAO = pointDAO;
         this.userDAO = userDAO;
@@ -77,6 +83,10 @@ class ProfileService {
                 throw { returnCode: 409, message: "Hike not started yet" };
             if(recordedHike.endDateTime !== "")
                 throw { returnCode: 409, message: "Hike already terminated" };
+            const startDateTime = dayjs(recordedHike.startDateTime).utc();
+            const endDateTime =  dayjs(dateTime).utc();
+            if(startDateTime.isSameOrAfter(endDateTime))
+                throw { returnCode: 409, message: "end dateTime must be after starting dateTime" };
             recordedHike.endDateTime = dateTime;
             result = await this.userDAO.updateRecordedHike(recordedHike);
         }

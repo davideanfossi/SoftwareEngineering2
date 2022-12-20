@@ -95,7 +95,7 @@ router.get("/user-hikes/limits",
     });
 
 router.post("/user/record/hikes/:id",
-    // isLoggedIn, getPermission(["Hiker"]),
+    isLoggedIn, getPermission(["Hiker"]),
     [param("id").exists().isInt({ min: 1 }),
     body("type").exists().isString().isIn(["start", "end"]),
     body("dateTime").exists().isISO8601()],
@@ -108,9 +108,7 @@ router.post("/user/record/hikes/:id",
 
             const type = req.body.type;
             const dateTime = dayjs(req.body.dateTime).utc().format();
-            await profileService.recordHike(Number.parseInt(req.params.id), req.user ? req.user.id : 3, type, dateTime);
-            // handle utc -> const local = dayjs(date);
-            // const utc = dayjs(date).utc().format();
+            await profileService.recordHike(Number.parseInt(req.params.id), req.user.id, type, dateTime);
             return res.status(201).json();
         } catch (err) {
             console.log(err);
@@ -126,7 +124,7 @@ router.post("/user/record/hikes/:id",
     });
 
     router.get("/user/record/hikes/:id",
-    // isLoggedIn, getPermission(["Hiker"]),
+    isLoggedIn, getPermission(["Hiker"]),
     [param("id").exists().isInt({ min: 1 })],
     async (req, res) => {
         try {
@@ -134,7 +132,7 @@ router.post("/user/record/hikes/:id",
             if (!errors.isEmpty()) {
                 return res.status(400).send();
             }
-            const result = await profileService.getRecordedHike(Number.parseInt(req.params.id), req.user ? req.user.id : 3);
+            const result = await profileService.getRecordedHike(Number.parseInt(req.params.id), req.user.id);
             delete result.userId;
             return res.status(200).json(result);
         } catch (err) {

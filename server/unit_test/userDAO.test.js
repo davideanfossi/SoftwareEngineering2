@@ -44,7 +44,6 @@ describe('User DAO unit test', () => {
     });
 
     const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 1, null, 1, 2, []);
-    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 1, null, 1, 3, []);
     const user = new User(1, "user 1", "user1@test.it", "Hiker", "", "", "");
     const recordedHike = new RecordedHike(1, hike1.id, user.id, "2022-12-18T16:09:12Z", null);
 
