@@ -102,7 +102,8 @@ function HutForm() {
     formData.append("website", website);
     formData.append("numOfBeds", numberBeds);
     formData.append("description", description);
-    if (file !== "") formData.append("file", file);
+    if (file !== "")
+            formData.append('image', file);
 
     API.newHut(formData)
       .then(() => {

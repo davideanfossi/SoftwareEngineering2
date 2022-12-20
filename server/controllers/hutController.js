@@ -54,7 +54,6 @@ fileUpload({createParentPath: true}),
             const phoneNumber=req.body.phoneNumber;
             const email=req.body.email;
             const website=req.body.website;
-            
             const rootPath=config.hutImagesPath;
             if (!rootPath) {
                 return res.status(500).json("error in reading hutImagesPath from config");
@@ -129,7 +128,6 @@ fileUpload({createParentPath: true}),
                 const result = await hutService.getHutbyUserId(name, userId,{ minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius }, { pageNumber, pageSize });
                 // remove additional data
                 result.pageItems.map((hut) => {
-                    delete hut.imageName;
                     delete hut.userId;
                 });
                 return res.status(200).json(result);

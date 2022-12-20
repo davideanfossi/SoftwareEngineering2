@@ -446,6 +446,8 @@ const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
    }
 }
 const API = {
+  SERVER_HOST,
+  SERVER_PORT,
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,

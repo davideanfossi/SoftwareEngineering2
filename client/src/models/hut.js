@@ -6,6 +6,7 @@ function Hut(
     phone,
     email,
     optionalWebsite,
+    image,
     point
 ) {
     this.id = id;
@@ -14,7 +15,8 @@ function Hut(
     this.numberOfBeds = numberOfBeds;
     this.phone = phone;
     this.email = email;
-    this.optionalWebsite = optionalWebsite
+    this.optionalWebsite = optionalWebsite;
+    this.image = image;
     this.point = point; 
 }
 
