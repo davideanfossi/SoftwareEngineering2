@@ -14,20 +14,20 @@ class UserDAO {
 
     async getUserByEmail(email) {
         const query = "SELECT * FROM User WHERE email = ?";
-        const result = await this.dbManager.get(query, [email], true);
-        return new User(result.id, result.username);
+        const res = await this.dbManager.get(query, [email], true);
+        return res ? new User(res.id, res.username, res.email, res.role, res.name, res.surname, res.phoneNumber) : undefined;
     }
 
     async getUserById(userId) {
         const query = "SELECT * FROM User WHERE id = ?";
-        const result = await this.dbManager.get(query, [userId], true);
-        return new User(result.id, result.username, result.email, result.role);
+        const res = await this.dbManager.get(query, [userId], true);
+        return res ? new User(res.id, res.username, res.email, res.role, res.name, res.surname, res.phoneNumber) : undefined;
     }
 
     async getUserByCredentials(username, email, role) {
         const query = "SELECT * FROM User WHERE email = ? AND username = ? AND role = ?";
-        const result = await this.dbManager.get(query, [email, username, role]);
-        return new User(result.id, result.username, result.email, result.role);
+        const res = await this.dbManager.get(query, [email, username, role], true);
+        return res ? new User(res.id, res.username, res.email, res.role, res.name, res.surname, res.phoneNumber) : undefined;
     }
 
     async loginUser(email, password) {
