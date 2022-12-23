@@ -110,7 +110,7 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={12}
               sm={4}
-              md={2}
+              md={1}
             >
               <Container fluid>
                 <Row>
@@ -141,15 +141,25 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
               </Container>
             </Col>
             {isUserHike && (
+              <>
               <Col
-                xs={12}
+                xs={6}
                 md={1}
                 className="d-flex justify-content-center align-items-center my-3 text-center"
-              >
+                >
                 <Button onClick={() => navigate("/link-start-end/" + hike.id)}>
                   Link start/end
                 </Button>
               </Col>
+              <Col
+                xs={6}
+                md={1}
+                className="d-flex justify-content-center align-items-center my-3 text-center">
+                <Button onClick={() => navigate("/add-reference-point/" + hike.id)}>
+                  Add reference point
+                </Button>
+              </Col>
+              </>
             )}
           </Row>
           {dropped && (
