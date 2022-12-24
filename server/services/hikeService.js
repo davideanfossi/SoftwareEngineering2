@@ -165,8 +165,24 @@ class HikeService {
         hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
         hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
         hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
-       
-        return hike;
+
+        let track=""
+        if (hike.gpxPath != null)
+        {
+            const hikeGpxFile = path.resolve(config.gpxPath, hike.gpxPath);
+            if (fs.existsSync(hikeGpxFile))
+            {
+                const gpx = new DOMParser().parseFromString(fs.readFileSync(hikeGpxFile, 'utf8'));
+                const geoJson = togeojson.gpx(gpx);
+                track= geoJson.features[0].geometry.coordinates.map(p => { return { "lat": p[1], "lon": p[0] } });
+            }
+        }
+        
+        return {
+            "hike":hike,
+            "track":track
+        }
+
     };
 
 
