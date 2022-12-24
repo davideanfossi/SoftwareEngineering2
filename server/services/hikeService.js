@@ -157,6 +157,19 @@ class HikeService {
         };
     };
 
+    getHike = async (hikeId) => {
+        const hike = await this.hikeDAO.getHike(hikeId);
+        if (hike === undefined)
+            return { returnCode: 404, message: "Hike not Found" };
+
+        hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+        hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
+        hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
+       
+        return hike;
+    };
+
+
 }
 
 module.exports = HikeService;
