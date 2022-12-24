@@ -212,6 +212,7 @@ router.post(
     body("difficulty").notEmpty().isString().trim(),
     body("description").optional().isString().trim(),
     check("trackingfile").optional(),
+    body('image').optional(),
 
     body("startLongitude").notEmpty().isString().trim(),
     body("startLatitude").notEmpty().isString().trim(),
@@ -231,6 +232,7 @@ router.post(
         return res.status(400).send();
       }
 
+      /// save tracking file
       const rootPath = config.gpxPath;
       if (!rootPath) {
         return res.status(500).send("error in reading gpxPath from config");
@@ -252,10 +254,35 @@ router.post(
           }
         });
       }
+    /// end save tracking file
 
+
+    ///save image
+
+    const rootHikePath=config.hikeImagesPath;
+            if (!rootHikePath) {
+                return res.status(500).json("error in reading hikeImagesPath from config");
+            }
+            const image =req.files ? req.files.image : null;
+            const imageName=image ?  uuidv4()+'-'+image.name  : null;
+            const imagePath=image ? rootHikePath + imageName : null;
+            
+            if(image)
+            {
+                //  mv() method places the file inside public directory
+                image.mv(imagePath, function (err) {
+                    if (err) {
+                        return res.status(500).json(err.message);
+                    }
+                });
+            }   
+            
+    /// end save image
+
+    const userId=req.user?req.user.Id:1;
       // define hike
       const hike = new Hike(undefined, req.body.title, Number.parseInt(req.body.length), Number.parseInt(req.body.expectedTime),
-        Number.parseInt(req.body.ascent), req.body.difficulty, req.body.description, req.user.id, gpxFileName);
+        Number.parseInt(req.body.ascent), req.body.difficulty, req.body.description, userId, gpxFileName,undefined,undefined,imageName);
 
       // define startPoint
       const startPoint = new Point(undefined, req.body.startLatitude, req.body.startLongitude, req.body.startAltitude,
@@ -299,8 +326,8 @@ router.get(
 
 router.post(
   "/hikes/:id/startArrival",
-  // isLoggedIn,
-  //getPermission(["Local Guide"]),
+  isLoggedIn,
+  getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 }),
   body("startType").optional().isString().trim(),
   body("startId").optional().isInt({ min: 0 }),

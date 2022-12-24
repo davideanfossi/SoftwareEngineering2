@@ -46,8 +46,8 @@ class HikeDAO {
     }
 
     insertHike = async (hike) => {
-            const sql = "insert into Hike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId) values(?,?,?,?,?,?,?,?,?,?)";
-            const res = await this.dbManager.query(sql, [hike.title, hike.length, hike.expectedTime, hike.ascent, hike.difficulty, hike.startPoint, hike.endPoint, hike.description, hike.gpxPath, hike.userId]);
+            const sql = "insert into Hike(title, length, expectedTime,ascent, difficulty ,startPointId ,endPointId, description, gpxPath, userId,imageName) values(?,?,?,?,?,?,?,?,?,?,?)";
+            const res = await this.dbManager.query(sql, [hike.title, hike.length, hike.expectedTime, hike.ascent, hike.difficulty, hike.startPoint, hike.endPoint, hike.description, hike.gpxPath, hike.userId,hike.imageName]);
             return res;
     };
 
