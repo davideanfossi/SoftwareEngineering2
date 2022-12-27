@@ -1,13 +1,14 @@
 import { InputGroup, Form } from "react-bootstrap";
 import { Container, Row, Col } from "react-bootstrap";
+import { Trash } from "react-bootstrap-icons";
+import { Button } from "react-bootstrap";
 
-export const InsertReferencePointTable = ({ referencePointList }) => {
+
+export const InsertReferencePointTable = ({ rp, idx, updateList }) => {
+  
   return (
-    <Container fluid>
-      {referencePointList.map((rp, idx) => (
         <Row
-          id={"reference-point-table" + idx}
-          //className={idx % 2 ? "hut-row-even" : "hut-row"}
+          key={"reference-point-table" + idx}
           style={{ cursor: "pointer" }}
         >
           <Col>
@@ -17,41 +18,24 @@ export const InsertReferencePointTable = ({ referencePointList }) => {
                   {"# " + idx}
                 </InputGroup.Text>
                 <Form.Control
+                  placeholder="Name"
+                  aria-label="Reference point name"
+                  aria-describedby="basic-addon1"
+                  onChange={(ev) => {rp.name = ev.target.value;}}
+                />
+                <Form.Control
                   placeholder="Description"
                   aria-label="Username"
                   aria-describedby="basic-addon1"
+                  onChange={(ev) => {rp.description = ev.target.value;}}
                 />
+                <Button>
+                <Trash onClick={() => {
+                  updateList(rp);}}/>
+                </Button>
               </InputGroup>
-              {/* <Row>
-                <Col
-                  className="d-flex justify-content-center align-items-center my-3 text-center"
-                >
-                  <Container fluid>
-                    
-                    <Col className="fw-bold">Name: {idx}</Col>
-                  </Container>
-                </Col>
-
-                <Col
-                  className="d-flex justify-content-center align-items-center my-3 text-center"
-                >
-                  <Container fluid>
-                  
-                    <Row>
-                      <Col className="fw-bold">
-                        Description:
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>{rp.description}</Col>
-                    </Row>
-                  </Container>
-                </Col>
-              </Row> */}
             </Container>
           </Col>
         </Row>
-      ))}
-    </Container>
   );
 };

@@ -6,10 +6,8 @@ import API from "../../API";
 
 function AddReferencePoint() {
   const [changed, setChanged] = useState(true);
-  const [startPoint, setStartPoint] = useState({ type: undefined, id: -1 });
-  const [endPoint, setEndPoint] = useState({ type: undefined, id: -1 });
   const [showAlert, setShowAlert] = useState("");
-  const [markerUpdate, setMarkerUpdate] = useState(false);
+  const [alreadySelected, setAlreadySelected] = useState([]);
   const { id } = useParams();
 
   return (
@@ -26,7 +24,7 @@ function AddReferencePoint() {
             }}
             dismissible
           >
-            <Alert.Heading>Link Successful!</Alert.Heading>
+            <Alert.Heading>Reference point successfully added!</Alert.Heading>
           </Alert>
         </Row>
       ) : (
@@ -51,6 +49,7 @@ function AddReferencePoint() {
           )}
         </>
       )}
+
       <Row
         className="justify-content-center align-items-center"
         style={{ margin: "0px" }}
@@ -67,24 +66,20 @@ function AddReferencePoint() {
           }}
         >
           <AddReferencePointMap
-            start
             changed={changed}
             setChanged={setChanged}
-            selected={startPoint}
-            setSelected={setStartPoint}
-            markerUpdate={markerUpdate}
+            setAlreadySelected={setAlreadySelected}
+            alreadySelected={alreadySelected}
           />
 
           {/* <Map/> */}
 
           <Button
             onClick={() => {
-              API.linkStartEndPoint(id, startPoint, endPoint)
+              API.AddReferencePoint(id, alreadySelected)
                 .then(() => {
                   setShowAlert("success");
-                  setMarkerUpdate((oldMarker) => !oldMarker);
-                  setStartPoint({ type: undefined, id: -1 });
-                  setEndPoint({ type: undefined, id: -1 });
+                  setAlreadySelected([]);
                 })
                 .catch((err) => {
                   setShowAlert("error");
@@ -98,7 +93,9 @@ function AddReferencePoint() {
               marginTop: "15px",
             }}
           >
-            Link Selected
+            {alreadySelected.length >1 ?  
+              "Add reference points" : "Add reference point"
+            }
           </Button>
         </Row>
       </Row>
