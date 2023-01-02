@@ -186,6 +186,8 @@ class HikeService {
     };
 
 
+
+
 }
 
 module.exports = HikeService;

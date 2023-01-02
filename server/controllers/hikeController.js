@@ -40,7 +40,7 @@ const hikeHutDAO = new HikeHutDAO(dbManager);
 const hikeParkingDAO = new HikeParkingDAO(dbManager);
 
 const hikeService = new HikeService(hikeDAO, pointDAO, hutDAO, parkingDAO);
-const hikeHutService = new HikeHutService(hikeHutDAO);
+const hikeHutService = new HikeHutService(hikeHutDAO,hikeDAO,hutDAO,pointDAO);
 const hikeParkingService = new HikeParkingService(hikeParkingDAO);
 
 const { isLoggedIn, getPermission } = require("./loginController");
@@ -330,9 +330,9 @@ router.post(
   getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 }),
   body("startType").optional().isString().trim(),
-  body("startId").optional().isInt({ min: 0 }),
+  body("startId").optional().isInt({ min: 1 }),
   body("endType").optional().isString().trim(),
-  body("endId").optional().isInt({ min: 0 })
+  body("endId").optional().isInt({ min: 1 })
   ],
   async (req, res) => {
     try {
@@ -349,9 +349,9 @@ router.post(
 
       let result;
       if (startType == "hut")
-        result = await hikeHutService.linkHutToHike(hikeId, startId, true, undefined);
+        result = await hikeHutService.linkHutAsStartEndToHike(hikeId, startId, true, undefined);
       if (endType == "hut")
-        result = await hikeHutService.linkHutToHike(hikeId, endId, undefined, true);
+        result = await hikeHutService.linkHutAsStartEndToHike(hikeId, endId, undefined, true);
       if (startType == "parking")
         result = await hikeParkingService.linkParkingToHike(hikeId, startId, true, undefined);
       if (endType == "parking")
@@ -395,6 +395,41 @@ router.get(
           return res.status(404).send(err.message);
         default:
           return res.status(500).send();
+      }
+    }
+  }
+);
+
+router.post(
+  "/hikes/:id/linkhut",
+  //isLoggedIn,
+  //getPermission(["Local Guide"]),
+  [param("id").exists().isInt({ min: 1 }),
+  body("hutId").notEmpty().isInt({ min: 1 }),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).end();
+      }
+
+      const hikeId = Number.parseInt(req.params.id);
+      const hutId = Number.parseInt(req.body.hutId);
+      
+      let result;
+      result = await hikeHutService.linkHutToHike(hikeId, hutId);
+     
+
+      return res.status(200).json(result);
+    } catch (err) {
+      switch (err.returnCode) {
+        case 404:
+          return res.status(404).send(err.message);
+        case 422:
+          return res.status(422).send(err.message);
+        default:
+          return res.status(500).send(err.message);
       }
     }
   }
