@@ -71,21 +71,22 @@ class ProfileService {
         if (!hike)
             throw { returnCode: 404, message: "Hike not found" };
 
-        const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
-        
+        const recordedHike = await this.userDAO.getLastRecordedHike(hikeId, userId);
+
         if (recordType === "start") {
-            if (recordedHike !== undefined)
-                throw { returnCode: 409, message: "Hike already started" };
+            const ongoingHike = await this.userDAO.getOngoingRecordedHike(userId);
+            if (ongoingHike !== undefined)
+                throw { returnCode: 409, message: "Only one Hike can be started at the same time" };
+            if (recordedHike && dayjs(recordedHike.endDateTime).isSameOrAfter(dayjs(dateTime)))
+                throw { returnCode: 409, message: "start dateTime must be after ending dateTime of last hike" };
             result = await this.userDAO.insertRecordedHike(new RecordedHike(undefined, hikeId, userId, dateTime, null));
         }
         else if (recordType === "end") {
-            if (recordedHike === undefined)
+            if (recordedHike === undefined || recordedHike.endDateTime !== "")
                 throw { returnCode: 409, message: "Hike not started yet" };
-            if(recordedHike.endDateTime !== "")
-                throw { returnCode: 409, message: "Hike already terminated" };
             const startDateTime = dayjs(recordedHike.startDateTime).utc();
-            const endDateTime =  dayjs(dateTime).utc();
-            if(startDateTime.isSameOrAfter(endDateTime))
+            const endDateTime = dayjs(dateTime).utc();
+            if (startDateTime.isSameOrAfter(endDateTime))
                 throw { returnCode: 409, message: "end dateTime must be after starting dateTime" };
             recordedHike.endDateTime = dateTime;
             result = await this.userDAO.updateRecordedHike(recordedHike);
@@ -94,15 +95,23 @@ class ProfileService {
         return result;
     };
 
-    getRecordedHike = async (hikeId, userId) => {
+    getRecordedHikes = async (hikeId, userId) => {
         const hike = await this.hikeDAO.getHike(hikeId);
         if (!hike)
             throw { returnCode: 422, message: "Hike not found" };
-        const recordedHike = await this.userDAO.getRecordedHike(hikeId, userId);
-        if (recordedHike === undefined)
-            throw { returnCode: 404, message: "Recorded Hike not found" };
-        return recordedHike;
+        const recordedHikes = await this.userDAO.getRecordedHikes(hikeId, userId);
+        return recordedHikes;
     };
+
+    getLastRecordedHike = async (hikeId, userId) => {
+        const hike = await this.hikeDAO.getHike(hikeId);
+        if (!hike)
+            throw { returnCode: 422, message: "Hike not found" };
+        const recordedHike = await this.userDAO.getLastRecordedHike(hikeId, userId);
+        if (recordedHike === undefined)
+            throw { returnCode: 404, message: "Recoded Hike not found" };
+        return recordedHike;
+    }
 
 }
 

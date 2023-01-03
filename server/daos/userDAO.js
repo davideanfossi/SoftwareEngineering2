@@ -4,6 +4,13 @@ const User = require('../models/userModel');
 const RecordedHike = require("../models/recordedHike");
 const crypto = require("crypto");
 
+const utc = require('dayjs/plugin/utc');
+const isSameOrAfter = require('dayjs/plugin/isSameOrAfter');
+const dayjs = require("dayjs");
+dayjs.extend(isSameOrAfter);
+dayjs.extend(utc);
+
+
 class UserDAO {
 
     constructor(dbManager) {
@@ -59,15 +66,15 @@ class UserDAO {
     }
 
     async updateRecordedHike(recordedHike) {
-        const sql = "UPDATE RecordedHike SET startDateTime = ?, endDateTime = ? WHERE hikeId = ? AND userId = ?";
-        const res = await this.dbManager.query(sql, [recordedHike.startDateTime, recordedHike.endDateTime, recordedHike.hikeId, recordedHike.userId]);
+        const sql = "UPDATE RecordedHike SET startDateTime = ?, endDateTime = ? WHERE id = ?";
+        const res = await this.dbManager.query(sql, [recordedHike.startDateTime, recordedHike.endDateTime, recordedHike.id]);
         return res;
     }
 
-    async getRecordedHike(hikeId, userId) {
+    async getRecordedHikes(hikeId, userId) {
         const sql = "SELECT * FROM RecordedHike WHERE hikeId = ? AND userId = ?";
-        const res = await this.dbManager.get(sql, [hikeId, userId], true);
-        return res ? new RecordedHike(res.id, res.hikeId, res.userId, res.startDateTime, res.endDateTime) : undefined;
+        const res = await this.dbManager.get(sql, [hikeId, userId]);
+        return res.map(r => new RecordedHike(r.id, r.hikeId, r.userId, r.startDateTime, r.endDateTime));
     }
 
     async getRecordedHikeById(recordedHikeId) {
@@ -76,7 +83,22 @@ class UserDAO {
         return res ? new RecordedHike(res.id, res.hikeId, res.userId, res.startDateTime, res.endDateTime) : undefined;
     }
 
+    async getLastRecordedHike(hikeId, userId) {
+        const recordedHikes = await this.getRecordedHikes(hikeId, userId);
+        let res = undefined;
+        recordedHikes.forEach(r => {
+            if(!res || dayjs(r.startDateTime).isAfter(dayjs(res.startDateTime))){
+                res = r;
+            }
+        });
+        return res;
+    }
 
+    async getOngoingRecordedHike (userId) {
+        const sql = "SELECT * FROM RecordedHike WHERE userId = ? AND endDateTime IS NULL";
+        const res = await this.dbManager.get(sql, [userId], true);
+        return res ? new RecordedHike(res.id, res.hikeId, res.userId, res.startDateTime, res.endDateTime) : undefined;
+    }
 }
 
 async function verifyPassword(passwordStored, saltStored, password) {
