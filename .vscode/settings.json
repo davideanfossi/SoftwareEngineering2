@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "dev-zanfa",
+        "projectKey": "Dev-zanfa_se2022-16-HikeTracker"
+    }
+}

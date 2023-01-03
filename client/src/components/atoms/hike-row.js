@@ -22,10 +22,6 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
   const [track, setTrack] = useState([]);
   const navigate = useNavigate();
 
-  const toggleDrop = () => {
-    setDropped((prev) => !prev);
-  };
-
   useEffect(() => {
     if (isLogged && dropped) {
       API.getHikeDetails(hike)
@@ -38,6 +34,11 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
         .catch((err) => {});
     }
   }, [dropped, hike, isLogged]);
+
+  const handleClick = useCallback(() => navigate("/link-start-end/" + hike.id), []);
+  const toggleDrop = useCallback(() => {
+    setDropped((prev) => !prev);
+  });
 
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
@@ -146,7 +147,7 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
                 md={1}
                 className="d-flex justify-content-center align-items-center my-3 text-center"
               >
-                <Button onClick={() => navigate("/link-start-end/" + hike.id)}>
+                <Button onClick={handleClick}>
                   Link start/end
                 </Button>
               </Col>

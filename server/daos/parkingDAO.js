@@ -16,6 +16,7 @@ class ParkingDAO {
             const res = await this.dbManager.get(sql, []);
             return res.map(r => new Parking(r.id, r.name, r.numSpots, r.hasFreeSpots, r.pointId, r.ownerId, r.imageName));
         } catch (err) {
+            console.log(err);
             throw err;
         }
     };

@@ -26,7 +26,7 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
     }
   }, [center, map]);
   return (
-    <Container onClick={handleClick}>
+    <Container onClick={this.handleClick}>
       <Row>
         <Col>
           <div style={{ width: "100%", padding: "1rem" }}>
@@ -47,7 +47,7 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
                 referencesPoints.map((point, index) => (
                   <MarkerReferencePoint
                     point={point}
-                    key={index}
+                    key={point.key}
                     isReference={true}
                   />
                 ))
