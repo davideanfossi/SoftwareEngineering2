@@ -80,16 +80,15 @@ function HutForm() {
       setEmail(null);
       flag = true;
     }
-    if (numberBeds === "" || !(parseInt(numberBeds) >= 0)) {
+    if (numberBeds === "" || (parseInt(numberBeds) < 0)) {
       setNumberBeds(null);
       flag = true;
     }
-    if (altitude === "" || !(parseInt(altitude) >= 0)) {
+    if (altitude === "" || (parseInt(altitude) < 0)) {
       setAltitude(null);
       flag = true;
     }
-    //if (description === '') { setDescription(''); flag = true; }
-    //if (file === '') {setFile(null); flag=true;}
+    //Code here
     if (flag) return;
 
     const formData = new FormData();
