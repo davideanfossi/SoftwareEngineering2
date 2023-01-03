@@ -3,8 +3,8 @@ import { Typeahead } from "react-bootstrap-typeahead";
 
 const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search?";
 
-function handleChange(elem) { setSelectPosition(elem[0]) }
-function handleInputChange(city) {
+function handleChange(setSelectPosition, elem) { setSelectPosition(elem[0]) }
+function handleInputChange(setListPlace, city) {
   const params = {
     city,
     format: "json",
@@ -27,7 +27,7 @@ export default function AutocompleteGeoInput({
   selectPosition,
   setSelectPosition,
 }) {
-  const listPlace = useState([]);
+  const [listPlace, setListPlace] = useState([]);
 
   return (
     <div className="z-index-2">
@@ -36,9 +36,9 @@ export default function AutocompleteGeoInput({
         placeholder="Choose a city..."
         options={listPlace}
         value={selectPosition}
-        onChange={handleChange}
+        onChange={handleChange(setSelectPosition)}
         labelKey={handleLabelKey}
-        onInputChange={handleInputChange}
+        onInputChange={handleInputChange(setListPlace)}
       />
     </div>
   );

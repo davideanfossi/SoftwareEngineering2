@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -35,10 +35,8 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
     }
   }, [dropped, hike, isLogged]);
 
-  const handleClick = useCallback(() => navigate("/link-start-end/" + hike.id), []);
-  const toggleDrop = useCallback(() => {
-    setDropped((prev) => !prev);
-  });
+  const handleClick = useCallback(() => navigate("/link-start-end/" + hike.id), [navigate, hike]);
+  const toggleDrop = useCallback(() => setDropped((prev) => !prev), []);
 
   return (
     <Row className={even ? "hike-row-even" : "hike-row"}>
