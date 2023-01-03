@@ -78,11 +78,12 @@ describe('Profile Service unit test', () => {
     testGetUserHikesLimits(user2.id, { "maxLength": 2000, "maxExpectedTime": 180, "maxAscent": 500, "difficultyType": [low, mid, high] });
 
     testRecordHike('test record hike start', hike1.id, user1.id, "start", "2022-12-18T16:09:12Z", 1);
-    testGetRecordedHike('test get recorded hike', hike1.id, user1.id, recordedHike1);
+    testGetLastRecordedHike('test get last recorded hike', hike1.id, user1.id, recordedHike1);
     testErrorRecordHike('test record hike error nonexistent hike', 10, user1.id, "start", "2022-12-18T16:09:12Z",
         { returnCode: 404, message: "Hike not found" });
-    testErrorRecordHike('test record hike error hike already started', hike1.id, user1.id, "start", "2022-12-18T16:09:12Z",
-        { returnCode: 409, message: "Hike already started" });
+    testErrorRecordHike('test record hike error ongoing hike', hike2.id, user1.id, "start", "2022-12-20T16:09:12Z",
+        { returnCode: 409, message: "Only one Hike can be started at the same time" });
+
     testErrorRecordHike('test record hike error hike already started', hike2.id, user1.id, "end", "2022-12-18T16:09:12Z",
         { returnCode: 409, message: "Hike not started yet" });
     testErrorRecordHike('test record hike error end before start', hike1.id, user1.id, "end", "2022-12-18T16:09:12Z",
@@ -90,7 +91,9 @@ describe('Profile Service unit test', () => {
 
     testRecordHike('test record hike end', hike1.id, user1.id, "end", "2022-12-18T17:09:12Z", 1);
     testErrorRecordHike('test record hike error hike already terminated', hike1.id, user1.id, "end", "2022-12-18T17:09:12Z",
-        { returnCode: 409, message: "Hike already terminated" });
+        { returnCode: 409, message: "Hike not started yet" });
+    testErrorRecordHike('test record hike error start hike before end of last recorded hike', hike1.id, user1.id, "start", "2022-12-18T16:09:12Z",
+        { returnCode: 409, message: "start dateTime must be after ending dateTime of last hike" });
 
 });
 
@@ -116,9 +119,9 @@ function testRecordHike(testMsg, hikeId, userId, recordType, dateTime, expectedR
     });
 }
 
-function testGetRecordedHike(testMsg, hikeId, userId, expectedRecordedHike) {
+function testGetLastRecordedHike(testMsg, hikeId, userId, expectedRecordedHike) {
     test(testMsg, async () => {
-        const res = await profileService.getRecordedHike(hikeId, userId);
+        const res = await profileService.getLastRecordedHike(hikeId, userId);
         expect(res).toEqual(expectedRecordedHike);
     });
 }

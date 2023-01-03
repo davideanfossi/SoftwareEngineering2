@@ -46,6 +46,7 @@ describe('User DAO unit test', () => {
     const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 1, null, 1, 2, []);
     const user = new User(1, "user 1", "user1@test.it", "Hiker", "", "", "");
     const recordedHike = new RecordedHike(1, hike1.id, user.id, "2022-12-18T16:09:12Z", null);
+    const recordedHike2 = new RecordedHike(2, hike1.id, user.id, "2022-12-20T16:09:12Z", null);
 
     testGetUserById('test get user by id', user.id, user);
     testGetUserById('test get user by wrong id', 10, undefined);
@@ -57,13 +58,17 @@ describe('User DAO unit test', () => {
         { "id": user.id, "username": user.username, "email": user.email, "role": user.role });
 
     testInsertRecordedHike('test insert recorded hike', recordedHike, 1);
-    testGetRecordedHike('test get recorded hike', hike1.id, user.id, recordedHike);
-    testGetRecordedHike('test get wrong recorded hike', 10, user.id, undefined);
+    testGetLastRecordedHike('test get last recorded hike', hike1.id, user.id, recordedHike);
+    testGetLastRecordedHike('test get last wrong recorded hike', 10, user.id, undefined);
     testGetRecordedHikeById('test get recorded hike by id', recordedHike.id, recordedHike);
     testGetRecordedHikeById('test get recorded hike by wrong id', 10, undefined);
+    testGetOngoingRecodedHike('test get ongoing recorded hike', user.id, recordedHike);
     const newRecordeHike = new RecordedHike(1, hike1.id, user.id, "2022-12-18T16:09:12Z", "2022-12-18T16:09:12Z");
     testUpdateRecordedHike('test update recorded hike', newRecordeHike, 1);
-    testGetRecordedHike('test get recorded hike after update', hike1.id, user.id, newRecordeHike);
+    testGetLastRecordedHike('test get last recorded hike after update', hike1.id, user.id, newRecordeHike);
+    testGetOngoingRecodedHike('test get ongoing recorded hike after update', user.id, undefined);
+    testInsertRecordedHike('test insert recorded hike', recordedHike2, 2);
+    testGetLastRecordedHike('test get last recorded hike after new insert', hike1.id, user.id, recordedHike2);
 });
 
 function testGetUserByEmail(testMsg, email, expectedUser) {
@@ -102,9 +107,16 @@ function testInsertRecordedHike(testMsg, recordedHike, expectedResult) {
     });
 }
 
-function testGetRecordedHike(testMsg, hikeId, userId, expectedRecordedHike) {
+function testGetLastRecordedHike(testMsg, hikeId, userId, expectedRecordedHike) {
     test(testMsg, async () => {
-        const res = await userDAO.getRecordedHike(hikeId, userId);
+        const res = await userDAO.getLastRecordedHike(hikeId, userId);
+        expect(res).toEqual(expectedRecordedHike);
+    });
+}
+
+function testGetOngoingRecodedHike(testMsg, userId, expectedRecordedHike) {
+    test(testMsg, async () => {
+        const res = await userDAO.getOngoingRecordedHike(userId);
         expect(res).toEqual(expectedRecordedHike);
     });
 }
