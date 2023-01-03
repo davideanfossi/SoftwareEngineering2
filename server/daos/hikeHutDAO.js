@@ -13,19 +13,19 @@ class HikeHutDAO {
     getHikeLinkedHutsAsStartEnd = async (hikeId) => {
             const sql = "SELECT * FROM HikeHut WHERE hikeId = ? and (startPoint =1 or endPoint=1)";
             const res = await this.dbManager.get(sql, [hikeId]);
-            return res.map(rs=> new HikeHut(rs.hikeId, rs.hutId, !!rs.startPoint,!!rs.endPoint,r.isLinked)) ;
+            return res.map(rs=> new HikeHut(rs.hikeId, rs.hutId, !!rs.startPoint,!!rs.endPoint,!!r.isLinked)) ;
     };
 
     getHikeHut = async (hikeId,hutId) => {
         const sql = "SELECT * FROM HikeHut WHERE hikeId = ? and hutId=? ";
-        const res = await this.dbManager.get(sql, [hikeId,hutId]);
-        return res?  new HikeHut(res.hikeId, res.hutId, !!res.startPoint,!!res.endPoint,res.isLinked) : undefined ;
+        const res = await this.dbManager.get(sql, [hikeId,hutId],true);
+        return res ?  new HikeHut(res.hikeId, res.hutId, !!res.startPoint,!!res.endPoint,!!res.isLinked) : undefined ;
     };
 
     getHikeHutAsLinked = async (hikeId,hutId) => {
         const sql = "SELECT * FROM HikeHut WHERE hikeId = ? and hutId=? and isLinked=1";
-        const res = await this.dbManager.get(sql, [hikeId,hutId]);
-        return res?  new HikeHut(res.hikeId, res.hutId, !!res.startPoint,!!res.endPoint,res.isLinked) : undefined ;
+        const res = await this.dbManager.get(sql, [hikeId,hutId],true);
+        return res?  new HikeHut(res.hikeId, res.hutId, !!res.startPoint,!!res.endPoint,!!res.isLinked) : undefined ;
     };
 
     insertHikeHut=async (hikeId,hutId,startPoint,endPoint,isLinked) =>{
