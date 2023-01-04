@@ -7,9 +7,13 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
   const [showReferencePoints, setShowReferencePoints] = useState(false);
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
   const [map, setMap] = useState(undefined);
-
-  function handleClick(event) { event.stopPropagation() }
-  function handleChange(event) { setShowReferencePoints(event.target.checked) }
+  
+  function handleClick(event) {
+    event.stopPropagation();
+  }
+  function handleChange(event) {
+    setShowReferencePoints(event.target.checked);
+  }
 
   useEffect(() => {
     if (startPoint !== undefined && endPoint !== undefined) {
@@ -37,20 +41,20 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
               ref={setMap}
               style={{ height: "50vh" }}
             >
-              <MarkerReferencePoint point={startPoint} />
-              <MarkerReferencePoint point={endPoint} />
+              {startPoint && <MarkerReferencePoint point={startPoint} />}
+              {endPoint && <MarkerReferencePoint point={endPoint} />}
 
               {
                 //TODO:decide if keep or not
 
                 showReferencePoints &&
-                referencesPoints.map((point, index) => (
-                  <MarkerReferencePoint
-                    point={point}
-                    key={index}
-                    isReference={true}
-                  />
-                ))
+                  referencesPoints.map((point, index) => (
+                    <MarkerReferencePoint
+                      point={point}
+                      key={index}
+                      isReference={true}
+                    />
+                  ))
               }
               <Polyline positions={track} />
               <TileLayer
