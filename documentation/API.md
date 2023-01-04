@@ -289,14 +289,14 @@ In order to complete  the registration process the user must be redirect to a cu
     }
     ```
 - Response: `201 Created` (success), `400 Bad Request` (id param not correct), `404 Not Found` (no hike related to the id),
-`401 Unauthorized` (user not authenticated), `403 Forbidden` (user logged in but not authorized), `409 Conflicts` (hike already started or hike not started yet) and `500 Internal Server Error` (generic error).
+`401 Unauthorized` (user not authenticated), `403 Forbidden` (user logged in but not authorized), `409 Conflicts` (another hike already started or hike not started yet or dates note coherent) and `500 Internal Server Error` (generic error).
 - Response body: _None_
 
 
 # GET recorded hike
 
-**`GET: /api/user/record/hikes/:id`**
-- get a recorded hike linked to the user
+**`GET: /api/user/record/hikes/:id/last`**
+- get the last recorded hike, identified by the id, linked to the user 
 - Authorization:  _hiker_
 - Request params:
     -  _id_: integer identifier of the hike
