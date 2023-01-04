@@ -297,6 +297,30 @@ router.get(
   }
 );
 
+router.get(
+  "/hikes/:id/completed",
+  isLoggedIn,
+  getPermission(["Hiker"]),
+  [param("id").exists().isInt({ min: 1 })],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).end();
+      }
+      const result = await hikeService.getCompleted(req.params.id);
+      return res.status(200).json(result);
+    } catch (err) {
+      switch (err.returnCode) {
+        case 404:
+          return res.status(404).send(err.message);
+        default:
+          return res.status(500).send();
+      }
+    }
+  }
+);
+
 router.post(
   "/hikes/:id/startArrival",
   // isLoggedIn,

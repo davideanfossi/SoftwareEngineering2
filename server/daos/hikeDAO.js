@@ -51,6 +51,12 @@ class HikeDAO {
             return res;
     };
 
+    getCompletedHikes = async (userId) => {
+        const sql = "SELECT RecordedHike.id, RecordedHike.startDateTime, RecordedHike.endDateTime, Hike.title, Hike.lenght, Hike.difficulty, Hike.description FROM RecordedHike JOIN Hike ON RecordedHike.hikeId = Hike.id WHERE userId = ? AND endDateTime IS NOT NULL";
+        const res = await this.dbManager.get(sql, [userId], true);
+        return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.difficulty, r.description, [])); 
+    }
+
 }
 
 module.exports = HikeDAO;
