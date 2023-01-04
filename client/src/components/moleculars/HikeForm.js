@@ -16,6 +16,7 @@ function HikeForm() {
   const [startPointLabel, setStartPointLabel] = useState('');
   const [endPointLabel, setEndPointLabel] = useState('');
   const [file, setFile] = useState('');
+  const [image, setImage] = useState('');
 
   const [startLongitude, setStartLongitude] = useState('');
   const [startLatitude, setStartLatitude] = useState('');
@@ -46,6 +47,7 @@ function HikeForm() {
     setEndAltitude('');
     setStartAddress('');
     setEndAddress('');
+    setImage('');
     if(cancelFile) setFile('');
   };
 
@@ -59,6 +61,7 @@ function HikeForm() {
     if (startPointLabel === '') { setShowErr(true); setStartPointLabel(''); flag = true; }
     if (endPointLabel === '') { setShowErr(true); setEndPointLabel(''); flag = true; }
     if (file === '') { setShowErr(true); setFile(''); flag = true; }
+    if (image === '') { setShowErr(true); setImage(''); flag = true; }
 
     if (flag) return;
 
@@ -72,6 +75,7 @@ function HikeForm() {
     formData.append('ascent', ascent);
     formData.append('difficulty', difficult);
     formData.append('description', description);
+    formData.append('image', image);
 
     formData.append('startLongitude', startLongitude);
     formData.append('startLatitude', startLatitude);
@@ -304,6 +308,45 @@ function HikeForm() {
               <Form.Check inline type="radio" name="difficulty" label="Professional Hiker" onChange={() => setDifficult("Professional Hiker")} />
             </div>
           </Form.Group>
+
+          <Form.Group style={{ paddingTop: "12px", paddingBottom: "20px" }}>
+              <Form.Label>Image of the Hike</Form.Label>
+              <Form.Control isInvalid={showErr && image === ''}
+                type="file"
+                ref={ref}
+                placeholder="img file"
+                onChange={(event) => {
+                  setImage(event.target.files[0]);
+                }}
+              />
+              <Form.Control.Feedback type="invalid">
+                  Image cannot be empty
+               </Form.Control.Feedback>
+            </Form.Group>
+
+            {image !== "" ? (
+              <div style={{ paddingTop: "20px", paddingBottom: "20px" }}>
+                <div className="text-center" style={{ paddingBottom: "10px" }}>
+                  <img
+                    alt="Not found"
+                    width={"250px"}
+                    src={URL.createObjectURL(image)}
+                  />
+                </div>
+                <div className="text-center">
+                  <Button
+                    className="btn-danger"
+                    style={{ width: "250px" }}
+                    onClick={() => {
+                      setImage("");
+                      ref.current.value = null;
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              </div>
+            ) : null}
 
           <Button type="submit" variant="warning" >Submit</Button>
         </Form>
