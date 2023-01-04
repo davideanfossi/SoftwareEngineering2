@@ -192,7 +192,6 @@ router.get("/huts",
             const result = await hutService.getHuts(name, { minNumOfBeds, maxNumOfBeds }, { minAltitude, maxAltitude }, { baseLat, baseLon, radius }, { pageNumber, pageSize });
             // remove additional data
             result.pageItems.map((hut) => {
-                delete hut.imageName;
                 delete hut.userId;
             });
             return res.status(200).json(result);
