@@ -19,6 +19,7 @@ import { UserContext } from "./context/user-context";
 import { MyHikes } from "./components/organism/my-hikes";
 import { MyHuts } from "./components/organism/my-huts";
 import { SearchHut } from "./components/organism/searchHut";
+import { StartHike } from "./components/organism/startHike";
 
 function App() {
   const [user, setUser] = useState({
@@ -64,6 +65,11 @@ function App() {
             )}
             {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) && (
               <Route path="search-hut" element={<SearchHut />} />
+            )}
+            {["Hiker"].includes(user.role) && (
+              <>
+                <Route path="start-hike" element={<StartHike />} />
+              </>
             )}
             <Route
               path="register"
