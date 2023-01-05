@@ -156,16 +156,26 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
             <>
               <Row>
                 <Col
-                  className="d-flex justify-content-center align-items-center my-3"
+                  className="d-flex justify-content-center align-items-center my-3 flex-column"
                   xs={12}
                 >
                   {isLogged ? (
-                    <HikeMap
-                      startPoint={startPoint}
-                      endPoint={endPoint}
-                      referencesPoints={referencesPoints}
-                      track={track}
-                    />
+                    <>
+                      <HikeMap
+                        startPoint={startPoint}
+                        endPoint={endPoint}
+                        referencesPoints={referencesPoints}
+                        track={track}
+                      />
+                      <Button
+                        className="w-100"
+                        onClick={() => {
+                          navigate("/hike/" + hike.id);
+                        }}
+                      >
+                        More info
+                      </Button>
+                    </>
                   ) : (
                     <>
                       <Link to="/login">Log in</Link>&nbsp; to see more info

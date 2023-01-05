@@ -445,6 +445,25 @@ const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
      throw await response.text();
    }
 }
+
+const getHike = async (id) => {
+  const response = await fetch(
+    new URL("hikes/" + id, SERVER_BASE),
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+};
+
 const API = {
   getHikesLimits,
   getAllHikes,
@@ -467,7 +486,8 @@ const API = {
   getUserHutsLimits,
   getParkingHutStartPoint,
   getParkingHutEndPoint,
-  linkStartEndPoint
+  linkStartEndPoint,
+  getHike,
 };
 
 export default API;

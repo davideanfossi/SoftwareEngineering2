@@ -19,6 +19,7 @@ import { UserContext } from "./context/user-context";
 import { MyHikes } from "./components/organism/my-hikes";
 import { MyHuts } from "./components/organism/my-huts";
 import { SearchHut } from "./components/organism/searchHut";
+import { HikePage } from "./components/organism/hike-page";
 import { StartHike } from "./components/organism/startHike";
 
 function App() {
@@ -64,7 +65,10 @@ function App() {
               </>
             )}
             {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) && (
-              <Route path="search-hut" element={<SearchHut />} />
+              <>
+                <Route path="search-hut" element={<SearchHut />} />
+                <Route path="hike/:id" element={<HikePage />} />
+              </>
             )}
             {["Hiker"].includes(user.role) && (
               <>
