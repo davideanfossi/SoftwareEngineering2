@@ -279,7 +279,9 @@ router.post(
             
     /// end save image
 
-    const userId=req.user.Id;
+    //const userId=req.user.Id;
+    const userId=req.user? req.user.id : 1;
+    
       // define hike
       const hike = new Hike(undefined, req.body.title, Number.parseInt(req.body.length), Number.parseInt(req.body.expectedTime),
         Number.parseInt(req.body.ascent), req.body.difficulty, req.body.description, userId, gpxFileName,undefined,undefined,imageName);
