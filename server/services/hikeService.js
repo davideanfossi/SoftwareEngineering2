@@ -162,6 +162,15 @@ class HikeService {
         };
     };
 
+    addReference = async(hikeId, refPointList) => {
+
+            for (const refPoint of refPointList){
+                const refPointId = await this.pointDAO.insertPoint(refPoint);
+                if(refPointId > 0)
+                    const res 
+            }
+    }
+
 }
 
 module.exports = HikeService;

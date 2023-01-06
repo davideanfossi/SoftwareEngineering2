@@ -45,6 +45,7 @@ CREATE TABLE "Hike" (
 CREATE TABLE "ReferencePoints" (
 	"hikeId" INTEGER NOT NULL,
 	"pointId" INTEGER NOT NULL,
+	"description" TEXT NOT NULL,
 	"label" TEXT NOT NULL,
 	PRIMARY KEY("hikeId","pointId"),
 	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),

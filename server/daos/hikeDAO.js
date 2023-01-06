@@ -1,6 +1,7 @@
 'use strict';
 
 const { Hike } = require("../models/hikeModel");
+const { RecordedHike } = require("../model/recordedHikesModel"); 
 
 class HikeDAO {
 
@@ -52,9 +53,9 @@ class HikeDAO {
     };
 
     getCompletedHikes = async (userId) => {
-        const sql = "SELECT RecordedHike.id, RecordedHike.startDateTime, RecordedHike.endDateTime, Hike.title, Hike.lenght, Hike.difficulty, Hike.description FROM RecordedHike JOIN Hike ON RecordedHike.hikeId = Hike.id WHERE userId = ? AND endDateTime IS NOT NULL";
+        const sql = "SELECT RecordedHike.id AS recordedHikeId, RecordedHike.startDateTime, RecordedHike.endDateTime, Hike.id, Hike.title, Hike.lenght, Hike.difficulty, Hike.ascent, Hike.expectedTime, Hike.startPoint, Hike.endPoint, Hike.gpxPath, Hike.description FROM RecordedHike JOIN Hike ON RecordedHike.hikeId = Hike.id WHERE userId = ? AND endDateTime IS NOT NULL";
         const res = await this.dbManager.get(sql, [userId], true);
-        return res.map(r => new Hike(r.id, r.title, r.length, r.expectedTime, r.difficulty, r.description, [])); 
+        return res.map(r => new RecordedHike(r.recordedHikeId, r.userId, r.startDateTime, r.endDateTime, new Hike(r.title, r.lenght, r.expectedTime, r.ascent, r.difficulty, r.description, r.userId, r.startPoint, r.endPoint, r.gpxPath, []))); 
     }
 
 }
