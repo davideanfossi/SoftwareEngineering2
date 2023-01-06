@@ -33,6 +33,19 @@ const getUserHikesLimits = async () => {
 
 };
 
+const recordHike = async (formData) => {
+  const response = await fetch(new URL("record-hike", SERVER_BASE), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: formData,
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+};
+
 const getAllHikes = async () => {
   const response = await fetch(new URL("hikes", SERVER_BASE), {
     method: "GET",
@@ -488,6 +501,7 @@ const API = {
   getParkingHutEndPoint,
   linkStartEndPoint,
   getHike,
+  recordHike,
 };
 
 export default API;

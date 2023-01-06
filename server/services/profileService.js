@@ -58,7 +58,7 @@ class ProfileService {
         return { "totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes };
     }
 
-    getUserHikesLimits = async (userId) => {
+    getUserHikesLimits  = async (userId) => {
         const res = await this.hikeDAO.getUserMaxData(userId);
         res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
         return res;

@@ -3,6 +3,7 @@ import utc from "dayjs/plugin/utc";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
 import { useState, Fragment } from "react";
 import { CardMessage } from "../atoms/card-message";
+import API from "../../API";
 
 dayjs.extend(utc);
 
@@ -26,11 +27,35 @@ export const StartHike = (props) => {
   function handleStartHike(event) {
     event.preventDefault();
     setHikeStarted(true);
-    console.log("Hike started");
+    let formData =
+        {
+          'hikeId': 1,
+          'userId': 1,
+          'recordType': 'start',
+          'dateTime': '',
+        }
+
+        API.recordHike(formData)
+            .then(() => {})
+            .catch((err) => {
+            });
   }
+
   function handleEndHike(event) {
     event.preventDefault();
     setHikeEnded(true);
+    let formData =
+        {
+          'hikeId': 1,
+          'userId': 1,
+          'recordType': 'end',
+          'dateTime': '',
+        }
+
+        API.recordHike(formData)
+            .then(() => {})
+            .catch((err) => {
+            });
   }
 
   const component =
@@ -205,17 +230,13 @@ export const StartHike = (props) => {
                       </Button>
                     </Col>
                   </Row>
-                  { hikeEnded && hikeStarted ? 
-                  <>
+
                   <CardMessage
                     className="text-center w-100 justify-content-center my-1 mx-0"
                     title="Congratulation, you terminated this hike!"
                     bgVariant={"success"}
                     textVariant={"white"}
                   />
-                  </>
-                  : <></>
-                  }
                 </>
               )}
             </Row>
