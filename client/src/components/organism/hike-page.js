@@ -30,8 +30,8 @@ export const HikePage = () => {
 
   function handleClick(event) { 
     event.preventDefault();
-    setShowAlert("success");
     setShowButton(false);
+    setShowAlert("success");
   }
   
   return (
@@ -118,7 +118,7 @@ export const HikePage = () => {
               :
               <></>
               }
-                  <StartHike alert= { showAlert }/>
+                <StartHike alert= { showAlert }/>
                   <Row className=" w-100 justify-content-center my-1 mx-0">
                     <Col xs={6}>
                       <Button

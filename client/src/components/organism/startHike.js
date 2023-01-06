@@ -1,19 +1,22 @@
 import dayjs from "dayjs"
 import utc from "dayjs/plugin/utc";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
-import { useState } from "react";
+import { useState, Fragment } from "react";
+import { CardMessage } from "../atoms/card-message";
 
 dayjs.extend(utc);
 
-export const StartHike = (alert) => {
+export const StartHike = (props) => {
 
-    const startDateValue = dayjs.utc().local().format("YYYY-MM-DD");
-    const endDateValue = dayjs.utc().local().format("YYYY-MM-DD");
-    const startTimeValue = dayjs.utc().local().format("HH:mm");
-    const endTimeValue = dayjs.utc().local().format("HH:mm");
+    const [startDateValue, setStartDateValue] = useState(dayjs.utc().local().format("YYYY-MM-DD"));
+    const [endDateValue, setEndDateValue] = useState(dayjs.utc().local().format("YYYY-MM-DD"));
+    const [startTimeValue, setStartTimeValue] = useState(dayjs.utc().local().format("HH:mm"));
+    const [endTimeValue, setEndTimeValue] = useState(dayjs.utc().local().format("HH:mm"));
+
     const [hikeStarted, setHikeStarted] = useState(false);
     const [hikeEnded, setHikeEnded] = useState(false);
-    let alert2 = "success";
+ 
+    
 
   function handleStartHike(event) {
     event.preventDefault();
@@ -24,13 +27,15 @@ export const StartHike = (alert) => {
     event.preventDefault();
     setHikeEnded(true);
   }
+  function handleModifyStart() {
 
-  return(
-    <>
+  };
+  function handleModifyEnd() {
+
+  };
+  const component = props.alert === "success" ? 
+    <Fragment>
       <Container className='mt-3'>
-        {
-          alert2 === "success" ?
-          <>
             <Form>
               <Row className="hike-row-even">
               {
@@ -48,20 +53,22 @@ export const StartHike = (alert) => {
                   </Row>
                   <Row className="w-100 justify-content-center my-1 mx-0">
                     <Col>
-                      <Form.Group className='mb-2' controlId='date'>
+                      <Form.Group className='mb-2' controlId='startDate'>
                         <Form.Label>Date:</Form.Label>
                           <Form.Control
                             type="date"
                             value={startDateValue}
+                            onChange={(ev) => setStartDateValue(ev.target.value)}
                             />
                       </Form.Group>
                     </Col>
                     <Col>
-                      <Form.Group className='mb-2' controlId='time'>
+                      <Form.Group className='mb-2' controlId='startTime'>
                         <Form.Label>Time:</Form.Label>
                           <Form.Control
                             type="time"
                             value={startTimeValue}
+                            onChange={(ev) => setStartTimeValue(ev.target.value)}
                           />
                         </Form.Group>
                     </Col>
@@ -69,7 +76,7 @@ export const StartHike = (alert) => {
                   <Row className="w-100 justify-content-center my-1 mx-0">
                     <Col>
                       <Button className="w-100 px-0" variant='warning' type='submit' onClick={handleStartHike}>
-                        Confirm
+                        Start hike
                       </Button>
                     </Col>
                     <Col>
@@ -82,32 +89,41 @@ export const StartHike = (alert) => {
                 :
                 <>
                   <Row  className="w-100 justify-content-center my-1 mx-0">
+                    <Col className="justify-content-center">
                     Hike started in { startDateValue } at { startTimeValue }
+                    </Col>
+                    <Col className="justify-content-center" >
+                    <Button className="w-100 px-0" variant='primary' type='submit' onClick={handleModifyStart}>
+                        Modify
+                    </Button>
+                    </Col>
                   </Row>
                   { !hikeEnded ?
                     <>
                     <Button className="w-100 px-0" variant='warning' type="submit" size="lg" onClick={handleEndHike}>
-                        Terminate Hike
+                        End now
                     </Button>
                     <Row className="w-100 justify-content-center my-1 mx-0">
                     Or insert date and time of the end hike:
                     </Row>
                     <Row className="w-100 justify-content-center my-1 mx-0">
                     <Col>
-                      <Form.Group className='mb-2' controlId='date'>
+                      <Form.Group className='mb-2' controlId='endDate'>
                         <Form.Label>Date:</Form.Label>
                           <Form.Control
                             type="date"
                             value={endDateValue}
+                            onChange={(ev) => setEndDateValue(ev.target.value)}
                             />
                       </Form.Group>
                     </Col>
                     <Col>
-                      <Form.Group className='mb-2' controlId='time'>
+                      <Form.Group className='mb-2' controlId='endTime'>
                         <Form.Label>Time:</Form.Label>
                           <Form.Control
                             type="time"
                             value={endTimeValue}
+                            onChange={(ev) => setEndTimeValue(ev.target.value)}
                           />
                         </Form.Group>
                     </Col>
@@ -115,7 +131,7 @@ export const StartHike = (alert) => {
                   <Row className="w-100 justify-content-center my-1 mx-0">
                     <Col>
                       <Button className="w-100 px-0" variant='warning' type='submit' onClick={handleEndHike}>
-                        Confirm
+                        End hike
                       </Button>
                     </Col>
                     <Col>
@@ -128,19 +144,25 @@ export const StartHike = (alert) => {
                     :
                     <>
                     <Row  className="w-100 justify-content-center my-1 mx-0">
+                      <Col className="justify-content-center">
                       Hike ended in { endDateValue } at { endTimeValue }
+                      </Col>
+                      <Col className="justify-content-center">
+                      <Button className="w-100 px-0" variant='primary' type='submit' onClick={handleModifyEnd}>
+                        Modify
+                      </Button>
+                      </Col>
                     </Row>
+                    <CardMessage className="text-center w-100 justify-content-center my-1 mx-0" title="Congratulation, you terminated this hike!" bgVariant={"success"} textVariant={"white"} />
                     </>
                   }
                 </> 
               } 
               </Row>
             </Form>
-          </>
-          : 
-          <></>
-        }
-        </Container>
-        </>
-    );
+          </Container>
+          </Fragment>
+   : "";
+  console.log(component)
+  return component;
 };
