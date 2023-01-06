@@ -97,3 +97,15 @@ CREATE TABLE "ParkingLinkHike" (
 	FOREIGN KEY("parkingId") REFERENCES "Parking"("id")
 	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
 );
+
+
+CREATE TABLE "RecordedHike" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"hikeId"	INTEGER NOT NULL,
+	"userId"	INTEGER NOT NULL,
+	"startDateTime"	TEXT,
+	"endDateTime"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
+	FOREIGN KEY("userId") REFERENCES "User"("id")
+);
