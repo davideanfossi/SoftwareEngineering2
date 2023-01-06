@@ -20,7 +20,6 @@ import { MyHikes } from "./components/organism/my-hikes";
 import { MyHuts } from "./components/organism/my-huts";
 import { SearchHut } from "./components/organism/searchHut";
 import { HikePage } from "./components/organism/hike-page";
-import { StartHike } from "./components/organism/startHike";
 
 function App() {
   const [user, setUser] = useState({

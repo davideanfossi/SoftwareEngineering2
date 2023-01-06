@@ -205,12 +205,17 @@ export const StartHike = (props) => {
                       </Button>
                     </Col>
                   </Row>
+                  { hikeEnded && hikeStarted ? 
+                  <>
                   <CardMessage
                     className="text-center w-100 justify-content-center my-1 mx-0"
                     title="Congratulation, you terminated this hike!"
                     bgVariant={"success"}
                     textVariant={"white"}
                   />
+                  </>
+                  : <></>
+                  }
                 </>
               )}
             </Row>

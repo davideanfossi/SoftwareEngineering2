@@ -7,7 +7,7 @@ import { HikeMap } from "../atoms/hike-map";
 //import defaultHikeImage from "../../../public/default-hike-image.svg";
 import { Button } from "react-bootstrap";
 import { UserContext } from "../../context/user-context";
-import { StartHike } from "./startHike";
+import { StartHike } from "../moleculars/startHike";
 
 export const HikePage = () => {
   const userContext = useContext(UserContext);
