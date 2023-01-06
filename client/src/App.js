@@ -70,11 +70,6 @@ function App() {
                 <Route path="hike/:id" element={<HikePage />} />
               </>
             )}
-            {["Hiker"].includes(user.role) && (
-              <>
-                <Route path="start-hike" element={<StartHike />} />
-              </>
-            )}
             <Route
               path="register"
               index
