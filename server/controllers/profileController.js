@@ -95,7 +95,7 @@ router.get("/user-hikes/limits",
     });
 
 router.post("/user/record/hikes/:id",
-    // isLoggedIn, getPermission(["Hiker"]),
+    isLoggedIn, getPermission(["Hiker"]),
     [param("id").exists().isInt({ min: 1 }),
     body("type").exists().isString().isIn(["start", "end"]),
     body("dateTime").exists().isISO8601()],
@@ -124,7 +124,7 @@ router.post("/user/record/hikes/:id",
     });
 
     router.get("/user/record/hikes/:id/last",
-    // isLoggedIn, getPermission(["Hiker"]),
+    isLoggedIn, getPermission(["Hiker"]),
     [param("id").exists().isInt({ min: 1 })],
     async (req, res) => {
         try {

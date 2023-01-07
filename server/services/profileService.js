@@ -66,6 +66,7 @@ class ProfileService {
 
 
     recordHike = async (hikeId, userId, recordType, dateTime) => {
+        console.log(hikeId)
         let result;
         const hike = await this.hikeDAO.getHike(hikeId);
         if (!hike)

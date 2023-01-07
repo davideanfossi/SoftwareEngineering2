@@ -33,11 +33,12 @@ const getUserHikesLimits = async () => {
 
 };
 
-const recordHike = async (formData) => {
-  const response = await fetch(new URL("/user/record/hikes/:id", SERVER_BASE), {
+const recordHike = async (hikeId, formData) => {
+  const response = await fetch(new URL("user/record/hikes/" + hikeId, SERVER_BASE), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: formData,
+    body: JSON.stringify(formData),
+    credentials:"include"
   });
   if (response.ok) {
     return await response.json();
@@ -46,8 +47,8 @@ const recordHike = async (formData) => {
   }
 };
 
-const getLastRecordedHike = async() => {
-  const response = await fetch(new URL("/user/record/hikes/:id/last", SERVER_BASE), {
+const getLastRecordedHike = async(hikeId) => {
+  const response = await fetch(new URL("user/record/hikes/" + hikeId + "/last", SERVER_BASE), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

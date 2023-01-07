@@ -26,69 +26,72 @@ export const StartHike = (props) => {
   const [hikeStarted, setHikeStarted] = useState(false);
   const [hikeEnded, setHikeEnded] = useState(false);
   const [showAlert, setShowAlert] = useState('');
-  const [dateTimeStart, setdateTimeStart] = useState('');
-  const [dateTimeEnd, setdateTimeEnd] = useState('');
+  // const [dateTimeStart, setdateTimeStart] = useState('');
+  // const [dateTimeEnd, setdateTimeEnd] = useState('');
 
   useEffect(() => {
-      API.getLastRecordedHike().then((hike) => {
-       if(hike.startDateTime) {
-          setStartDateValue(dayjs(hike.startDateTime).utc().format("YYYY-MM-DD"));
-          setStartTimeValue(dayjs(hike.startDateTime).utc().format("HH:mm"));
-          setdateTimeStart(hike.startDateTime);
-          setHikeStarted(true);
-        if(hike.endDateTime) {
+    API.getLastRecordedHike(props.hikeId).then((hike) => {
+      if (hike.startDateTime) {
+        setStartDateValue(dayjs(hike.startDateTime).utc().format("YYYY-MM-DD"));
+        setStartTimeValue(dayjs(hike.startDateTime).utc().format("HH:mm"));
+        // setdateTimeStart(hike.startDateTime);
+        setHikeStarted(true);
+        if (hike.endDateTime) {
           setEndDateValue(dayjs(hike.endDateTime).utc().format("YYYY-MM-DD"));
           setEndTimeValue(dayjs(hike.endDateTime).utc().format("HH:mm"));
-          setdateTimeEnd(hike.endDateTime);
+          // setdateTimeEnd(hike.endDateTime);
           setHikeEnded(true);
         } else {
           setHikeEnded(false);
         }
-       } else {
-          setHikeStarted(false);
-       }
+      } else {
+        setHikeStarted(false);
+      }
+    })
+      .catch((err) => {
+        setHikeEnded(true);
       });
-  }, []);
+  }, [props.hikeId]);
 
   function handleStartHike(event) {
     event.preventDefault();
-    setdateTimeStart(startDateValue.concat('T', startTimeValue));
+    // setdateTimeStart(startDateValue.concat('T', startTimeValue));
     //debug
     console.log(startDateValue);
     console.log(startTimeValue);
-    console.log(dateTimeStart);
+    // console.log(dateTimeStart);
 
     let formData =
-        {
-          'recordType': 'start',
-          'dateTime': dateTimeStart,
-        }
+    {
+      'type': 'start',
+      'dateTime': startDateValue.concat('T', startTimeValue),
+    }
 
-        API.recordHike(formData)
-            .then(() => { setHikeStarted(true); })
-            .catch((err) => {
-            });
+    API.recordHike(props.hikeId, formData)
+      .then(() => { setHikeStarted(true); })
+      .catch((err) => {
+      });
   }
 
   function handleEndHike(event) {
     event.preventDefault();
     setHikeEnded(true);
-    setdateTimeEnd(endDateValue.concat('T', endTimeValue));
+    // setdateTimeEnd(endDateValue.concat('T', endTimeValue));
     //debug
     console.log(endDateValue);
     console.log(endTimeValue);
-    console.log(dateTimeEnd);
+    // console.log(dateTimeEnd);
 
     let formData =
-        {
-          'recordType': 'end',
-          'dateTime': dateTimeEnd,
-        }
+    {
+      'type': 'end',
+      'dateTime': endDateValue.concat('T', endTimeValue),
+    }
 
-        API.recordHike(formData)
-            .then(() => { setShowAlert("success") })
-            .catch((err) => {
-            });
+    API.recordHike(props.hikeId, formData)
+      .then(() => { setShowAlert("success") })
+      .catch((err) => {
+      });
   }
 
   const component =
@@ -238,7 +241,7 @@ export const StartHike = (props) => {
                             className="w-100 px-0"
                             variant="secondary"
                             type="reset"
-                            onClick={ () => { setHikeStarted(false) }}
+                            onClick={() => { setHikeStarted(false) }}
                           >
                             Cancel
                           </Button>
@@ -270,19 +273,19 @@ export const StartHike = (props) => {
               )}
             </Row>
           </Form>
-          { showAlert === "success" ?
+          {showAlert === "success" ?
             <>
-            <CardMessage
-                    className="text-center w-100 justify-content-center my-1 mx-0"
-                    title="Congratulation, you terminated this hike!"
-                    //subtitle={"You spent" + { dayjs(dateTimeEnd).diff(dayjs(dateTimeStart), "minutes")} + "minutes"}
-                    bgVariant={"success"}
-                    textVariant={"white"}
-                  />
-              </>
-              :
-              <></>
-            }
+              <CardMessage
+                className="text-center w-100 justify-content-center my-1 mx-0"
+                title="Congratulation, you terminated this hike!"
+                //subtitle={"You spent" + { dayjs(dateTimeEnd).diff(dayjs(dateTimeStart), "minutes")} + "minutes"}
+                bgVariant={"success"}
+                textVariant={"white"}
+              />
+            </>
+            :
+            <></>
+          }
         </Container>
       </Fragment>
     ) : (

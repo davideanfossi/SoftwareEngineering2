@@ -4,7 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router";
 import API from "../../API";
 import { HikeMap } from "../atoms/hike-map";
-//import defaultHikeImage from "../../../public/default-hike-image.svg";
+import defaultHikeImage from "../../public/default-hike-image.svg";
 import { Button } from "react-bootstrap";
 import { UserContext } from "../../context/user-context";
 import { StartHike } from "../moleculars/startHike";
@@ -28,12 +28,12 @@ export const HikePage = () => {
     });
   }, [id]);
 
-  function handleClick(event) { 
+  function handleClick(event) {
     event.preventDefault();
     setShowButton(false);
     setshowForm("success");
   }
-  
+
   return (
     <Container fluid className="mt-4">
       <Row className="m-2 justify-content-center">
@@ -55,8 +55,7 @@ export const HikePage = () => {
                     className="m-2"
                   />
                 ) : (
-                  //<img src={defaultHikeImage} alt="hike-image" height={200} />
-                  <></>
+                  <img src={defaultHikeImage} alt="hike-image" height={200} />
                 )}
               </Col>
               <Col xs={12} lg={8} className="align-items-center d-flex">
@@ -107,18 +106,18 @@ export const HikePage = () => {
                       </Container>
                     </Col>
                   </Row>
-                {showButton ? 
-                <Row className="w-100 justify-content-center my-1 mx-0">
-                  <Col xs={6}>
-                    <Button className="w-100 px-0" variant='warning' type='submit' size="lg" onClick={handleClick}>
-                      Start Hike
-                    </Button>
-                  </Col>
-                </Row>
-              :
-              <></>
-              }
-                <StartHike form= { showForm } hikeId= { hike.id } userId= { userContext.user.id }/>
+                  {showButton ?
+                    <Row className="w-100 justify-content-center my-1 mx-0">
+                      <Col xs={6}>
+                        <Button className="w-100 px-0" variant='warning' type='submit' size="lg" onClick={handleClick}>
+                          Start Hike
+                        </Button>
+                      </Col>
+                    </Row>
+                    :
+                    <></>
+                  }
+                  <StartHike form={showForm} hikeId={hike.id} userId={userContext.user.id} />
                   <Row className=" w-100 justify-content-center my-1 mx-0">
                     <Col xs={6}>
                       <Button
