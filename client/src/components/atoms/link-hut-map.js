@@ -61,8 +61,7 @@ export const LinkHutMap = ({
   }, [id, changed]);
 
   useEffect(() => {
-    // THIS SHOULD GET ALL HUTS FOR THE HIKE !!!!!!
-    API.getParkingHutStartPoint(id).then((res) => {
+    API.getNearHuts(id).then((res) => {
     setHuts(res.huts);
     if (res.selected.length !== 0) {
         setAlreadySelected(res.selected);
@@ -113,10 +112,10 @@ export const LinkHutMap = ({
             point={hut.point}
             alreadySelected={
               alreadySelected.filter(
-                (elem) => elem.type === "hut" && elem.id === hut.id
+                (elem) => elem.id === hut.id
               ).length > 0
             }
-            selected={selected.type === "hut" && hut.id === selected.id}
+            selected={hut.id === selected.id}
             onClickHandle={() => onClickHut(hut.id)}
           />
         ))}

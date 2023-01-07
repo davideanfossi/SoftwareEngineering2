@@ -425,6 +425,24 @@ const getParkingHutEndPoint = async (id) => {
     }
 };
 
+const getNearHuts = async (id) => {
+  const response = await fetch(
+    new URL("hikes/" + id + "/nearhuts", SERVER_BASE),
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+};
+
 const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
    const response = await fetch(
      new URL("hikes/" + hikeId + "/startArrival", SERVER_BASE),
@@ -445,6 +463,25 @@ const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
      throw await response.text();
    }
 }
+
+const linkHut=async(hikeId,point)=>{
+  const response = await fetch(
+    new URL("hikes/" + hikeId + "/linkhut", SERVER_BASE),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hutId: point.id,
+      }),
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+}
+
 const API = {
   getHikesLimits,
   getAllHikes,
@@ -467,7 +504,9 @@ const API = {
   getUserHutsLimits,
   getParkingHutStartPoint,
   getParkingHutEndPoint,
-  linkStartEndPoint
+  linkStartEndPoint,
+  getNearHuts,
+  linkHut
 };
 
 export default API;

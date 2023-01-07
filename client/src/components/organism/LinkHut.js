@@ -61,16 +61,13 @@ function LinkHut() {
         <Button
         
             onClick={() => {
-            /*
-            API.linkStartEndPoint(id, startPoint, endPoint).then(
-            () => {
-                setShowAlert("success");
-                setMarkerUpdate(oldMarker => !oldMarker);
-                setStartPoint({ type: undefined, id: -1 });
-                setEndPoint({ type: undefined, id: -1 });
-            })
-            .catch(err => { setShowAlert("error"); });
-            */
+                API.linkHut(id, selected).then(
+                () => {
+                    setShowAlert("success");
+                    setMarkerUpdate(oldMarker => !oldMarker);
+                    setSelected({ type: undefined, id: -1 });
+                })
+                .catch(err => { setShowAlert("error"); });
             }}
             style={{
               backgroundColor: "rgb(239, 208, 131)",
