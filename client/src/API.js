@@ -425,6 +425,35 @@ const getParkingHutEndPoint = async (id) => {
     }
 };
 
+const getCompletedHikes = async (
+  pageNumber,
+  pageSize
+) => {
+  const response = await fetch(
+    new URL(
+      "/hikes/completed?" +
+        new URLSearchParams({
+          pageNumber,
+          pageSize,
+        }),
+      SERVER_BASE
+    ),
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw response.text();
+  }
+};
+
+
 const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
    const response = await fetch(
      new URL("hikes/" + hikeId + "/startArrival", SERVER_BASE),
@@ -467,6 +496,7 @@ const API = {
   getUserHutsLimits,
   getParkingHutStartPoint,
   getParkingHutEndPoint,
+  getCompletedHikes,
   linkStartEndPoint
 };
 

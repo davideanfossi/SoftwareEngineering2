@@ -45,11 +45,13 @@ export const Layout = () => {
   };
   const goSearchHut = () => {
     navigate("/search-hut");
-  }
+  };
   const goMyHuts = () => {
     navigate("/my-huts");
   };
-  
+  const goCompletedHikes = () => {
+    navigate("/completed-hikes");
+  };
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="nav">
@@ -71,20 +73,35 @@ export const Layout = () => {
                 }
                 id="basic-nav-dropdown"
               >
-                <NavDropdown.Item
-                  onClick={() => {
-                    goMyHikes();
-                  }}
-                >
-                  My hikes
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    goMyHuts();
-                  }}
-                >
-                  My huts
-                </NavDropdown.Item>
+                {["Local Guide"].includes(userContext.user.role) && (
+                  <>
+                    <NavDropdown.Item
+                      onClick={() => {
+                        goMyHikes();
+                      }}
+                    >
+                      My hikes
+                    </NavDropdown.Item>
+                    <NavDropdown.Item
+                      onClick={() => {
+                        goMyHuts();
+                      }}
+                    >
+                      My huts
+                    </NavDropdown.Item>
+                  </>
+                )}
+                {["Hiker"].includes(userContext.user.role) && (
+                  <>
+                    <NavDropdown.Item
+                      onClick={() => {
+                        goCompletedHikes();
+                      }}
+                    >
+                      Completed hikes
+                    </NavDropdown.Item>
+                  </>
+                )}
                 <NavDropdown.Item
                   onClick={() => {
                     handleLogout();
