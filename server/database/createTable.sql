@@ -45,6 +45,7 @@ CREATE TABLE "Hike" (
 CREATE TABLE "ReferencePoints" (
 	"hikeId" INTEGER NOT NULL,
 	"pointId" INTEGER NOT NULL,
+	"description" TEXT NOT NULL,
 	"label" TEXT NOT NULL,
 	PRIMARY KEY("hikeId","pointId"),
 	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
@@ -96,4 +97,16 @@ CREATE TABLE "ParkingLinkHike" (
 	PRIMARY KEY("parkingId","hikeId"),
 	FOREIGN KEY("parkingId") REFERENCES "Parking"("id")
 	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
+);
+
+
+CREATE TABLE "RecordedHike" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"hikeId"	INTEGER NOT NULL,
+	"userId"	INTEGER NOT NULL,
+	"startDateTime"	TEXT,
+	"endDateTime"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("hikeId") REFERENCES "Hike"("id"),
+	FOREIGN KEY("userId") REFERENCES "User"("id")
 );
