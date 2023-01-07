@@ -1,8 +1,6 @@
 "use strict";
 
 const togeojson = require("togeojson");
-const fs = require("fs");
-const DOMParser = require("xmldom").DOMParser;
 const path = require("path");
 
 const config = require("../config.json");
@@ -123,7 +121,6 @@ class HikeHutService {
 
     //check if hut is already linked to the hike
     const hikeHut = await this.hikeHutDAO.getHikeHut(hikeId, hutId);
-    console.log(hikeHut)
     if (hikeHut && hikeHut.isLinked) 
         throw { 
             returnCode: 409, 
@@ -141,7 +138,6 @@ class HikeHutService {
     let res;
     //if there is not any record for this hike and hut in the table insert new record
     if (!hikeHut) {
-        console.log('insert')
       res = await this.hikeHutDAO.insertHikeHut(
         hikeId,
         hutId,
@@ -153,7 +149,6 @@ class HikeHutService {
     }
     //otherwise update existing record
     else {
-        console.log('update')
       res = await this.hikeHutDAO.updateHikeHutIsLinked(hikeId, hutId, true);
       return res;
     }
