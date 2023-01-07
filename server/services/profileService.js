@@ -58,7 +58,7 @@ class ProfileService {
         return { "totalPages": totalPages, "pageNumber": pageNumber, "pageSize": pageSize, "pageItems": returnedHikes };
     }
 
-    getUserHikesLimits  = async (userId) => {
+    getUserHikesLimits = async (userId) => {
         const res = await this.hikeDAO.getUserMaxData(userId);
         res.difficultyType = [difficultyType.low, difficultyType.mid, difficultyType.high];
         return res;
@@ -66,8 +66,9 @@ class ProfileService {
 
 
     recordHike = async (hikeId, userId, recordType, dateTime) => {
-        console.log(hikeId)
         let result;
+        if (dayjs(dateTime).isAfter(dayjs()))
+            throw { returnCode: 409, message: "dateTime cannot be a future date" };
         const hike = await this.hikeDAO.getHike(hikeId);
         if (!hike)
             throw { returnCode: 404, message: "Hike not found" };
@@ -78,8 +79,8 @@ class ProfileService {
             const ongoingHike = await this.userDAO.getOngoingRecordedHike(userId);
             if (ongoingHike !== undefined)
                 throw { returnCode: 409, message: "Only one Hike can be started at the same time" };
-            if (recordedHike && dayjs(recordedHike.endDateTime).isSameOrAfter(dayjs(dateTime)))
-                throw { returnCode: 409, message: "start dateTime must be after ending dateTime of last hike" };
+            // if (recordedHike && dayjs(recordedHike.endDateTime).isSameOrAfter(dayjs(dateTime)))
+            //     throw { returnCode: 409, message: "start dateTime must be after ending dateTime of last hike" };
             result = await this.userDAO.insertRecordedHike(new RecordedHike(undefined, hikeId, userId, dateTime, null));
         }
         else if (recordType === "end") {

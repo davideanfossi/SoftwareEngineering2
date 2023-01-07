@@ -1,11 +1,13 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import duration from "dayjs/plugin/duration";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
 import { useState, Fragment, useEffect } from "react";
 import { CardMessage } from "../atoms/card-message";
 import API from "../../API";
 
 dayjs.extend(utc);
+dayjs.extend(duration);
 
 export const StartHike = (props) => {
   const [startDateValue, setStartDateValue] = useState(
@@ -21,13 +23,13 @@ export const StartHike = (props) => {
     dayjs().format("HH:mm")
   );
 
-  const [hikeStartDateTime, setHikeStartDateTime] = useState(
-    ""
-  );
+  const [hikeStartDateTime, setHikeStartDateTime] = useState("");
 
   const [hikeStarted, setHikeStarted] = useState(false);
   const [hikeEnded, setHikeEnded] = useState(false);
-  const [showAlert, setShowAlert] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errMessage, setErrMessage] = useState('');
 
   useEffect(() => {
     API.getLastRecordedHike(props.hikeId).then((hike) => {
@@ -66,11 +68,14 @@ export const StartHike = (props) => {
 
     API.recordHike(props.hikeId, formData)
       .then(() => {
+        setShowError(false); setErrMessage('');
         setHikeStarted(true);
         setHikeStartDateTime(dateTime);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
+        setShowError(true);
+        setErrMessage(err);
       });
   }
 
@@ -88,9 +93,10 @@ export const StartHike = (props) => {
     }
 
     API.recordHike(props.hikeId, formData)
-      .then(() => { setShowAlert("success"); setHikeEnded(true); })
+      .then(() => { setShowError(false); setErrMessage(''); setShowSuccess(true); setHikeEnded(true); })
       .catch((err) => {
-        console.log(err);
+        setShowError(true);
+        setErrMessage(err);
       });
   }
 
@@ -99,7 +105,7 @@ export const StartHike = (props) => {
       <Container className="mt-3">
         <Form>
           <Row className="hike-row-even">
-            {!hikeStarted ? (
+            {!hikeStarted ? 
               <>
                 <Row className="w-100 justify-content-center my-1 mx-0">
                   <Col>
@@ -123,7 +129,7 @@ export const StartHike = (props) => {
                       <Form.Label>Date:</Form.Label>
                       <Form.Control
                         type="date"
-                        max={new Date()}
+                        max={dayjs().format("YYYY-MM-DD")}
                         value={startDateValue}
                         onChange={(ev) => setStartDateValue(ev.target.value)}
                       />
@@ -155,15 +161,14 @@ export const StartHike = (props) => {
                     <Button
                       className="w-100 px-0"
                       variant="secondary"
-                      type="submit"
-                      onClick={() => { props.handleCancel() }}
+                      onClick={props.handleCancel}
                     >
                       Cancel
                     </Button>
                   </Col>
                 </Row>
               </>
-            ) : (
+             : 
               <>
                 <Row className="w-100 justify-content-center my-1 mx-0">
                   <Col className="justify-content-center">
@@ -171,10 +176,10 @@ export const StartHike = (props) => {
                   </Col>
                 </Row>
               </>
-            )}
-            {!hikeEnded ? (
+            }
+            {!hikeEnded ?
               <>
-                {hikeStarted ? (
+                {hikeStarted ?
                   <>
                     <Button
                       className="w-100 px-0"
@@ -194,6 +199,7 @@ export const StartHike = (props) => {
                           <Form.Label>Date:</Form.Label>
                           <Form.Control
                             type="date"
+                            max={dayjs().format("YYYY-MM-DD")}
                             value={endDateValue}
                             onChange={(ev) =>
                               setEndDateValue(ev.target.value)
@@ -216,32 +222,22 @@ export const StartHike = (props) => {
                     </Row>
                     <Row className="w-100 justify-content-center my-1 mx-0">
                       <Col>
-                        <Button
-                          className="w-100 px-0"
-                          variant="warning"
-                          type="submit"
-                          onClick={handleEndHike}
-                        >
+                        <Button className="w-100 px-0" variant="warning" type="submit" onClick={handleEndHike}>
                           End hike
                         </Button>
                       </Col>
                       <Col>
-                        <Button
-                          className="w-100 px-0"
-                          variant="secondary"
-                          type="reset"
-                          onClick={() => { setHikeStarted(false) }}
-                        >
+                        <Button className="w-100 px-0" variant="secondary" type="reset" onClick={() => { setHikeStarted(false) }}>
                           Cancel
                         </Button>
                       </Col>
                     </Row>
                   </>
-                ) : (
+                  :
                   <></>
-                )}
+                }
               </>
-            ) : (
+              :
               <>
                 <Row className="w-100 justify-content-center my-1 mx-0">
                   <Col className="justify-content-center">
@@ -249,19 +245,27 @@ export const StartHike = (props) => {
                   </Col>
                 </Row>
               </>
-            )}
+            }
           </Row>
         </Form>
-        {showAlert === "success" ?
-          <>
-            <CardMessage
-              className="text-center w-100 justify-content-center my-1 mx-0"
-              title="Congratulation, you terminated this hike!"
-              //subtitle={"You spent" + { dayjs(dateTimeEnd).diff(dayjs(dateTimeStart), "minutes")} + "minutes"}
-              bgVariant={"success"}
-              textVariant={"white"}
-            />
-          </>
+        {showSuccess ?
+          <CardMessage
+            className="text-center w-100 justify-content-center my-1 mx-0"
+            title="Congratulation, you terminated this hike!"
+            subtitle={"You spent " + dayjs.duration(dayjs(endDateValue.concat("T", endTimeValue)).diff(hikeStartDateTime)).asMinutes() + " minutes"}
+            bgVariant="success"
+            textVariant="white"
+          />
+          :
+          <></>
+        }
+        {showError ?
+          <CardMessage
+            className="text-center w-100 justify-content-center my-1 mx-0"
+            title="Some error occur!"
+            subtitle={errMessage}
+            bgVariant={"danger"} textVariant={"white"}
+          />
           :
           <></>
         }

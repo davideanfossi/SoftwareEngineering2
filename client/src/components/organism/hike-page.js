@@ -1,11 +1,10 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useContext, useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router";
 import API from "../../API";
 import { HikeMap } from "../atoms/hike-map";
 import defaultHikeImage from "../../public/default-hike-image.svg";
-import { Button } from "react-bootstrap";
 import { UserContext } from "../../context/user-context";
 import { StartHike } from "../moleculars/startHike";
 
@@ -29,6 +28,11 @@ export const HikePage = () => {
   function handleClick(event) {
     event.preventDefault();
     setShowRecordHike(true);
+  }
+
+  function handleCancel() {
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    setShowRecordHike(false);
   }
 
   return (
@@ -104,7 +108,7 @@ export const HikePage = () => {
                     </Col>
                   </Row>
                   {showRecordHike ?
-                    <StartHike handleCancel={() => setShowRecordHike(false)} hikeId={hike.id} userId={userContext.user.id} />
+                    <StartHike handleCancel={handleCancel} hikeId={hike.id}/>
                     :
                     <Row className="w-100 justify-content-center my-1 mx-0">
                       <Col xs={6}>
