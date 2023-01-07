@@ -12,8 +12,7 @@ import { StartHike } from "../moleculars/startHike";
 export const HikePage = () => {
   const userContext = useContext(UserContext);
 
-  const [showForm, setshowForm] = useState("");
-  const [showButton, setShowButton] = useState(true);
+  const [showRecordHike, setShowRecordHike] = useState(false);
 
   const isLocalGuide = ["Local Guide"].includes(userContext.user.role);
   const { id } = useParams();
@@ -22,7 +21,6 @@ export const HikePage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     API.getHike(id).then((res) => {
-      console.log(res);
       setHike(res.hike);
       setTrack(res.track);
     });
@@ -30,8 +28,7 @@ export const HikePage = () => {
 
   function handleClick(event) {
     event.preventDefault();
-    setShowButton(false);
-    setshowForm("success");
+    setShowRecordHike(true);
   }
 
   return (
@@ -106,18 +103,17 @@ export const HikePage = () => {
                       </Container>
                     </Col>
                   </Row>
-                  {showButton ?
+                  {showRecordHike ?
+                    <StartHike handleCancel={() => setShowRecordHike(false)} hikeId={hike.id} userId={userContext.user.id} />
+                    :
                     <Row className="w-100 justify-content-center my-1 mx-0">
                       <Col xs={6}>
                         <Button className="w-100 px-0" variant='warning' type='submit' size="lg" onClick={handleClick}>
-                          Start Hike
+                          Record Hike
                         </Button>
                       </Col>
                     </Row>
-                    :
-                    <></>
                   }
-                  <StartHike form={showForm} hikeId={hike.id} userId={userContext.user.id} />
                   <Row className=" w-100 justify-content-center my-1 mx-0">
                     <Col xs={6}>
                       <Button
