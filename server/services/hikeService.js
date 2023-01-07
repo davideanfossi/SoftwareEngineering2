@@ -211,7 +211,7 @@ class HikeService {
 
 function validateHutPoint (hutPoint, hikeGpxPath)
    {
-    const radius = 500;
+    const radius = 5;
 
     if (hikeGpxPath === null)
       throw { returnCode: 500, message: "Gpx file does not exist" };
@@ -226,7 +226,7 @@ function validateHutPoint (hutPoint, hikeGpxPath)
     let result=false;
     // compare distance of hut point with all points of the hike
     geoJson.features[0].geometry.coordinates.some((element) => {
-      if (isWithinCircle(hutPoint.latitude,hutPoint.longitude,element[1],element[2],radius)) 
+      if (isWithinCircle(element[1],element[0],hutPoint.latitude,hutPoint.longitude,radius)) 
       {
         result=true;
         return result ;
