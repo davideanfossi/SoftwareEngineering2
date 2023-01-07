@@ -62,7 +62,7 @@ export const HutRow = ({ hut, even }) => {
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={6}
               sm={6}
-              md={6}
+              md={2}
             >
               <Container fluid>
                 <Row>
@@ -78,7 +78,7 @@ export const HutRow = ({ hut, even }) => {
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={6}
               sm={6}
-              md={6}
+              md={1}
             >
               <Container fluid>
                 <Row>
@@ -94,7 +94,7 @@ export const HutRow = ({ hut, even }) => {
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={6}
               sm={4}
-              md={4}
+              md={3}
             >
               <Container fluid>
                 <Row>
@@ -102,7 +102,7 @@ export const HutRow = ({ hut, even }) => {
                 </Row>
                 <Row>
                   <Col>
-                    {hut.optionalWebsite === "" ? " - " : hut.optionalWebsite}
+                    {hut.optionalWebsite === "" ? " - " : <a href= {`https://${hut.optionalWebsite}`} target="_blank"> Click here to visit hut's website</a>}
                   </Col>
                 </Row>
               </Container>
@@ -112,7 +112,7 @@ export const HutRow = ({ hut, even }) => {
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={6}
               sm={4}
-              md={4}
+              md={2}
             >
               <Container fluid>
                 <Row>
