@@ -196,8 +196,8 @@ class HikeService {
         let returnedHuts = [];
     
         for (const hut of huts) {
-            const hutPoint = await this.pointDAO.getPoint(hut.point);
-            if (validateHutPoint(hutPoint,hike.gpxPath))
+            hut.point = await this.pointDAO.getPoint(hut.point);
+            if (validateHutPoint(hut.point,hike.gpxPath))
                 returnedHuts.push(hut);
         }
     
