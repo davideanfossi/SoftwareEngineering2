@@ -21,18 +21,6 @@ export const StartHike = (props) => {
     dayjs().utc().local().format("HH:mm")
   );
 
-  useEffect(() => {
-    if (true)
-      API.getLastRecordedHike().then((elem) => {
-       /*if(startDateTime) {
-        if(endDateTime) {
-
-        } else {}
-       } else {}
-       */
-      });
-  }, []);
-
   let form = props.form;
 
   const [hikeStarted, setHikeStarted] = useState(false);
@@ -40,6 +28,27 @@ export const StartHike = (props) => {
   const [showAlert, setShowAlert] = useState('');
   const [dateTimeStart, setdateTimeStart] = useState('');
   const [dateTimeEnd, setdateTimeEnd] = useState('');
+
+  useEffect(() => {
+      API.getLastRecordedHike().then((hike) => {
+       if(hike.startDateTime) {
+          setStartDateValue(dayjs(hike.startDateTime).utc().format("YYYY-MM-DD"));
+          setStartTimeValue(dayjs(hike.startDateTime).utc().format("HH:mm"));
+          setdateTimeStart(hike.startDateTime);
+          setHikeStarted(true);
+        if(hike.endDateTime) {
+          setEndDateValue(dayjs(hike.endDateTime).utc().format("YYYY-MM-DD"));
+          setEndTimeValue(dayjs(hike.endDateTime).utc().format("HH:mm"));
+          setdateTimeEnd(hike.endDateTime);
+          setHikeEnded(true);
+        } else {
+          setHikeEnded(false);
+        }
+       } else {
+          setHikeStarted(false);
+       }
+      });
+  }, []);
 
   function handleStartHike(event) {
     event.preventDefault();
