@@ -14,6 +14,7 @@ import { EmailActivate } from "./components/emailActivate";
 import { useEffect, useState } from "react";
 import API from "./API";
 import { LinkStartEnd } from "./components/organism/LinkStartEnd";
+import { LinkHut } from "./components/organism/LinkHut";
 
 import { UserContext } from "./context/user-context";
 import { MyHikes } from "./components/organism/my-hikes";
@@ -60,6 +61,7 @@ function App() {
                 <Route path="my-huts" element={<MyHuts />} />
                 <Route path="insertparking" element={<InsertParking />} />
                 <Route path="link-start-end/:id" element={<LinkStartEnd />} />
+                <Route path="link-hut/:id" element={<LinkHut />} />
               </>
             )}
             {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) && (
