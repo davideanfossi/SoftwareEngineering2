@@ -196,8 +196,8 @@ class HikeService {
         let returnedHuts = [];
     
         for (const hut of huts) {
-            hut.point = await this.pointDAO.getPoint(hut.point);
-            if (validateHutPoint(hut.point,hike.gpxPath))
+            const hutPoint = await this.pointDAO.getPoint(hut.point);
+            if (validateHutPoint(hutPoint,hike.gpxPath))
                 returnedHuts.push(hut);
         }
     
@@ -211,7 +211,7 @@ class HikeService {
 
 function validateHutPoint (hutPoint, hikeGpxPath)
    {
-    const radius = 1;
+    const radius = 5;
 
     if (hikeGpxPath === null)
       throw { returnCode: 500, message: "Gpx file does not exist" };
@@ -223,11 +223,10 @@ function validateHutPoint (hutPoint, hikeGpxPath)
       fs.readFileSync(hikeGpxFile, "utf8")
     );
     const geoJson = togeojson.gpx(gpx);
-
     let result=false;
     // compare distance of hut point with all points of the hike
     geoJson.features[0].geometry.coordinates.some((element) => {
-      if (isWithinCircle(element[1],element[2],hutPoint.latitude,hutPoint.longitude,radius)) 
+      if (isWithinCircle(element[1],element[0],hutPoint.latitude,hutPoint.longitude,radius)) 
       {
         result=true;
         return result ;
