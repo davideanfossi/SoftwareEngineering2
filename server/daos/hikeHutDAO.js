@@ -16,6 +16,12 @@ class HikeHutDAO {
             return res.map(rs=> new HikeHut(rs.hikeId, rs.hutId, !!rs.startPoint,!!rs.endPoint,!!r.isLinked)) ;
     };
 
+    getHikeLinkedHuts = async (hikeId) => {
+        const sql = "SELECT * FROM HikeHut WHERE hikeId = ? and isLinked=1";
+        const res = await this.dbManager.get(sql, [hikeId]);
+        return res.map(rs=> new HikeHut(rs.hikeId, rs.hutId, !!rs.startPoint,!!rs.endPoint,!!r.isLinked)) ;
+    };
+
     getHikeHut = async (hikeId,hutId) => {
         const sql = "SELECT * FROM HikeHut WHERE hikeId = ? and hutId=? ";
         const res = await this.dbManager.get(sql, [hikeId,hutId],true);
