@@ -34,7 +34,7 @@ const getUserHikesLimits = async () => {
 };
 
 const recordHike = async (formData) => {
-  const response = await fetch(new URL("record-hike", SERVER_BASE), {
+  const response = await fetch(new URL("/user/record/hikes/:id", SERVER_BASE), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: formData,
@@ -45,6 +45,21 @@ const recordHike = async (formData) => {
     throw await response.text();
   }
 };
+
+const getLastRecordedHike = async() => {
+  const response = await fetch(new URL("/user/record/hikes/:id/last", SERVER_BASE), {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials:"include"
+  });
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw response.text();
+  }
+}
 
 const getAllHikes = async () => {
   const response = await fetch(new URL("hikes", SERVER_BASE), {
@@ -502,6 +517,7 @@ const API = {
   linkStartEndPoint,
   getHike,
   recordHike,
+  getLastRecordedHike,
 };
 
 export default API;

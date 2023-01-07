@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { CardMessage } from "../atoms/card-message";
 import API from "../../API";
 
@@ -9,34 +9,54 @@ dayjs.extend(utc);
 
 export const StartHike = (props) => {
   const [startDateValue, setStartDateValue] = useState(
-    dayjs.utc().local().format("YYYY-MM-DD")
+    dayjs().utc().local().format("YYYY-MM-DD")
   );
   const [endDateValue, setEndDateValue] = useState(
-    dayjs.utc().local().format("YYYY-MM-DD")
+    dayjs().utc().local().format("YYYY-MM-DD")
   );
   const [startTimeValue, setStartTimeValue] = useState(
-    dayjs.utc().local().format("HH:mm")
+    dayjs().utc().local().format("HH:mm")
   );
   const [endTimeValue, setEndTimeValue] = useState(
-    dayjs.utc().local().format("HH:mm")
+    dayjs().utc().local().format("HH:mm")
   );
+
+  useEffect(() => {
+    if (true)
+      API.getLastRecordedHike().then((elem) => {
+       /*if(startDateTime) {
+        if(endDateTime) {
+
+        } else {}
+       } else {}
+       */
+      });
+  }, []);
+
+  let form = props.form;
 
   const [hikeStarted, setHikeStarted] = useState(false);
   const [hikeEnded, setHikeEnded] = useState(false);
+  const [showAlert, setShowAlert] = useState('');
+  const [dateTimeStart, setdateTimeStart] = useState('');
+  const [dateTimeEnd, setdateTimeEnd] = useState('');
 
   function handleStartHike(event) {
     event.preventDefault();
-    setHikeStarted(true);
+    setdateTimeStart(startDateValue.concat('T', startTimeValue));
+    //debug
+    console.log(startDateValue);
+    console.log(startTimeValue);
+    console.log(dateTimeStart);
+
     let formData =
         {
-          'hikeId': 1,
-          'userId': 1,
           'recordType': 'start',
-          'dateTime': '',
+          'dateTime': dateTimeStart,
         }
 
         API.recordHike(formData)
-            .then(() => {})
+            .then(() => { setHikeStarted(true); })
             .catch((err) => {
             });
   }
@@ -44,22 +64,26 @@ export const StartHike = (props) => {
   function handleEndHike(event) {
     event.preventDefault();
     setHikeEnded(true);
+    setdateTimeEnd(endDateValue.concat('T', endTimeValue));
+    //debug
+    console.log(endDateValue);
+    console.log(endTimeValue);
+    console.log(dateTimeEnd);
+
     let formData =
         {
-          'hikeId': 1,
-          'userId': 1,
           'recordType': 'end',
-          'dateTime': '',
+          'dateTime': dateTimeEnd,
         }
 
         API.recordHike(formData)
-            .then(() => {})
+            .then(() => { setShowAlert("success") })
             .catch((err) => {
             });
   }
 
   const component =
-    props.alert === "success" ? (
+    form === "success" ? (
       <Fragment>
         <Container className="mt-3">
           <Form>
@@ -119,7 +143,8 @@ export const StartHike = (props) => {
                       <Button
                         className="w-100 px-0"
                         variant="secondary"
-                        type="reset"
+                        type="submit"
+                        onClick={() => { form = "" }}
                       >
                         Cancel
                       </Button>
@@ -132,7 +157,7 @@ export const StartHike = (props) => {
                     <Col className="justify-content-center">
                       Hike started in {startDateValue} at {startTimeValue}
                     </Col>
-                    <Col className="justify-content-center">
+                    { /*<Col className="justify-content-center">
                       <Button
                         className="w-100 px-0"
                         variant="primary"
@@ -141,7 +166,8 @@ export const StartHike = (props) => {
                       >
                         Modify
                       </Button>
-                    </Col>
+                    </Col> */
+                    }
                   </Row>
                 </>
               )}
@@ -203,6 +229,7 @@ export const StartHike = (props) => {
                             className="w-100 px-0"
                             variant="secondary"
                             type="reset"
+                            onClick={ () => { setHikeStarted(false) }}
                           >
                             Cancel
                           </Button>
@@ -219,7 +246,7 @@ export const StartHike = (props) => {
                     <Col className="justify-content-center">
                       Hike ended in {endDateValue} at {endTimeValue}
                     </Col>
-                    <Col className="justify-content-center">
+                    { /*<Col className="justify-content-center">
                       <Button
                         className="w-100 px-0"
                         variant="primary"
@@ -228,19 +255,25 @@ export const StartHike = (props) => {
                       >
                         Modify
                       </Button>
-                    </Col>
+                    </Col>*/ }
                   </Row>
-
-                  <CardMessage
-                    className="text-center w-100 justify-content-center my-1 mx-0"
-                    title="Congratulation, you terminated this hike!"
-                    bgVariant={"success"}
-                    textVariant={"white"}
-                  />
                 </>
               )}
             </Row>
           </Form>
+          { showAlert === "success" ?
+            <>
+            <CardMessage
+                    className="text-center w-100 justify-content-center my-1 mx-0"
+                    title="Congratulation, you terminated this hike!"
+                    //subtitle={"You spent" + { dayjs(dateTimeEnd).diff(dayjs(dateTimeStart), "minutes")} + "minutes"}
+                    bgVariant={"success"}
+                    textVariant={"white"}
+                  />
+              </>
+              :
+              <></>
+            }
         </Container>
       </Fragment>
     ) : (
