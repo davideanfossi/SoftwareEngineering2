@@ -298,17 +298,36 @@ router.get(
 );
 
 router.get(
-  "/hikes/:id/completed",
+  "/hikes/completed",
   isLoggedIn,
   getPermission(["Hiker"]),
-  [param("id").exists().isInt({ min: 1 })],
+  express.json(),
+  [
+    param("id").exists().isInt({ min: 1 }),
+    query("pageNumber").optional().isInt({ min: 1 }),
+    query("pageSize").optional().isInt({ min: 1 }),
+  ],
   async (req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).end();
       }
-      const result = await hikeService.getCompleted(req.params.id);
+      const pageNumber = req.query.pageNumber
+        ? Number.parseInt(req.query.pageNumber)
+        : undefined;
+      const pageSize = req.query.pageSize
+        ? Number.parseInt(req.query.pageSize)
+        : undefined;
+      const result = await hikeService.getCompleted(req.user.id, { pageNumber, pageSize });
+      //remove additional data
+      result.pageItems.map((recordedHike) => {
+        delete recordedHike.hike.startPoint;
+        delete recordedHike.hike.endPoint;
+        delete recordedHike.hike.referencePoints;
+        delete recordedHike.hike.gpxPath;
+        delete recordedHike.hike.userId;
+      });
       return res.status(200).json(result);
     } catch (err) {
       switch (err.returnCode) {
@@ -365,6 +384,35 @@ router.post(
     }
   }
 );
+
+
+router.post(
+  "/hikes/referencePoints",
+  isLoggedIn,
+  getPermission(["Local Guide"]),
+  
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).end();
+      }
+      const hikeId = Number.parseInt(req.params.id);
+      let refPointList = JSON.parse(req.body.pointList);
+      const result = await hikeService.addReference(hikeId, refPointList);
+
+      return res.status(200).json(result);
+    } catch (err) {
+      switch (err.returnCode) {
+        case 404:
+          return res.status(404).send(err.message);
+        default:
+          return res.status(500).end();
+      }
+    }
+  }
+);
+
 
 router.get("/hikes/limits", async (req, res) => {
   try {

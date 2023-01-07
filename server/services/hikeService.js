@@ -166,10 +166,13 @@ class HikeService {
 
             for (const refPoint of refPointList){
                 const refPointId = await this.pointDAO.insertPoint(refPoint);
-                if(refPointId > 0)
-                    const res 
+                if(refPointId > 0){
+                    const res = await this.pointDAO.insertReference(hikeId, refPointId, refPoint.description);
+                    return res;
+                } else
+                    throw "generic error";
             }
-    }
+    };
 
 }
 
