@@ -154,6 +154,7 @@ router.get("/hikes/:id/near-start",
       let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
       parkingLinked = parkingLinked.filter(parkingHut => parkingHut.startPoint).map(p => {return {id: p.parkingId, type: "parking"}});
 
+      console.log(result)
       result.selected = [...hutLinked, ...parkingLinked];
 
       return res.status(200).json(result);
@@ -164,15 +165,15 @@ router.get("/hikes/:id/near-start",
         case 404:
           return res.status(404).send(err.msg);
         default:
-          return res.status(500).send();
+          return res.status(500).send(err);
       }
     }
   });
 
 
 router.get("/hikes/:id/near-end",
-  // isLoggedIn,
-  // getPermission(["Local Guide"]),
+   isLoggedIn,
+   getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 })],
   async (req, res) => {
     try {
@@ -407,8 +408,8 @@ router.get(
 );
 
 router.get("/hikes/:id/nearhuts",
- // isLoggedIn,
-  //getPermission(["Local Guide"]),
+  isLoggedIn,
+  getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 })],
   async (req, res) => {
     try {
@@ -418,10 +419,13 @@ router.get("/hikes/:id/nearhuts",
       }
       const hikeId = Number.parseInt(req.params.id);
       const result = await hikeService.getHutsNearHike(hikeId);
-     // let hutLinked = await hikeHutService.getHikeLinkedHuts(hikeId);
-     // hutLinked = hutLinked.filter(hikeHut => hikeHut.startPoint).map(h => {return {id: h.hutId, type: "hut"}});
+      if(result)
+        {
+          let hutLinked = await hikeHutService.getHutLinkedToHike(hikeId);
+          hutLinked = hutLinked.map(h => {return {id: h.hutId}});
+          result.selected = [...hutLinked];
+        } 
 
-     // result.selected = [...hutLinked];
 
       return res.status(200).json(result);
     } catch (err) {
@@ -431,7 +435,7 @@ router.get("/hikes/:id/nearhuts",
         case 404:
           return res.status(404).send(err.msg);
         default:
-          return res.status(500).send();
+          return res.status(500).send(err);
       }
     }
   });

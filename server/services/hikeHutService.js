@@ -4,7 +4,6 @@ const togeojson = require("togeojson");
 const fs = require("fs");
 const DOMParser = require("xmldom").DOMParser;
 const path = require("path");
-const { isWithinCircle } = require("../utils/positionUtils");
 
 const config = require("../config.json");
 
@@ -14,7 +13,8 @@ class HikeHutService {
       throw new Error("hikeHutDAO must be defined for HikeHutService!");
     if (!hikeDAO)
       throw new Error("hikeDAO must be defined for HikeHutService!");
-    if (!hutDAO) throw new Error("hutDAO must be defined for HikeHutService!");
+    if (!hutDAO) 
+      throw new Error("hutDAO must be defined for HikeHutService!");
     if (!pointDAO)
       throw new Error("pointDAO must be defined for HikeHutService!");
 
@@ -43,7 +43,6 @@ class HikeHutService {
         returnCode: 404,
         message: "hike not found",
       };
-
     const res = await this.hikeHutDAO.getHikeLinkedHuts(hikeId);
     return res;
   };
