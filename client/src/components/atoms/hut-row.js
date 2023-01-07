@@ -102,7 +102,7 @@ export const HutRow = ({ hut, even }) => {
                 </Row>
                 <Row>
                   <Col>
-                    {hut.optionalWebsite === "" ? " - " : <a href= {`https://${hut.optionalWebsite}`} target="_blank"> Click here to visit hut's website</a>}
+                    {hut.optionalWebsite === "" ? " - " : <a href= {`https://${hut.optionalWebsite}`} target="_blank" rel="noreferrer"> Click here to visit hut's website</a>}
                   </Col>
                 </Row>
               </Container>
