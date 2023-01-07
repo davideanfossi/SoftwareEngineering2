@@ -201,7 +201,7 @@ class HikeService {
                 returnedHuts.push(hut);
         }
     
-        return returnedHuts;
+        return {huts  :returnedHuts};
     }
 
 
