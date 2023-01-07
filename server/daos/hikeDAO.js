@@ -1,7 +1,7 @@
 'use strict';
 
 const { Hike } = require("../models/hikeModel");
-const { RecordedHike } = require("../model/recordedHikesModel"); 
+const { RecordedHike } = require("../models/recordedHikesModel"); 
 
 class HikeDAO {
 
