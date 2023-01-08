@@ -1,7 +1,7 @@
 'use strict';
 
 class RecordedHike {
-    constructor(id, hike, userId, startDateTime, endDateTime){
+    constructor(id, userId, startDateTime, endDateTime, hike){
         this.id = id;
         this.userId = userId;
         this.startDateTime = startDateTime;
