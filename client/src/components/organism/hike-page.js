@@ -14,6 +14,7 @@ export const HikePage = () => {
   const [showRecordHike, setShowRecordHike] = useState(false);
 
   const isLocalGuide = ["Local Guide"].includes(userContext.user.role);
+  const isHiker = ["Hiker"].includes(userContext.user.role);
   const { id } = useParams();
   const [hike, setHike] = useState({});
   const [track, setTrack] = useState([]);
@@ -106,19 +107,32 @@ export const HikePage = () => {
                       </Container>
                     </Col>
                   </Row>
-                  {showRecordHike ?
-                    <StartHike handleCancel={handleCancel} hikeId={hike.id}/>
-                    :
-                    <Row className="w-100 justify-content-center my-1 mx-0">
-                      <Col xs={6}>
-                        <Button className="w-100 px-0" variant='warning' type='submit' size="lg" onClick={handleClick}>
-                          Record Hike
-                        </Button>
-                      </Col>
-                    </Row>
-                  }
+                  {isHiker && (
+                    <>
+                      {showRecordHike ? (
+                        <StartHike
+                          handleCancel={handleCancel}
+                          hikeId={hike.id}
+                        />
+                      ) : (
+                        <Row className="w-100 justify-content-center my-1 mx-0">
+                          <Col xs={6}>
+                            <Button
+                              className="w-100 px-0"
+                              variant="warning"
+                              type="submit"
+                              size="lg"
+                              onClick={handleClick}
+                            >
+                              Record Hike
+                            </Button>
+                          </Col>
+                        </Row>
+                      )}
+                    </>
+                  )}
                   <Row className=" w-100 justify-content-center my-1 mx-0">
-                    <Col xs={6}>
+                    <Col xs={6} className="my-1">
                       <Button
                         className="w-100 px-0"
                         onClick={() => navigate("/")}
@@ -127,14 +141,26 @@ export const HikePage = () => {
                       </Button>
                     </Col>
                     {isLocalGuide && (
-                      <Col xs={6}>
-                        <Button
-                          className="w-100 px-0"
-                          onClick={() => navigate("/link-start-end/" + hike.id)}
-                        >
-                          Link start/end
-                        </Button>
-                      </Col>
+                      <>
+                        <Col xs={6} className="my-1">
+                          <Button
+                            className="w-100 px-0"
+                            onClick={() =>
+                              navigate("/link-start-end/" + hike.id)
+                            }
+                          >
+                            Link start/end
+                          </Button>
+                        </Col>
+                        <Col xs={6} className="my-1">
+                          <Button
+                            className="w-100 px-0"
+                            onClick={() => navigate("/link-hut/" + hike.id)}
+                          >
+                            Link Hut
+                          </Button>
+                        </Col>
+                      </>
                     )}
                   </Row>
                 </Container>
