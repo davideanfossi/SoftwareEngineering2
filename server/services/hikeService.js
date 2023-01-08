@@ -119,6 +119,11 @@ class HikeService {
         return res;
     }
 
+    getCompleted = async (userId) => {
+        let completedHikes = await this.hikeDAO.getCompletedHikes(userId);
+        return completedHikes;
+    }
+
     addHike = async (hike, startPoint, endPoint) => {
         //TODO :  add transaction or delete points in catch when insertHike returns err
         //first insert startPoint and endPoint
@@ -155,6 +160,18 @@ class HikeService {
             "referencePoints": hike.referencePoints,
             "track": geoJson.features[0].geometry.coordinates.map(p => { return { "lat": p[1], "lon": p[0] } })
         };
+    };
+
+    addReference = async(hikeId, refPointList) => {
+
+            for (const refPoint of refPointList){
+                const refPointId = await this.pointDAO.insertPoint(refPoint);
+                if(refPointId > 0){
+                    const res = await this.pointDAO.insertReference(hikeId, refPointId, refPoint.description);
+                    return res;
+                } else
+                    throw "generic error";
+            }
     };
 
 }
