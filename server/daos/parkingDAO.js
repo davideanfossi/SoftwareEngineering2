@@ -24,7 +24,14 @@ class ParkingDAO {
             const sql= "insert into Parking (name, ownerId, pointId, numSpots, hasFreeSpots, imageName) values(?,?,?,?,?,?)";
             const res = await this.dbManager.query(sql, [parking.name, parking.ownerId, parking.point.id, parking.numSpots, parking.hasFreeSpots, parking.imageName]);
             return res;
-       }    
+       } 
+       
+    getParking = async (id) => {
+        let sql = "SELECT * FROM Parking WHERE id = ?";
+        const r = await this.dbManager.get(sql, [id], true);
+        return r ? new Parking(r.id, r.name, r.numSpots, r.hasFreeSpots, r.pointId, r.ownerId, r.imageName) 
+               : undefined;
+    }
 }
 
 module.exports = ParkingDAO;
