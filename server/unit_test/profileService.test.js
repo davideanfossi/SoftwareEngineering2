@@ -9,6 +9,7 @@ const ProfileService = require('../services/profileService');
 
 const { Hike, difficultyType } = require('../models/hikeModel');
 const { purgeAllTables } = require('./purgeUtils');
+const dayjs = require('dayjs');
 
 const dbManager = new DBManager("TEST");
 dbManager.openConnection();
@@ -63,8 +64,8 @@ describe('Profile Service unit test', () => {
     const point2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
     const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
 
-    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 2, null, point1, point2, []);
-    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 2, null, point1, point3, []);
+    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 2, null, point1, point2, undefined, []);
+    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 2, null, point1, point3, undefined, []);
 
     const user1 = new User(1, "user 1", "user1@test.it", "Hiker", "", "", "");
     const user2 = new User(2, "user 2", "user2@test.it", "Local Guide", "frank", "white", "123456789");
@@ -84,17 +85,16 @@ describe('Profile Service unit test', () => {
     testErrorRecordHike('test record hike error ongoing hike', hike2.id, user1.id, "start", "2022-12-20T16:09:12Z",
         { returnCode: 409, message: "Only one Hike can be started at the same time" });
 
-    testErrorRecordHike('test record hike error hike already started', hike2.id, user1.id, "end", "2022-12-18T16:09:12Z",
-        { returnCode: 409, message: "Hike not started yet" });
-    testErrorRecordHike('test record hike error end before start', hike1.id, user1.id, "end", "2022-12-18T16:09:12Z",
-        { returnCode: 409, message: "end dateTime must be after starting dateTime" });
+    testErrorRecordHike('test record hike error end before start', hike1.id, user1.id, "end", "2022-12-18T16:08:12Z",
+        { returnCode: 409, message: "End dateTime must be after starting dateTime" });
 
     testRecordHike('test record hike end', hike1.id, user1.id, "end", "2022-12-18T17:09:12Z", 1);
     testErrorRecordHike('test record hike error hike already terminated', hike1.id, user1.id, "end", "2022-12-18T17:09:12Z",
         { returnCode: 409, message: "Hike not started yet" });
-    testErrorRecordHike('test record hike error start hike before end of last recorded hike', hike1.id, user1.id, "start", "2022-12-18T16:09:12Z",
-        { returnCode: 409, message: "start dateTime must be after ending dateTime of last hike" });
-
+    testErrorRecordHike('test record hike error date overlapping with other recorded hike', hike1.id, user1.id, "start", "2022-12-18T16:30:00Z",
+        { returnCode: 409, message: "DateTime overlaps with another completed hike" });
+    testErrorRecordHike('test record hike error future date', hike1.id, user1.id, "start", dayjs().add(1, 'day').utc().format(),
+        { returnCode: 409, message: "DateTime cannot be a future date" });
 });
 
 
