@@ -5,7 +5,11 @@ export const CompletedHikeTable = ({ completedHikeList }) => {
   return (
     <Container className="hike-table" fluid>
       {completedHikeList.map((hike, count) => (
-        <CompletedHikeRow hike={hike} key={hike.id} even={count % 2 === 0} />
+        <CompletedHikeRow
+          recordedHike={hike}
+          key={hike.id}
+          even={count % 2 === 0}
+        />
       ))}
     </Container>
   );

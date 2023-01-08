@@ -460,7 +460,7 @@ const getCompletedHikes = async (
 ) => {
   const response = await fetch(
     new URL(
-      "/hikes/completed?" +
+      "hikes/completed?" +
         new URLSearchParams({
           pageNumber,
           pageSize,

@@ -2,17 +2,18 @@ import { useMemo, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { SimpleBarChart } from "./bar-chart";
 
-export const CompletedHikeRow = ({ recordeHike, even }) => {
+export const CompletedHikeRow = ({ recordedHike, even }) => {
+  console.log(recordedHike)
   const [dropped, setDropped] = useState(false);
   const data = useMemo(
     () => [
       {
         type: "actualTime",
-        value: recordeHike.endTime - recordeHike.startTime,
+        value: recordedHike.duration,
       },
-      { type: "expectedTime", value: recordeHike.hike.expectedTime },
+      { type: "expectedTime", value: recordedHike.hike.expectedTime },
     ],
-    [recordeHike.endTime, recordeHike.startTime, recordeHike.hike.expectedTime]
+    [recordedHike.duration, recordedHike.hike.expectedTime]
   );
 
   const toggleDrop = () => {
@@ -35,7 +36,7 @@ export const CompletedHikeRow = ({ recordeHike, even }) => {
                 </Row>
                 <Row>
                   <Col className={dropped ? "" : "text-truncate"}>
-                    {recordeHike.title}
+                    {recordedHike.hike.title}
                   </Col>
                 </Row>
               </Container>
@@ -51,7 +52,7 @@ export const CompletedHikeRow = ({ recordeHike, even }) => {
                   <Col className="fw-bold">Length:</Col>
                 </Row>
                 <Row>
-                  <Col>{recordeHike.lenght}m</Col>
+                  <Col>{recordedHike.hike.length}m</Col>
                 </Row>
               </Container>
             </Col>
@@ -66,7 +67,7 @@ export const CompletedHikeRow = ({ recordeHike, even }) => {
                   <Col className="fw-bold">Time:</Col>
                 </Row>
                 <Row>
-                  <Col>{recordeHike.expectedTime}min</Col>
+                  <Col>{recordedHike.hike.expectedTime}min</Col>
                 </Row>
               </Container>
             </Col>
@@ -81,7 +82,7 @@ export const CompletedHikeRow = ({ recordeHike, even }) => {
                   <Col className="fw-bold">Ascent:</Col>
                 </Row>
                 <Row>
-                  <Col>{recordeHike.ascent}m</Col>
+                  <Col>{recordedHike.hike.ascent}m</Col>
                 </Row>
               </Container>
             </Col>
@@ -97,7 +98,7 @@ export const CompletedHikeRow = ({ recordeHike, even }) => {
                 </Row>
                 <Row>
                   <Col className={dropped ? "" : "text-truncate"}>
-                    {recordeHike.difficult}
+                    {recordedHike.hike.difficulty}
                   </Col>
                 </Row>
               </Container>
@@ -113,7 +114,9 @@ export const CompletedHikeRow = ({ recordeHike, even }) => {
                   <Col className="fw-bold">Start time:</Col>
                 </Row>
                 <Row>
-                  <Col>{recordeHike.startTime}</Col>
+                  <Col>
+                    {recordedHike.startDateTime.format("D MMMM YYYY HH:mm")}
+                  </Col>
                 </Row>
               </Container>
             </Col>
@@ -128,7 +131,9 @@ export const CompletedHikeRow = ({ recordeHike, even }) => {
                   <Col className="fw-bold">End time:</Col>
                 </Row>
                 <Row>
-                  <Col>{recordeHike.endTime}</Col>
+                  <Col>
+                    {recordedHike.endDateTime.format("D MMMM YYYY HH:mm")}
+                  </Col>
                 </Row>
               </Container>
             </Col>
