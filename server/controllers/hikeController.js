@@ -278,9 +278,9 @@ router.post(
                 });
             }   
             
-    /// end save image
+      /// end save image
+      const userId=req.user.id;
 
-    const userId=req.user?req.user.Id:1;
       // define hike
       const hike = new Hike(undefined, req.body.title, Number.parseInt(req.body.length), Number.parseInt(req.body.expectedTime),
         Number.parseInt(req.body.ascent), req.body.difficulty, req.body.description, userId, gpxFileName,undefined,undefined,imageName);
@@ -443,8 +443,8 @@ router.get("/hikes/:id/nearhuts",
 
 router.post(
   "/hikes/:id/linkhut",
-  //isLoggedIn,
-  //getPermission(["Local Guide"]),
+  isLoggedIn,
+  getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 }),
   body("hutId").notEmpty().isInt({ min: 1 }),
   ],
@@ -458,7 +458,7 @@ router.post(
       const hikeId = Number.parseInt(req.params.id);
       const hutId = Number.parseInt(req.body.hutId);
 
-      const userId=req.user?req.user.Id:1;
+      const userId=req.user.id;
       
       let result;
       result = await hikeHutService.linkHutToHike(hikeId, hutId,userId);

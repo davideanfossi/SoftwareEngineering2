@@ -473,6 +473,7 @@ const linkHut=async(hikeId,point)=>{
       body: JSON.stringify({
         hutId: point.id,
       }),
+      credentials: "include",
     }
   );
   if (response.ok) {
