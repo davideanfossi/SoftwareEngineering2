@@ -36,7 +36,7 @@ export const HikePage = () => {
                 {hike.imageName ? (
                   <img
                     src={
-                      "https://happiestoutdoors.ca/wp-content/uploads/2019/10/AlpineMeadowsTrailGroup.jpg.webp"
+                      "http://localhost:3001/hikeImages/"+hike.imageName
                     }
                     alt="hike-image"
                     width="100%"
