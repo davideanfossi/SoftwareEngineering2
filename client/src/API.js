@@ -33,6 +33,35 @@ const getUserHikesLimits = async () => {
 
 };
 
+const recordHike = async (hikeId, formData) => {
+  const response = await fetch(new URL("user/record/hikes/" + hikeId, SERVER_BASE), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+    credentials:"include"
+  });
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+};
+
+const getLastRecordedHike = async(hikeId) => {
+  const response = await fetch(new URL("user/record/hikes/" + hikeId + "/last", SERVER_BASE), {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials:"include"
+  });
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw response.text();
+  }
+}
+
 const getAllHikes = async () => {
   const response = await fetch(new URL("hikes", SERVER_BASE), {
     method: "GET",
@@ -474,6 +503,25 @@ const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
      throw await response.text();
    }
 }
+
+const getHike = async (id) => {
+  const response = await fetch(
+    new URL("hikes/" + id, SERVER_BASE),
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+};
+
 const API = {
   getHikesLimits,
   getAllHikes,
@@ -497,7 +545,10 @@ const API = {
   getParkingHutStartPoint,
   getParkingHutEndPoint,
   getCompletedHikes,
-  linkStartEndPoint
+  linkStartEndPoint,
+  getHike,
+  recordHike,
+  getLastRecordedHike,
 };
 
 export default API;

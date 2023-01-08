@@ -20,6 +20,7 @@ import { MyHikes } from "./components/organism/my-hikes";
 import { MyHuts } from "./components/organism/my-huts";
 import { SearchHut } from "./components/organism/searchHut";
 import { CompletedHikes } from "./components/organism/completed-hikes";
+import { HikePage } from "./components/organism/hike-page";
 
 function App() {
   const [user, setUser] = useState({
@@ -64,7 +65,10 @@ function App() {
               </>
             )}
             {["Local Guide", "Hiker", "Hut Worker"].includes(user.role) && (
-              <Route path="search-hut" element={<SearchHut />} />
+              <>
+                <Route path="search-hut" element={<SearchHut />} />
+                <Route path="hike/:id" element={<HikePage />} />
+              </>
             )}
             {["Hiker"].includes(user.role) && (
               <Route path="completed-hikes" element={<CompletedHikes />} />
