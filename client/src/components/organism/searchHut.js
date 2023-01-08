@@ -27,6 +27,7 @@ export const SearchHut = () => {
             hut.phoneNumber,
             hut.email,
             hut.website,
+            hut.imageName,
             new Point(
                 hut.point.id,
                 hut.point.latitude,
@@ -41,6 +42,7 @@ export const SearchHut = () => {
   };
 
   const handleServerResponseChangePage = (huts) => {
+    
     setPageSize(huts.pageSize);
     setTotalPages(huts.totalPages);
     setHutList(
@@ -54,6 +56,7 @@ export const SearchHut = () => {
             hut.phoneNumber,
             hut.email,
             hut.website,
+            hut.imageName,
             new Point(
                 hut.point.id,
                 hut.point.latitude,

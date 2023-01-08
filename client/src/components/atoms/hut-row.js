@@ -1,8 +1,9 @@
 import { useState, useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { SinglePointMap } from "./single-point-map";
 import { UserContext } from "../../context/user-context";
+import API from "../../API";
 
 export const HutRow = ({ hut, even }) => {
   const userContext = useContext(UserContext);
@@ -13,36 +14,55 @@ export const HutRow = ({ hut, even }) => {
     setDropped((prev) => !prev);
   };
 
-
   return (
-    <Row className={even ? "hut-row-even" : "hut-row"} style={{cursor:'pointer'}}>
+    <Row
+      className={even ? "hut-row-even" : "hut-row"}
+      style={{ cursor: "pointer" }}
+    >
       <Col>
         <Container fluid onClick={toggleDrop}>
           <Row>
+            <Row className="justify-content-md-center" xl="auto">
+              <Col
+                className="d-flex justify-content-center align-items-center my-3 text-center"
+                xs={12}
+                sm={12}
+                md={6}
+              >
+                <img
+                  src={
+                    API.SERVER_HOST +
+                    ":" +
+                    API.SERVER_PORT +
+                    "/hutimages/" +
+                    hut.image
+                  }
+                  alt="Not found"
+                  width={"250px"}
+                />
+              </Col>
+
+              <Col
+                className="d-flex justify-content-center align-items-center my-3 text-center"
+                xs={12}
+                sm={12}
+                md={6}
+              >
+                <Container fluid>
+                  <Row>
+                    <Col className="fw-bold">Name:</Col>
+                  </Row>
+                  <Row>
+                    <Col>{hut.name}</Col>
+                  </Row>
+                </Container>
+              </Col>
+            </Row>
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={12}
-              sm={12}
-              md={4}
-            >
-              <Container fluid>
-                <Row>
-                  <Col className="fw-bold">Name:</Col>
-                </Row>
-                <Row>
-                  <Col>
-                    {hut.name}
-                  </Col>
-                </Row>
-              </Container>
-            </Col>
-
-
-            <Col
-               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={6}
               sm={6}
-              md={4}
+              md={2}
             >
               <Container fluid>
                 <Row>
@@ -55,18 +75,34 @@ export const HutRow = ({ hut, even }) => {
             </Col>
 
             <Col
-               className="d-flex justify-content-center align-items-center my-3 text-center"
+              className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={6}
               sm={6}
-              md={4}
+              md={1}
             >
               <Container fluid>
                 <Row>
                   <Col className="fw-bold">Altitude:</Col>
                 </Row>
                 <Row>
+                  <Col>{parseInt(hut.point.altitude)} m</Col>
+                </Row>
+              </Container>
+            </Col>
+
+            <Col
+              className="d-flex justify-content-center align-items-center my-3 text-center"
+              xs={6}
+              sm={4}
+              md={3}
+            >
+              <Container fluid>
+                <Row>
+                  <Col className="fw-bold">Website:</Col>
+                </Row>
+                <Row>
                   <Col>
-                    {parseInt(hut.point.altitude)} m
+                    {hut.optionalWebsite === "" ? " - " : <a href= {`https://${hut.optionalWebsite}`} target="_blank" rel="noreferrer"> Click here to visit hut's website</a>}
                   </Col>
                 </Row>
               </Container>
@@ -76,25 +112,7 @@ export const HutRow = ({ hut, even }) => {
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={6}
               sm={4}
-              md={4}
-            >
-              <Container fluid>
-                <Row>
-                  <Col className="fw-bold">Website:</Col>
-                </Row>
-                <Row>
-                  <Col>
-                    {hut.optionalWebsite === "" ? " - " :  hut.optionalWebsite }
-                  </Col>
-                </Row>
-              </Container>
-            </Col> 
-
-            <Col
-               className="d-flex justify-content-center align-items-center my-3 text-center"
-              xs={6}
-              sm={4}
-              md={4}
+              md={2}
             >
               <Container fluid>
                 <Row>
@@ -106,7 +124,7 @@ export const HutRow = ({ hut, even }) => {
               </Container>
             </Col>
             <Col
-               className="d-flex justify-content-center align-items-center my-3 text-center"
+              className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={12}
               sm={4}
               md={4}
@@ -120,8 +138,7 @@ export const HutRow = ({ hut, even }) => {
                 </Row>
               </Container>
             </Col>
-           
-            
+
             <Col
               className="d-flex justify-content-center align-items-center my-3 text-center"
               xs={12}
@@ -139,8 +156,6 @@ export const HutRow = ({ hut, even }) => {
                 </Row>
               </Container>
             </Col>
-           
-
           </Row>
 
           {dropped && (
@@ -150,19 +165,15 @@ export const HutRow = ({ hut, even }) => {
                 xs={12}
               >
                 {isLogged ? (
-                  <SinglePointMap
-                    point={hut.point}
-                  />
-                  ) : (
-                    <>
-                    <Link to='/login'>Log in</Link>&nbsp; to see more info
-                    </>
-                  )}
+                  <SinglePointMap point={hut.point} />
+                ) : (
+                  <>
+                    <Link to="/login">Log in</Link>&nbsp; to see more info
+                  </>
+                )}
               </Col>
             </Row>
           )}
-       
-
         </Container>
       </Col>
     </Row>

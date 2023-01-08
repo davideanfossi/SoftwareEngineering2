@@ -523,6 +523,8 @@ const getHike = async (id) => {
 };
 
 const API = {
+  SERVER_HOST,
+  SERVER_PORT,
   getHikesLimits,
   getAllHikes,
   getFilteredHikes,

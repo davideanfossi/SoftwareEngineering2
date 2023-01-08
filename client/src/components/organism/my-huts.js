@@ -17,7 +17,7 @@ export const MyHuts = () => {
    setPageNumer(1);
    setPageSize(huts.pageSize);
    setTotalPages(huts.totalPages);
-
+  console.log(huts);
    setHutList(
      huts.pageItems.map(
        (hut) =>
@@ -29,6 +29,7 @@ export const MyHuts = () => {
            hut.phoneNumber,
            hut.email,
            hut.website,
+           hut.imageName,
            new Point(
              hut.point.id,
              hut.point.latitude,
@@ -56,6 +57,7 @@ export const MyHuts = () => {
            hut.phoneNumber,
            hut.email,
            hut.website,
+           hut.imageName,
            new Point(
              hut.point.id,
              hut.point.latitude,

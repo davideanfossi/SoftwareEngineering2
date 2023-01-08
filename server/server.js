@@ -25,7 +25,8 @@ app.set("query parser", "simple");
 app.use(morgan("dev"));
 // set up the middlewares
 app.use(express.json());
-app.use(express.static("public")); //to access the files in public folder
+app.use(express.static('public'));
+app.use('/hutImages',express.static("/hutImages")); //to access the files in public folder
 
 // set up and enable cors
 const corsOptions = {
