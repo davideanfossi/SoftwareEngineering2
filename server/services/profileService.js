@@ -67,31 +67,30 @@ class ProfileService {
 
     recordHike = async (hikeId, userId, recordType, dateTime) => {
         let result;
-        if (dayjs(dateTime).isAfter(dayjs()))
-            throw { returnCode: 409, message: "dateTime cannot be a future date" };
+        await this.#checkInvalidDateRecodedHike(userId, dateTime);
         const hike = await this.hikeDAO.getHike(hikeId);
         if (!hike)
             throw { returnCode: 404, message: "Hike not found" };
 
-        const recordedHike = await this.userDAO.getLastRecordedHike(hikeId, userId);
+        const ongoingHike = await this.userDAO.getOngoingRecordedHike(userId);
 
         if (recordType === "start") {
-            const ongoingHike = await this.userDAO.getOngoingRecordedHike(userId);
             if (ongoingHike !== undefined)
                 throw { returnCode: 409, message: "Only one Hike can be started at the same time" };
-            // if (recordedHike && dayjs(recordedHike.endDateTime).isSameOrAfter(dayjs(dateTime)))
-            //     throw { returnCode: 409, message: "start dateTime must be after ending dateTime of last hike" };
+
             result = await this.userDAO.insertRecordedHike(new RecordedHike(undefined, hikeId, userId, dateTime, null));
         }
         else if (recordType === "end") {
-            if (recordedHike === undefined || recordedHike.endDateTime !== "")
+            if (ongoingHike === undefined)
                 throw { returnCode: 409, message: "Hike not started yet" };
-            const startDateTime = dayjs(recordedHike.startDateTime).utc();
-            const endDateTime = dayjs(dateTime).utc();
-            if (startDateTime.isSameOrAfter(endDateTime))
-                throw { returnCode: 409, message: "end dateTime must be after starting dateTime" };
-            recordedHike.endDateTime = dateTime;
-            result = await this.userDAO.updateRecordedHike(recordedHike);
+            if (ongoingHike.hikeId === hikeId) {
+                const startDateTime = dayjs(ongoingHike.startDateTime).utc();
+                const endDateTime = dayjs(dateTime).utc();
+                if (startDateTime.isSameOrAfter(endDateTime))
+                    throw { returnCode: 409, message: "End dateTime must be after starting dateTime" };
+                ongoingHike.endDateTime = dateTime;
+                result = await this.userDAO.updateRecordedHike(ongoingHike);
+            }
         }
 
         return result;
@@ -106,13 +105,22 @@ class ProfileService {
     };
 
     getLastRecordedHike = async (hikeId, userId) => {
-        const hike = await this.hikeDAO.getHike(hikeId);
-        if (!hike)
-            throw { returnCode: 422, message: "Hike not found" };
-        const recordedHike = await this.userDAO.getLastRecordedHike(hikeId, userId);
-        if (recordedHike === undefined)
+        const recordedHike = await this.userDAO.getOngoingRecordedHike(userId);
+        if (recordedHike === undefined || recordedHike.hikeId !== hikeId)
             throw { returnCode: 404, message: "Recoded Hike not found" };
         return recordedHike;
+    }
+
+    #checkInvalidDateRecodedHike = async (userId, dateTime) => {
+        const dateToValidate = dayjs(dateTime);
+        if (dateToValidate.isAfter(dayjs()))
+            throw { returnCode: 409, message: "DateTime cannot be a future date" };
+
+        const completedHikes = await this.hikeDAO.getCompletedHikes(userId);
+        for (const ch of completedHikes) {
+            if (dateToValidate.isAfter(dayjs(ch.startDateTime)) && dateToValidate.isBefore(dayjs(ch.endDateTime)))
+                throw { returnCode: 409, message: "DateTime overlaps with another completed hike" };
+        }
     }
 
 }

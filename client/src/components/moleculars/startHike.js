@@ -34,7 +34,6 @@ export const StartHike = (props) => {
   useEffect(() => {
     API.getLastRecordedHike(props.hikeId).then((hike) => {
       if (hike.startDateTime) {
-
         if (hike.endDateTime) {
           setHikeEnded(false);
           setHikeStarted(false);
@@ -73,7 +72,6 @@ export const StartHike = (props) => {
         setHikeStartDateTime(dateTime);
       })
       .catch((err) => {
-        console.log(err)
         setShowError(true);
         setErrMessage(err);
       });
@@ -105,7 +103,7 @@ export const StartHike = (props) => {
       <Container className="mt-3">
         <Form>
           <Row className="hike-row-even">
-            {!hikeStarted ? 
+            {!hikeStarted ?
               <>
                 <Row className="w-100 justify-content-center my-1 mx-0">
                   <Col>
@@ -168,7 +166,7 @@ export const StartHike = (props) => {
                   </Col>
                 </Row>
               </>
-             : 
+              :
               <>
                 <Row className="w-100 justify-content-center my-1 mx-0">
                   <Col className="justify-content-center">
@@ -181,15 +179,19 @@ export const StartHike = (props) => {
               <>
                 {hikeStarted ?
                   <>
-                    <Button
-                      className="w-100 px-0"
-                      variant="warning"
-                      type="submit"
-                      size="lg"
-                      onClick={(event) => handleEndHike(event, true)}
-                    >
-                      End now
-                    </Button>
+                    <Row className="w-100 justify-content-center my-1 mx-0">
+                      <Col>
+                        <Button
+                          className="w-100 px-0"
+                          variant="warning"
+                          type="submit"
+                          size="lg"
+                          onClick={(event) => handleEndHike(event, true)}
+                        >
+                          End now
+                        </Button>
+                      </Col>
+                    </Row>
                     <Row className="w-100 justify-content-center my-1 mx-0">
                       Or insert date and time of the end hike:
                     </Row>
@@ -227,7 +229,7 @@ export const StartHike = (props) => {
                         </Button>
                       </Col>
                       <Col>
-                        <Button className="w-100 px-0" variant="secondary" type="reset" onClick={() => { setHikeStarted(false) }}>
+                        <Button className="w-100 px-0" variant="secondary" type="reset" onClick={props.handleCancel}>
                           Cancel
                         </Button>
                       </Col>
@@ -252,7 +254,7 @@ export const StartHike = (props) => {
           <CardMessage
             className="text-center w-100 justify-content-center my-1 mx-0"
             title="Congratulation, you terminated this hike!"
-            subtitle={"You spent " + dayjs.duration(dayjs(endDateValue.concat("T", endTimeValue)).diff(hikeStartDateTime)).asMinutes().toFixed(0) + " minute(s)"}
+            subtitle={"You spent " + dayjs.duration(dayjs(endDateValue.concat("T", endTimeValue)).diff(hikeStartDateTime)).asMinutes() + " minute(s)"}
             bgVariant="success"
             textVariant="white"
           />

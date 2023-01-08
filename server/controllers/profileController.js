@@ -111,7 +111,6 @@ router.post("/user/record/hikes/:id",
             await profileService.recordHike(Number.parseInt(req.params.id), req.user.id, type, dateTime);
             return res.status(201).json({});
         } catch (err) {
-            console.log(err);
             switch (err.returnCode) {
                 case 404:
                     return res.status(404).send(err.message);
@@ -136,7 +135,6 @@ router.post("/user/record/hikes/:id",
             delete result.userId;
             return res.status(200).json(result);
         } catch (err) {
-            console.log(err);
             switch (err.returnCode) {
                 case 404:
                     return res.status(404).send(err.message);
