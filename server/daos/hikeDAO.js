@@ -1,7 +1,7 @@
 'use strict';
 
 const { Hike } = require("../models/hikeModel");
-const { RecordedHike } = require("../model/recordedHikesModel"); 
+const { RecordedHike } = require("../models/recordedHikesModel"); 
 
 class HikeDAO {
 
@@ -53,9 +53,9 @@ class HikeDAO {
     };
 
     getCompletedHikes = async (userId) => {
-        const sql = "SELECT RecordedHike.id AS recordedHikeId, RecordedHike.startDateTime, RecordedHike.endDateTime, Hike.id, Hike.title, Hike.lenght, Hike.difficulty, Hike.ascent, Hike.expectedTime, Hike.startPoint, Hike.endPoint, Hike.gpxPath, Hike.description FROM RecordedHike JOIN Hike ON RecordedHike.hikeId = Hike.id WHERE userId = ? AND endDateTime IS NOT NULL";
-        const res = await this.dbManager.get(sql, [userId], true);
-        return res.map(r => new RecordedHike(r.recordedHikeId, r.userId, r.startDateTime, r.endDateTime, new Hike(r.title, r.lenght, r.expectedTime, r.ascent, r.difficulty, r.description, r.userId, r.startPoint, r.endPoint, r.gpxPath, []))); 
+        const sql = "SELECT RecordedHike.id AS recordedHikeId, RecordedHike.startDateTime, RecordedHike.endDateTime, Hike.id, Hike.title, Hike.length, Hike.difficulty, Hike.ascent, Hike.expectedTime, Hike.startPointId, Hike.endPointId, Hike.gpxPath, Hike.description FROM RecordedHike JOIN Hike ON RecordedHike.hikeId = Hike.id WHERE Hike.userId = ? AND endDateTime IS NOT NULL";
+        const res = await this.dbManager.get(sql, [userId]);
+        return res.map(r => new RecordedHike(r.recordedHikeId, r.userId, r.startDateTime, r.endDateTime, new Hike(r.id, r.title, r.length, r.expectedTime, r.ascent, r.difficulty, r.description, r.userId, r.gpxPath, r.startPointId, r.endPointId, undefined, []))); 
     }
 
 }
