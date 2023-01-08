@@ -13,11 +13,13 @@ export const HikePage = () => {
 
   const [showRecordHike, setShowRecordHike] = useState(false);
 
-  const isLocalGuide = ["Local Guide"].includes(userContext.user.role);
   const isHiker = ["Hiker"].includes(userContext.user.role);
   const { id } = useParams();
   const [hike, setHike] = useState({});
   const [track, setTrack] = useState([]);
+  const isLocalGuide =
+    ["Local Guide"].includes(userContext.user.role) &&
+    userContext.user.id === hike.userId;
   const navigate = useNavigate();
   useEffect(() => {
     API.getHike(id).then((res) => {
