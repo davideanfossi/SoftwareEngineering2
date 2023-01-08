@@ -330,7 +330,6 @@ router.get(
   getPermission(["Hiker"]),
   express.json(),
   [
-    param("id").exists().isInt({ min: 1 }),
     query("pageNumber").optional().isInt({ min: 1 }),
     query("pageSize").optional().isInt({ min: 1 }),
   ],

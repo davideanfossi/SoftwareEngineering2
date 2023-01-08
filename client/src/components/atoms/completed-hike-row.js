@@ -3,7 +3,6 @@ import { Col, Container, Row } from "react-bootstrap";
 import { SimpleBarChart } from "./bar-chart";
 
 export const CompletedHikeRow = ({ recordedHike, even }) => {
-  console.log(recordedHike)
   const [dropped, setDropped] = useState(false);
   const data = useMemo(
     () => [
