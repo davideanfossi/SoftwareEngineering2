@@ -72,8 +72,8 @@ function ParkingForm() {
             .catch(err => console.log(err));
 
         if (name === '') { setName(null); flag = true; }
-        if (parkingSpot === '' || !(parseInt(parkingSpot) >= 0)) { setParkingSpot(null); flag = true; }
-        if (altitude === '' || !(parseInt(altitude) >= 0)) { setAltitude(null); flag = true; }
+        if (parkingSpot === '' || parseInt(parkingSpot) < 0) { setParkingSpot(null); flag = true; }
+        if (altitude === '' || parseInt(altitude) < 0) { setAltitude(null); flag = true; }
         if (flag) return;
 
         const formData = new FormData();

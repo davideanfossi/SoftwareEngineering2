@@ -127,14 +127,6 @@ class HikeHutService {
             message:"hut is already linked to the hike"
         };
 
-/*     hut.point = await this.pointDAO.getPoint(hut.point);
-
-    if (!validateHutPoint(hut.point, hike.gpxPath))
-      throw {
-        returnCode: 409,
-        message: "this hut is located far from the hike"
-      }; */
-
     let res;
     //if there is not any record for this hike and hut in the table insert new record
     if (!hikeHut) {

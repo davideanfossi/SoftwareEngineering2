@@ -1,4 +1,4 @@
-class authDAO {
+class AuthDAO {
 
     constructor(dbManager) {
         if (!dbManager)
@@ -32,4 +32,4 @@ class authDAO {
 
 }
 
-module.exports = authDAO;
+module.exports = AuthDAO;

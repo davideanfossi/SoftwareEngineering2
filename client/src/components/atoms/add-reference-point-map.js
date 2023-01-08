@@ -1,7 +1,6 @@
-import { polyline } from "leaflet";
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import Leaflet from "leaflet";
+import Leaflet, { polyline } from "leaflet";
 import {
   MapContainer,
   Polyline,
@@ -28,20 +27,15 @@ export const AddReferencePointMap = ({
     setAlreadySelected(newList);
   };
 
-
-
-
   const updaterp = (rp) => {
-    setAlreadySelected(prev => {
-      prev.map(el => {
-        if (el.id === rp.id)
-          return rp
-        else return el
+    setAlreadySelected((prev) => {
+      prev.map((el) => {
+        if (el.id === rp.id) return rp;
+        else return el;
       });
-      return [...prev]
-    }
-    )
-  } 
+      return [...prev];
+    });
+  };
 
   const lockedIcon = Leaflet.icon({
     iconUrl: LockedUrl,
@@ -65,11 +59,6 @@ export const AddReferencePointMap = ({
   });
   const [map, setMap] = useState(undefined);
 
-  // eslint-disable-next-line no-unused-vars
-  const [huts, setHuts] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [parkings, setParkings] = useState([]);
-
   const { id } = useParams();
 
   useEffect(() => {
@@ -85,17 +74,6 @@ export const AddReferencePointMap = ({
         setTrack(elem.track);
       });
   }, [id, changed]);
-
-  useEffect(() => {
-    API.getParkingHutStartPoint(id).then((res) => {
-      setHuts(res.huts);
-      setParkings(res.parkings);
-      if (res.selected.length !== 0) {
-        setAlreadySelected(res.selected);
-      }
-    });
-    // eslint-disable-next-line
-  }, [id]);
 
   useEffect(() => {
     if (map) {
@@ -137,13 +115,17 @@ export const AddReferencePointMap = ({
                   name: "",
                   description: "",
                 },
-              ])
-              setCount(prev => prev+1);
+              ]);
+              setCount((prev) => prev + 1);
             },
           }}
         />
         {alreadySelected.map((refPoint, idx) => (
-            <ReferencePointMarker refPoint={refPoint} key={refPoint.id} idx={idx}/>
+          <ReferencePointMarker
+            refPoint={refPoint}
+            key={refPoint.id}
+            idx={idx}
+          />
         ))}
 
         {oldReferencePoints.map((refPoint, idx) => (
@@ -185,13 +167,12 @@ export const AddReferencePointMap = ({
         </Row>
       </Container>
       {alreadySelected.map((rp, idx) => (
-        <Row>
+        <Row key={"table" + rp.id}>
           <InsertReferencePointTable
-            key={"table" + rp.id}
             rp={rp}
             idx={idx}
             updateList={updateList}
-            updaterp = {updaterp}
+            updaterp={updaterp}
           />
         </Row>
       ))}

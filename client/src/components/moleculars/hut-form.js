@@ -88,8 +88,6 @@ function HutForm() {
       setAltitude(null);
       flag = true;
     }
-    //if (description === '') { setDescription(''); flag = true; }
-    //if (file === '') {setFile(null); flag=true;}
     if (flag) return;
 
     const formData = new FormData();

@@ -1,7 +1,5 @@
-import { InputGroup, Form } from "react-bootstrap";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button, InputGroup, Form } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
-import { Button } from "react-bootstrap";
 import { useState } from "react";
 
 export const InsertReferencePointTable = ({ rp, idx, updateList, updaterp }) => {
