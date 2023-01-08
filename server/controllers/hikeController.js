@@ -342,8 +342,8 @@ router.get(
 
 router.post(
   "/hikes/:id/startArrival",
-  // isLoggedIn,
-  //getPermission(["Local Guide"]),
+  isLoggedIn,
+  getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 }),
   body("startType").optional().isString().trim(),
   body("startId").optional().isInt({ min: 0 }),
@@ -387,7 +387,7 @@ router.post(
 
 
 router.post(
-  "/hikes/referencePoints",
+  "/hikes/:id/referencePoints",
   isLoggedIn,
   getPermission(["Local Guide"]),
   
@@ -398,10 +398,9 @@ router.post(
         return res.status(400).end();
       }
       const hikeId = Number.parseInt(req.params.id);
-      let refPointList = JSON.parse(req.body.pointList);
-      const result = await hikeService.addReference(hikeId, refPointList);
-
-      return res.status(200).json(result);
+      await hikeService.addReference(hikeId, req.body.pointList);
+      
+      return res.status(200).json({});
     } catch (err) {
       switch (err.returnCode) {
         case 404:

@@ -163,16 +163,13 @@ class HikeService {
     };
 
     addReference = async(hikeId, refPointList) => {
-
             for (const refPoint of refPointList){
                 const refPointId = await this.pointDAO.insertPoint(refPoint);
-                if(refPointId > 0){
-                    const res = await this.pointDAO.insertReference(hikeId, refPointId, refPoint.description);
-                    return res;
-                } else
-                    throw "generic error";
+                if(refPointId > 0)
+                    await this.pointDAO.insertReference(hikeId, refPointId, refPoint.description);
+
             }
-    };
+        };
 
 }
 

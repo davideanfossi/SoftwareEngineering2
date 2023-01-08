@@ -1,7 +1,7 @@
 import { Row, Button, Container, Alert } from "react-bootstrap";
 import { useState } from "react";
 import { AddReferencePointMap } from "../atoms/add-reference-point-map";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import API from "../../API";
 
 function AddReferencePoint() {
@@ -9,6 +9,8 @@ function AddReferencePoint() {
   const [showAlert, setShowAlert] = useState("");
   const [alreadySelected, setAlreadySelected] = useState([]);
   const { id } = useParams();
+  
+  const navigate = useNavigate();
 
   return (
     <Container className="mt-2" fluid>
@@ -75,13 +77,25 @@ function AddReferencePoint() {
           {/* <Map/> */}
 
           <Button
-            onClick={() => {
-              API.AddReferencePoint(id, alreadySelected)
+            onClick={async () => {
+              let refList = await Promise.all(alreadySelected.map(async el => {
+                let url = 'https://nominatim.openstreetmap.org/reverse?lat=' + el.pos.lat + '&lon=' + el.pos.lng + '&zoom=16';
+                  let address = await fetch(url)
+                    .then(response => response.text())
+                    .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                    .then(data => data.getElementsByTagName("reversegeocode")[0].getElementsByTagName("result")[0].innerHTML)
+                    .catch(err => console.log(err));
+                  let altitude = await API.getAltitudeFromCoordinates(el.pos.lat, el.pos.lng);
+                  return {"latitude": el.pos.lat, "longitude": el.pos.lng, "altitude": altitude.elevation, "name" : el.name, "address": address, "description": el.description}
+              }));
+              API.addReferencePoints(id, refList)
                 .then(() => {
                   setShowAlert("success");
                   setAlreadySelected([]);
+                  navigate("/my-hikes");
                 })
                 .catch((err) => {
+                  console.log(err);
                   setShowAlert("error");
                 });
             }}

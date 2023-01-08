@@ -437,6 +437,7 @@ const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
          endType: endPoint.type,
          endId: endPoint.id < 0 ? undefined : endPoint.id,
        }),
+       credentials: "include",
      }
    );
    if (response.ok) {
@@ -445,6 +446,27 @@ const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
      throw await response.text();
    }
 }
+
+const addReferencePoints = async(hikeId,pointList)=>{
+  const response = await fetch(
+    new URL("hikes/" + hikeId + "/referencePoints", SERVER_BASE),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pointList: pointList
+      }),
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+}
+
+
 const API = {
   getHikesLimits,
   getAllHikes,
@@ -467,7 +489,8 @@ const API = {
   getUserHutsLimits,
   getParkingHutStartPoint,
   getParkingHutEndPoint,
-  linkStartEndPoint
+  linkStartEndPoint,
+  addReferencePoints
 };
 
 export default API;

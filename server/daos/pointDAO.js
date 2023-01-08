@@ -19,7 +19,8 @@ class PointDAO {
     getReferencePointsOfHike = async (hikeId) => {
             const sql = "SELECT * FROM Points P, ReferencePoints RP WHERE P.id = RP.pointId AND RP.hikeId = ?";
             const res = await this.dbManager.get(sql, [hikeId]);
-            return res.map(r => new Point(r.id, Number.parseFloat(r.latitude), Number.parseFloat(r.longitude), r.altitude, r.name, r.address));
+            return res.map(r => { return {"id": r.id, "latitude": Number.parseFloat(r.latitude), "longitude":  Number.parseFloat(r.longitude), "altitude": r.altitude, "name": r.name , "address": r.address, "description": r.description} })
+            //return res.map(r => new Point(r.id, Number.parseFloat(r.latitude), Number.parseFloat(r.longitude), r.altitude, r.name, r.address));
     };
 
     insertPoint = async (point) => {

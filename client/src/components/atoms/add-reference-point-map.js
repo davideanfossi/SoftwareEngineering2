@@ -11,9 +11,10 @@ import {
 } from "react-leaflet";
 import { useParams } from "react-router";
 import API from "../../API";
-import HutIconUrl from "./../atoms/marker-point/marker-hut-icon.svg";
+import LockedUrl from "./../atoms/marker-point/marker-icon-locked.svg";
 import { InsertReferencePointTable } from "../moleculars/insert-reference-point-table";
 import { MarkerReferencePoint } from "./marker-reference-point";
+import { ReferencePointMarker } from "./reference-point-marker";
 
 export const AddReferencePointMap = ({
   changed,
@@ -27,14 +28,31 @@ export const AddReferencePointMap = ({
     setAlreadySelected(newList);
   };
 
-  const hutIcon = Leaflet.icon({
-    iconUrl: HutIconUrl,
+
+
+
+  const updaterp = (rp) => {
+    setAlreadySelected(prev => {
+      prev.map(el => {
+        if (el.id === rp.id)
+          return rp
+        else return el
+      });
+      return [...prev]
+    }
+    )
+  } 
+
+  const lockedIcon = Leaflet.icon({
+    iconUrl: LockedUrl,
     iconAnchor: [25, 50],
     iconSize: [50, 50],
   });
 
+  const [count, setCount] = useState(0);
   const [track, setTrack] = useState([]);
   const [center, setCenter] = useState([45.0702899, 7.6348208]);
+  const [oldReferencePoints, setOldReferencePoints] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [startPoint, setStartPoint] = useState({
     latitude: 45.0702899,
@@ -63,6 +81,7 @@ export const AddReferencePointMap = ({
           .getBounds()
           .getCenter();
         setCenter([polyCenter.lat, polyCenter.lng]);
+        setOldReferencePoints(elem.referencePoints);
         setTrack(elem.track);
       });
   }, [id, changed]);
@@ -113,31 +132,32 @@ export const AddReferencePointMap = ({
               setAlreadySelected([
                 ...alreadySelected,
                 {
-                  id: alreadySelected.length,
+                  id: count,
                   pos: e.latlng,
                   name: "",
                   description: "",
                 },
-              ]);
+              ])
+              setCount(prev => prev+1);
             },
           }}
         />
         {alreadySelected.map((refPoint, idx) => (
-          <>
-            <Marker
-              key={"refPointMap" + refPoint.id}
-              position={[refPoint.pos.lat, refPoint.pos.lng]}
-              icon={hutIcon}
+            <ReferencePointMarker refPoint={refPoint} key={refPoint.id} idx={idx}/>
+        ))}
+
+        {oldReferencePoints.map((refPoint, idx) => (
+          <Marker
+            key={"refPointMapOld" + refPoint.id}
+            position={[refPoint.latitude, refPoint.longitude]}
+            icon={lockedIcon}
+          >
+            <Popup
+              key={"refPointPopUp" + refPoint.id}
+              style={{ borderRadius: 0 }}
             >
-              <Popup key={"refPointPopUp" + refPoint.id} style={{ borderRadius: 0 }}>
-                <Container>
-                  <Row>
-                    <Col className="text-center fw-bold">Reference point</Col>
-                  </Row>
-                  <Row>
-                    <Col className="text-center"># {idx}</Col>
-                  </Row>
-                  {/* <Row>
+              <Container>
+                <Row>
                   <Col className="text-center fw-bold">Name:</Col>
                 </Row>
                 <Row>
@@ -148,27 +168,12 @@ export const AddReferencePointMap = ({
                 </Row>
                 <Row>
                   <Col className="text-center">{refPoint.description}</Col>
-                </Row> */}
-                </Container>
-              </Popup>
-            </Marker>
-          </>
+                </Row>
+              </Container>
+            </Popup>
+          </Marker>
         ))}
 
-        {/* {alreadySelected.map((parking, idx) => (
-          <MarkerPoint
-            key={parking.id}
-            point={parking.point}
-            alreadySelected={
-              alreadySelected.filter(
-                (elem) => elem.type === "parking" && elem.id === parking.id
-              ).length > 0
-            }
-            selected={selected.type === "parking" && parking.id === selected.id}
-            onClickHandle={() => onClickParking(parking.id)}
-            isParking
-          />
-        ))} */}
         <MarkerReferencePoint point={startPoint} isReference={false} />
         <MarkerReferencePoint point={endPoint} isReference={false} />
       </MapContainer>
@@ -186,6 +191,7 @@ export const AddReferencePointMap = ({
             rp={rp}
             idx={idx}
             updateList={updateList}
+            updaterp = {updaterp}
           />
         </Row>
       ))}
