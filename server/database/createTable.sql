@@ -36,6 +36,7 @@ CREATE TABLE "Hike" (
 	"description" TEXT,
 	"gpxPath" TEXT,
 	"userId" INTEGER NOT NULL,
+	"imageName" Text,
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("startPointId") REFERENCES "Points"("id"),
 	FOREIGN KEY("endPointId") REFERENCES "Points"("id"),
