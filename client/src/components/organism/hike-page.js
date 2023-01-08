@@ -31,7 +31,6 @@ export const HikePage = () => {
   }
 
   function handleCancel() {
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     setShowRecordHike(false);
   }
 
