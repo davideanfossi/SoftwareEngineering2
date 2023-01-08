@@ -68,8 +68,9 @@ export const MyHikes = () => {
         apiCall={API.getFilteredUserHikes}
         getLimits={API.getUserHikesLimits}
       />
+      <h1 className="w-100 text-center">My hikes</h1>
       <div className="hike-table-container">
-        <HikeTable hikeList={hikeList} isUserHike={true} />
+        <HikeTable hikeList={hikeList} />
       </div>
       <Paging
         totalPages={totalPages}

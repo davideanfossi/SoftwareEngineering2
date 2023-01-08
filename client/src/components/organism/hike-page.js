@@ -160,6 +160,16 @@ export const HikePage = () => {
                             Link Hut
                           </Button>
                         </Col>
+                        <Col xs={6} className="my-1">
+                          <Button
+                            className="w-100 px-0"
+                            onClick={() =>
+                              navigate("/add-reference-point/" + hike.id)
+                            }
+                          >
+                            Link reference points
+                          </Button>
+                        </Col>
                       </>
                     )}
                   </Row>

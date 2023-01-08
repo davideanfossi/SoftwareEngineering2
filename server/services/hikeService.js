@@ -290,29 +290,67 @@ class HikeService {
     }
   };
 
+  getHutsNearHike = async (hikeId) => {
+    const hike = await this.hikeDAO.getHike(hikeId);
+    if (!hike)
+      throw {
+        returnCode: 404,
+        msg: "hike not found",
+      };
 
-    getHutsNearHike =async (hikeId) => {
-        const hike = await this.hikeDAO.getHike(hikeId);
-        if (!hike)
-            throw {
-                returnCode: 404, msg: "hike not found"
-            }
+    let huts = await this.hutDAO.getAllHuts();
+    let returnedHuts = [];
 
-        let huts = await this.hutDAO.getAllHuts();
-        let returnedHuts = [];
-    
-        for (const hut of huts) {
-            hut.point = await this.pointDAO.getPoint(hut.point);
-            if (validateHutPoint(hut.point,hike.gpxPath))
-                returnedHuts.push(hut);
-        }
-    
-        return {huts  :returnedHuts};
+    for (const hut of huts) {
+      hut.point = await this.pointDAO.getPoint(hut.point);
+      if (validateHutPoint(hut.point, hike.gpxPath)) returnedHuts.push(hut);
     }
 
+    return { huts: returnedHuts };
+  };
 
+  getHikeGpx = async (hikeId) => {
+    const hike = await this.hikeDAO.getHike(hikeId);
+    if (hike === undefined)
+      throw { returnCode: 404, message: "Hike not Found" };
 
-  }
+    hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
+    hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
+    hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(
+      hike.id
+    );
+    if (hike.gpxPath === null)
+      throw { returnCode: 500, message: "Gpx file does not exist" };
+    const hikeGpxFile = path.resolve(config.gpxPath, hike.gpxPath);
+    if (!fs.existsSync(hikeGpxFile))
+      throw { returnCode: 500, message: "Gpx file does not exist" };
+
+    const gpx = new DOMParser().parseFromString(
+      fs.readFileSync(hikeGpxFile, "utf8")
+    );
+    const geoJson = togeojson.gpx(gpx);
+    return {
+      startPoint: hike.startPoint,
+      endPoint: hike.endPoint,
+      referencePoints: hike.referencePoints,
+      track: geoJson.features[0].geometry.coordinates.map((p) => {
+        return { lat: p[1], lon: p[0] };
+      }),
+    };
+  };
+
+  addReference = async (hikeId, refPointList) => {
+    for (const refPoint of refPointList) {
+      const refPointId = await this.pointDAO.insertPoint(refPoint);
+      if (refPointId > 0)
+        await this.pointDAO.insertReference(
+          hikeId,
+          refPointId,
+          refPoint.description
+        );
+    }
+  };
+}
 
 function validateHutPoint (hutPoint, hikeGpxPath)
    {
@@ -340,38 +378,6 @@ function validateHutPoint (hutPoint, hikeGpxPath)
     return result;
   };
 
-    getHikeGpx = async (hikeId) => {
-        const hike = await this.hikeDAO.getHike(hikeId);
-        if (hike === undefined)
-            throw { returnCode: 404, message: "Hike not Found" };
 
-        hike.startPoint = await this.pointDAO.getPoint(hike.startPoint);
-        hike.endPoint = await this.pointDAO.getPoint(hike.endPoint);
-        hike.referencePoints = await this.pointDAO.getReferencePointsOfHike(hike.id);
-        if (hike.gpxPath === null)
-            throw { returnCode: 500, message: "Gpx file does not exist" };
-        const hikeGpxFile = path.resolve(config.gpxPath, hike.gpxPath);
-        if (!fs.existsSync(hikeGpxFile))
-            throw { returnCode: 500, message: "Gpx file does not exist" };
-
-        const gpx = new DOMParser().parseFromString(fs.readFileSync(hikeGpxFile, 'utf8'));
-        const geoJson = togeojson.gpx(gpx);
-        return {
-            "startPoint": hike.startPoint, "endPoint": hike.endPoint,
-            "referencePoints": hike.referencePoints,
-            "track": geoJson.features[0].geometry.coordinates.map(p => { return { "lat": p[1], "lon": p[0] } })
-        };
-    };
-
-    addReference = async(hikeId, refPointList) => {
-            for (const refPoint of refPointList){
-                const refPointId = await this.pointDAO.insertPoint(refPoint);
-                if(refPointId > 0)
-                    await this.pointDAO.insertReference(hikeId, refPointId, refPoint.description);
-
-            }
-        };
-
-}
 
 module.exports = HikeService;

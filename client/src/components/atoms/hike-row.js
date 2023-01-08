@@ -6,7 +6,7 @@ import API from "../../API";
 import { UserContext } from "../../context/user-context";
 import { HikeMap } from "./hike-map";
 
-export const HikeRow = ({ hike, even, isUserHike = false }) => {
+export const HikeRow = ({ hike, even }) => {
   const userContext = useContext(UserContext);
   const isLogged = ["Hiker", "Local Guide"].includes(userContext.user.role);
   const [dropped, setDropped] = useState(false);
@@ -140,27 +140,6 @@ export const HikeRow = ({ hike, even, isUserHike = false }) => {
                 </Row>
               </Container>
             </Col>
-            {isUserHike && (
-              <>
-              <Col
-                xs={6}
-                md={1}
-                className="d-flex justify-content-center align-items-center my-3 text-center"
-                >
-                <Button onClick={() => navigate("/link-start-end/" + hike.id)}>
-                  Link start/end
-                </Button>
-              </Col>
-              <Col
-                xs={6}
-                md={1}
-                className="d-flex justify-content-center align-items-center my-3 text-center">
-                <Button onClick={() => navigate("/add-reference-point/" + hike.id)}>
-                  Add reference point
-                </Button>
-              </Col>
-              </>
-            )}
           </Row>
           {dropped && (
             <>
