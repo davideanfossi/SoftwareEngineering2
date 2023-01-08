@@ -86,10 +86,7 @@ fileUpload({createParentPath: true}),
                 return res.status(500).end();
             return res.status(201).json(result);
         } catch (err) {
-            switch(err.returnCode){
-                default:
-                    return res.status(500).json(err.message);
-            }
+            return res.status(500).json(err.message);
         }
     });
 

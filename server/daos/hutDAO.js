@@ -25,7 +25,8 @@ class HutDAO {
     getHut = async (hutId) => {
         let sql = "SELECT * FROM hut WHERE id = ?";
         const res = await this.dbManager.get(sql, [hutId], true);
-        return new Hut(res.id, res.name, res.numOfBeds, res.phoneNumber, res.email, res.description, res.website, res.pointId, res.ownerId, res.imageName);
+        return res ? new Hut(res.id, res.name, res.numOfBeds, res.phoneNumber, res.email, res.description, res.website, res.pointId, res.ownerId, res.imageName)
+              : undefined ;
     }
 
     getMaxData = async () => {

@@ -40,8 +40,8 @@ const hikeHutDAO = new HikeHutDAO(dbManager);
 const hikeParkingDAO = new HikeParkingDAO(dbManager);
 
 const hikeService = new HikeService(hikeDAO, pointDAO, hutDAO, parkingDAO);
-const hikeHutService = new HikeHutService(hikeHutDAO);
-const hikeParkingService = new HikeParkingService(hikeParkingDAO);
+const hikeHutService = new HikeHutService(hikeHutDAO,hikeDAO,hutDAO,pointDAO);
+const hikeParkingService = new HikeParkingService(hikeParkingDAO,hikeDAO,parkingDAO);
 
 const { isLoggedIn, getPermission } = require("./loginController");
 
@@ -149,7 +149,7 @@ router.get("/hikes/:id/near-start",
       }
       const hikeId = Number.parseInt(req.params.id);
       const result = await hikeService.getNearStart(hikeId);
-      let hutLinked = await hikeHutService.getHutLinkedToHike(hikeId);
+      let hutLinked = await hikeHutService.getHutLinkedToHikeAsStartEnd(hikeId);
       hutLinked = hutLinked.filter(hikeHut => hikeHut.startPoint).map(h => {return {id: h.hutId, type: "hut"}});
       let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
       parkingLinked = parkingLinked.filter(parkingHut => parkingHut.startPoint).map(p => {return {id: p.parkingId, type: "parking"}});
@@ -159,6 +159,8 @@ router.get("/hikes/:id/near-start",
       return res.status(200).json(result);
     } catch (err) {
       switch (err.returnCode) {
+        case 401:
+          return res.status(401).end();
         case 404:
           return res.status(404).send(err.msg);
         default:
@@ -180,7 +182,7 @@ router.get("/hikes/:id/near-end",
       }
       const hikeId = Number.parseInt(req.params.id);
       const result = await hikeService.getNearEnd(hikeId);
-      let hutLinked = await hikeHutService.getHutLinkedToHike(hikeId);
+      let hutLinked = await hikeHutService.getHutLinkedToHikeAsStartEnd(hikeId);
       hutLinked = hutLinked.filter(hikeHut => hikeHut.endPoint).map(h => {return {id: h.hutId, type: "hut"}});
       let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
       parkingLinked = parkingLinked.filter(parkingHut => parkingHut.endPoint).map(p => {return {id: p.parkingId, type: "parking"}});
@@ -189,6 +191,8 @@ router.get("/hikes/:id/near-end",
       return res.status(200).json(result);
     } catch (err) {
       switch (err.returnCode) {
+        case 401:
+          return res.status(401).end();
         case 404:
           return res.status(404).send(err.msg);
         default:
@@ -234,9 +238,7 @@ router.post(
 
       /// save tracking file
       const rootPath = config.gpxPath;
-      if (!rootPath) {
-        return res.status(500).send("error in reading gpxPath from config");
-      }
+
       const trackingfile = req.files ? req.files.trackingfile : null;
       const gpxFileName = trackingfile
         ? uuidv4() + "-" + trackingfile.name
@@ -244,7 +246,7 @@ router.post(
       const gpxPath = trackingfile ? rootPath + gpxFileName : null;
 
       if (path.extname(trackingfile.name) != ".gpx")
-        return res.status(400).send("wrong file type");
+        return res.status(422).send("wrong file type");
 
       if (trackingfile) {
         //  mv() method places the file inside public directory
@@ -260,9 +262,7 @@ router.post(
     ///save image
 
     const rootHikePath=config.hikeImagesPath;
-            if (!rootHikePath) {
-                return res.status(500).json("error in reading hikeImagesPath from config");
-            }
+
             const image =req.files ? req.files.image : null;
             const imageName=image ?  uuidv4()+'-'+image.name  : null;
             const imagePath=image ? rootHikePath + imageName : null;
@@ -279,7 +279,9 @@ router.post(
             
     /// end save image
 
-    const userId=req.user?req.user.Id:1;
+    //const userId=req.user.Id;
+    const userId=req.user? req.user.id : 1;
+    
       // define hike
       const hike = new Hike(undefined, req.body.title, Number.parseInt(req.body.length), Number.parseInt(req.body.expectedTime),
         Number.parseInt(req.body.ascent), req.body.difficulty, req.body.description, userId, gpxFileName,undefined,undefined,imageName);
@@ -315,6 +317,8 @@ router.get(
       return res.status(200).json(result);
     } catch (err) {
       switch (err.returnCode) {
+        case 401:
+          return res.status(401).end();
         case 404:
           return res.status(404).send(err.message);
         default:
@@ -372,9 +376,9 @@ router.post(
   getPermission(["Local Guide"]),
   [param("id").exists().isInt({ min: 1 }),
   body("startType").optional().isString().trim(),
-  body("startId").optional().isInt({ min: 0 }),
+  body("startId").optional().isInt({ min: 1 }),
   body("endType").optional().isString().trim(),
-  body("endId").optional().isInt({ min: 0 })
+  body("endId").optional().isInt({ min: 1 })
   ],
   async (req, res) => {
     try {
@@ -389,21 +393,25 @@ router.post(
       const startId = req.body.startId ? Number.parseInt(req.body.startId) : undefined;
       const endId = req.body.endId ? Number.parseInt(req.body.endId) : undefined;
 
+      const userId=req.user?req.user.Id:1;
+
       let result;
       if (startType == "hut")
-        result = await hikeHutService.linkHutToHike(hikeId, startId, true, undefined);
+        result = await hikeHutService.linkHutAsStartEndToHike(hikeId, startId, true, undefined,userId);
       if (endType == "hut")
-        result = await hikeHutService.linkHutToHike(hikeId, endId, undefined, true);
+        result = await hikeHutService.linkHutAsStartEndToHike(hikeId, endId, undefined, true,userId);
       if (startType == "parking")
-        result = await hikeParkingService.linkParkingToHike(hikeId, startId, true, undefined);
+        result = await hikeParkingService.linkParkingToHike(hikeId, startId, true, undefined,userId);
       if (endType == "parking")
-        result = await hikeParkingService.linkParkingToHike(hikeId, endId, undefined, true);
+        result = await hikeParkingService.linkParkingToHike(hikeId, endId, undefined, true,userId);
 
       return res.status(200).json(result);
     } catch (err) {
       switch (err.returnCode) {
         case 404:
           return res.status(404).send(err.message);
+        case 401:
+          return res.status(401).end();
         default:
           return res.status(500).end();
       }
@@ -466,6 +474,45 @@ router.get(
           return res.status(404).send(err.message);
         default:
           return res.status(500).send();
+      }
+    }
+  }
+);
+
+router.post(
+  "/hikes/:id/linkhut",
+  //isLoggedIn,
+  //getPermission(["Local Guide"]),
+  [param("id").exists().isInt({ min: 1 }),
+  body("hutId").notEmpty().isInt({ min: 1 }),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).end();
+      }
+
+      const hikeId = Number.parseInt(req.params.id);
+      const hutId = Number.parseInt(req.body.hutId);
+
+      const userId=req.user?req.user.Id:1;
+      
+      let result;
+      result = await hikeHutService.linkHutToHike(hikeId, hutId,userId);
+     
+
+      return res.status(200).json(result);
+    } catch (err) {
+      switch (err.returnCode) {
+        case 401:
+          return res.status(401).end();
+        case 404:
+          return res.status(404).send(err.message);
+        case 422:
+          return res.status(422).send(err.message);
+        default:
+          return res.status(500).end();
       }
     }
   }
