@@ -200,7 +200,7 @@ const getFilteredUserHikes = async (
 ) => {
   const response = await fetch(
     new URL(
-      "user-hikes?" + //TODO: fix api call
+      "user-hikes?" +
         new URLSearchParams({
           minLen,
           maxLen,

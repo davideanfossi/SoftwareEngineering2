@@ -222,20 +222,16 @@ class HikeService {
   addReference = async (hikeId, refPointList) => {
     for (const refPoint of refPointList) {
       const refPointId = await this.pointDAO.insertPoint(refPoint);
-      if (refPointId > 0) {
-        const res = await this.pointDAO.insertReference(
+      if (refPointId > 0)
+        await this.pointDAO.insertReference(
           hikeId,
           refPointId,
-          refPoint.description
+          refPoint.description,
+          refPoint.name
         );
-        return res;
-      } else throw "generic error";
     }
   };
-
   addHike = async (hike, startPoint, endPoint) => {
-    //TODO :  add transaction or delete points in catch when insertHike returns err
-    //first insert startPoint and endPoint
     const startPointId = await this.pointDAO.insertPoint(startPoint);
     const endPointId = await this.pointDAO.insertPoint(endPoint);
     if (startPointId > 0 && endPointId > 0) {
@@ -274,20 +270,6 @@ class HikeService {
         return { lat: p[1], lon: p[0] };
       }),
     };
-  };
-
-  addReference = async (hikeId, refPointList) => {
-    for (const refPoint of refPointList) {
-      const refPointId = await this.pointDAO.insertPoint(refPoint);
-      if (refPointId > 0) {
-        const res = await this.pointDAO.insertReference(
-          hikeId,
-          refPointId,
-          refPoint.description
-        );
-        return res;
-      } else throw "generic error";
-    }
   };
 
   getHutsNearHike = async (hikeId) => {
@@ -337,18 +319,6 @@ class HikeService {
         return { lat: p[1], lon: p[0] };
       }),
     };
-  };
-
-  addReference = async (hikeId, refPointList) => {
-    for (const refPoint of refPointList) {
-      const refPointId = await this.pointDAO.insertPoint(refPoint);
-      if (refPointId > 0)
-        await this.pointDAO.insertReference(
-          hikeId,
-          refPointId,
-          refPoint.description
-        );
-    }
   };
 }
 

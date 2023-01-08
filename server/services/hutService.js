@@ -14,8 +14,6 @@ class HutService {
     }
 
     addHut = async (name, numOfBeds, description, phoneNumber, email, website, userId, latitude, longitude, altitude, pointLabel, address, imageName) => {
-        //TODO :  add transaction or delete points in catch when insertHike returns err
-        //first insert Point 
         const pointId = await this.pointDAO.insertPoint({ latitude, longitude, altitude, name: pointLabel, address })
 
         if (pointId > 0) {

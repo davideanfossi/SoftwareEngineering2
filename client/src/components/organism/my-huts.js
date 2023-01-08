@@ -17,7 +17,6 @@ export const MyHuts = () => {
     setPageNumer(1);
     setPageSize(huts.pageSize);
     setTotalPages(huts.totalPages);
-    console.log(huts);
     setHutList(
       huts.pageItems.map(
         (hut) =>

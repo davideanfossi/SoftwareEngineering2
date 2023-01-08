@@ -29,9 +29,9 @@ class PointDAO {
             return res;
     }
 
-    insertReference = async (hikeId, pointId, description) => {
-        const sql = "insert into ReferencePoints(hikeId, pointId, description) values(?,?,?)";
-        const res = await this.dbManager.query(sql, [hikeId, pointId, description]);
+    insertReference = async (hikeId, pointId, description,label) => {
+        const sql = "insert into ReferencePoints(hikeId, pointId, description,label) values(?,?,?,?)";
+        const res = await this.dbManager.query(sql, [hikeId, pointId, description,label]);
         return res;
     }
 

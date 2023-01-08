@@ -45,7 +45,7 @@ export const HikeMap = ({ startPoint, endPoint, referencesPoints, track }) => {
               {endPoint && <MarkerReferencePoint point={endPoint} />}
 
               {
-                //TODO:decide if keep or not
+                
 
                 showReferencePoints &&
                   referencesPoints.map((point, index) => (

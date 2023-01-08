@@ -154,7 +154,6 @@ router.get("/hikes/:id/near-start",
       let parkingLinked = await hikeParkingService.getParkingLinkedToHike(hikeId);
       parkingLinked = parkingLinked.filter(parkingHut => parkingHut.startPoint).map(p => {return {id: p.parkingId, type: "parking"}});
 
-      console.log(result)
       result.selected = [...hutLinked, ...parkingLinked];
 
       return res.status(200).json(result);
