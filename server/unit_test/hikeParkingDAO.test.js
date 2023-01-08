@@ -27,6 +27,10 @@ describe('HikeParking DAO unit test', () => {
         sql = "insert into Parking (name, ownerId, pointId, numSpots, hasFreeSpots, imageName) values(?,?,?,?,?,?)";
         await dbManager.query(sql, ["parking 1", 1, 1,20, 1, ""]);
         await dbManager.query(sql, ["parking 2", 1, 10,40, 1, ""]);
+
+        sql = "insert into HikeParking(hikeId,parkingId,startPoint,endPoint) values(?,?,?,?)";
+        await dbManager.query(sql, [2, 1, true, null]);
+        await dbManager.query(sql, [2, 2, null, true]);
     });
 
     afterAll(async () => {
@@ -39,13 +43,23 @@ describe('HikeParking DAO unit test', () => {
             .toThrow('DBManager must be defined for HikeParking dao!');
     });
 
+    const hikeParking1 = new HikeParking(2, 1, true, false);
+    const hikeParking2 = new HikeParking(2, 2, false, true);
 
+    testGetParkingLinkedToHike(2,[hikeParking1,hikeParking2]);
 
     testInsertHikeParking(1,1,true,null)
     testInsertHikeParking(1,2,null,true)
 
 });
 
+function testGetParkingLinkedToHike(hikeId,expectedParkings){
+    test('testGetParkingLinkedToHike', async () => {
+
+        const res = await hikeParkingDAO.getHikeLinkedParkings(hikeId);
+        expect(res).toEqual(expect.arrayContaining(expectedParkings));
+    })
+}
 
 function testInsertHikeParking(hikeId, parkingId, startPoint,endPoint) {
     test('add parking to hike', async () => {

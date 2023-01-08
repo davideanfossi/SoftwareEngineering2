@@ -13,7 +13,13 @@ class HikeHutDAO {
     getHikeLinkedHutsAsStartEnd = async (hikeId) => {
             const sql = "SELECT * FROM HikeHut WHERE hikeId = ? and (startPoint =1 or endPoint=1)";
             const res = await this.dbManager.get(sql, [hikeId]);
-            return res.map(rs=> new HikeHut(rs.hikeId, rs.hutId, !!rs.startPoint,!!rs.endPoint,!!r.isLinked)) ;
+            return res.map(rs=> new HikeHut(rs.hikeId, rs.hutId, !!rs.startPoint,!!rs.endPoint,!!rs.isLinked)) ;
+    };
+
+    getHikeLinkedHuts = async (hikeId) => {
+        const sql = "SELECT * FROM HikeHut WHERE isLinked=true and hikeId = ? ";
+        const res = await this.dbManager.get(sql, [hikeId]);
+        return res.map(rs=> new HikeHut(rs.hikeId, rs.hutId, !!rs.startPoint,!!rs.endPoint,!!rs.isLinked)) ;
     };
 
     getHikeHut = async (hikeId,hutId) => {

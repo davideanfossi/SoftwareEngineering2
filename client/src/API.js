@@ -466,7 +466,23 @@ const getCompletedHikes = async (
           pageSize,
         }),
       SERVER_BASE
-    ),
+    ),    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+};
+const getNearHuts = async (id) => {
+  const response = await fetch(
+    new URL("hikes/" + id + "/nearhuts", SERVER_BASE),
     {
       method: "GET",
       headers: {
@@ -476,12 +492,11 @@ const getCompletedHikes = async (
     }
   );
   if (response.ok) {
-    return response.json();
+    return await response.json();
   } else {
-    throw response.text();
+    throw await response.text();
   }
 };
-
 
 const linkStartEndPoint=async(hikeId,startPoint,endPoint)=>{
    const response = await fetch(
@@ -511,7 +526,24 @@ const getHike = async (id) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-      },
+      },      credentials: "include",
+    }
+  );
+  if (response.ok) {
+    return await response.json();
+  } else {
+    throw await response.text();
+  }
+};
+const linkHut=async(hikeId,point)=>{
+  const response = await fetch(
+    new URL("hikes/" + hikeId + "/linkhut", SERVER_BASE),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hutId: point.id,
+      }),
       credentials: "include",
     }
   );
@@ -551,6 +583,8 @@ const API = {
   getHike,
   recordHike,
   getLastRecordedHike,
+  getNearHuts,
+  linkHut
 };
 
 export default API;

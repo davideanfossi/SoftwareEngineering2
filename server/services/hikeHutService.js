@@ -1,10 +1,7 @@
 "use strict";
 
 const togeojson = require("togeojson");
-const fs = require("fs");
-const DOMParser = require("xmldom").DOMParser;
 const path = require("path");
-const { isWithinCircle } = require("../utils/positionUtils");
 
 const config = require("../config.json");
 
@@ -14,7 +11,8 @@ class HikeHutService {
       throw new Error("hikeHutDAO must be defined for HikeHutService!");
     if (!hikeDAO)
       throw new Error("hikeDAO must be defined for HikeHutService!");
-    if (!hutDAO) throw new Error("hutDAO must be defined for HikeHutService!");
+    if (!hutDAO) 
+      throw new Error("hutDAO must be defined for HikeHutService!");
     if (!pointDAO)
       throw new Error("pointDAO must be defined for HikeHutService!");
 
@@ -33,6 +31,17 @@ class HikeHutService {
       };
 
     const res = await this.hikeHutDAO.getHikeLinkedHutsAsStartEnd(hikeId);
+    return res;
+  };
+
+  getHutLinkedToHike = async (hikeId) => {
+    const hike = await this.hikeDAO.getHike(hikeId);
+    if (!hike)
+      throw {
+        returnCode: 404,
+        message: "hike not found",
+      };
+    const res = await this.hikeHutDAO.getHikeLinkedHuts(hikeId);
     return res;
   };
 
@@ -112,25 +121,23 @@ class HikeHutService {
 
     //check if hut is already linked to the hike
     const hikeHut = await this.hikeHutDAO.getHikeHut(hikeId, hutId);
-    console.log(hikeHut)
     if (hikeHut && hikeHut.isLinked) 
         throw { 
-            returnCode: 422, 
+            returnCode: 409, 
             message:"hut is already linked to the hike"
         };
 
-    hut.point = await this.pointDAO.getPoint(hut.point);
+/*     hut.point = await this.pointDAO.getPoint(hut.point);
 
     if (!validateHutPoint(hut.point, hike.gpxPath))
       throw {
-        returnCode: 422,
+        returnCode: 409,
         message: "this hut is located far from the hike"
-      };
+      }; */
 
     let res;
     //if there is not any record for this hike and hut in the table insert new record
     if (!hikeHut) {
-        console.log('insert')
       res = await this.hikeHutDAO.insertHikeHut(
         hikeId,
         hutId,
@@ -142,7 +149,6 @@ class HikeHutService {
     }
     //otherwise update existing record
     else {
-        console.log('update')
       res = await this.hikeHutDAO.updateHikeHutIsLinked(hikeId, hutId, true);
       return res;
     }
@@ -151,31 +157,6 @@ class HikeHutService {
 
 }
 
-function validateHutPoint (hutPoint, hikeGpxPath)
-   {
-    const radius = 5;
 
-    if (hikeGpxPath === null)
-      throw { returnCode: 500, message: "Gpx file does not exist" };
-    const hikeGpxFile = path.resolve(config.gpxPath, hikeGpxPath);
-    if (!fs.existsSync(hikeGpxFile))
-      throw { returnCode: 500, message: "Gpx file does not exist" };
-
-    const gpx = new DOMParser().parseFromString(
-      fs.readFileSync(hikeGpxFile, "utf8")
-    );
-    const geoJson = togeojson.gpx(gpx);
-
-    let result=true;
-    // compare distance of hut point with all points of the hike
-    geoJson.features[0].geometry.coordinates.every((element) => {
-      if (!isWithinCircle(element[1],element[2],hutPoint.latitude,hutPoint.longitude,radius)) 
-      {
-        result=false;
-        return result ;
-      }
-    });
-    return result;
-  };
 
 module.exports = HikeHutService;

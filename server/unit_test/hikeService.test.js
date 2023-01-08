@@ -47,11 +47,11 @@ describe('Hike DAO unit test', () => {
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
 
-        sql = "INSERT INTO Hike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        await dbManager.query(sql, ["title 1", 1000, 120, 300, mid, 1, 2, "description 1", testFileBasename, 1]);
-        await dbManager.query(sql, ["title 2", 2000, 180, 500, high, 1, 4, "description 2", null, 1]);
-        await dbManager.query(sql, ["title 3", 1500, 100, 200, low, 3, 4, "description 3", null, 1]);
-        await dbManager.query(sql, ["title 4", 1600, 120, 350, mid, 2, 4, "description 4", null, 1]);
+        sql = "INSERT INTO Hike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId,imageName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?);";
+        await dbManager.query(sql, ["title 1", 1000, 120, 300, mid, 1, 2, "description 1", testFileBasename, 1,"hike1 image"]);
+        await dbManager.query(sql, ["title 2", 2000, 180, 500, high, 1, 4, "description 2", null, 1,null]);
+        await dbManager.query(sql, ["title 3", 1500, 100, 200, low, 3, 4, "description 3", null, 1,"hike3 image"]);
+        await dbManager.query(sql, ["title 4", 1600, 120, 350, mid, 2, 4, "description 4", null, 1,null]);
 
         sql = "INSERT INTO ReferencePoints(hikeId, pointId) VALUES (?, ?);";
         await dbManager.query(sql, [2, 2]);
@@ -90,10 +90,10 @@ describe('Hike DAO unit test', () => {
     const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
     const point4 = new Point(4, 47.574405, 8.455193, 300, "point 4", null);
 
-    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 1, testFileBasename, point1, point2, []);
-    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 1, null, point1, point4, [point2, point3]);
-    const hike3 = new Hike(3, "title 3", 1500, 100, 200, low, "description 3", 1, null, point3, point4, [point2]);
-    const hike4 = new Hike(4, "title 4", 1600, 120, 350, mid, "description 4", 1, null, point2, point4, [point3]);
+    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 1, testFileBasename, point1, point2,"hike1 image", []);
+    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 1, null, point1, point4,null, [point2, point3]);
+    const hike3 = new Hike(3, "title 3", 1500, 100, 200, low, "description 3", 1, null, point3, point4,"hike3 image", [point2]);
+    const hike4 = new Hike(4, "title 4", 1600, 120, 350, mid, "description 4", 1, null, point2, point4,null, [point3]);
 
     testGetHikesLimits({ "maxLength": 2000, "maxExpectedTime": 180, "maxAscent": 500, "difficultyType": [low, mid, high] });
 
@@ -177,4 +177,5 @@ function testGetHikeGpxError(testMsg, hikeId, expectedError) {
         await expect(invalidgetHikeGpx).rejects.toEqual(expectedError);
     })
 }
+
 

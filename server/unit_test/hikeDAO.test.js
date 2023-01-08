@@ -23,11 +23,11 @@ describe('Hike DAO unit test', () => {
         sql = "INSERT INTO user(email, username, role, password, salt, name, surname, phoneNumber, isVerified, token, tokenExpires) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         await dbManager.query(sql, ["user1@test.it", "user 1", "local guide", "password", "salt", null, null, null, 1, null, null]);
 
-        sql = "INSERT INTO Hike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        await dbManager.query(sql, ["title 1", 1000, 120, 300, mid, 1, 2, "description 1", null, 1]);
-        await dbManager.query(sql, ["title 2", 2000, 180, 500, high, 1, 4, "description 2", null, 1]);
-        await dbManager.query(sql, ["title 3", 1500, 100, 200, low, 3, 4, "description 3", null, 1]);
-        await dbManager.query(sql, ["title 4", 1600, 120, 350, mid, 2, 4, "description 4", null, 1]);
+        sql = "INSERT INTO Hike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId,imageName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?);";
+        await dbManager.query(sql, ["title 1", 1000, 120, 300, mid, 1, 2, "description 1", null, 1,null]);
+        await dbManager.query(sql, ["title 2", 2000, 180, 500, high, 1, 4, "description 2", null, 1,null]);
+        await dbManager.query(sql, ["title 3", 1500, 100, 200, low, 3, 4, "description 3", null, 1,null]);
+        await dbManager.query(sql, ["title 4", 1600, 120, 350, mid, 2, 4, "description 4", null, 1,null]);
 
         sql = "INSERT INTO ReferencePoints(hikeId, pointId) VALUES (?, ?);";
         await dbManager.query(sql, [2, 2]);
@@ -46,11 +46,13 @@ describe('Hike DAO unit test', () => {
             .toThrow('DBManager must be defined for Hike dao!');
     });
 
-    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 1, null, 1, 2, []);
-    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 1, null, 1, 4, []);
-    const hike3 = new Hike(3, "title 3", 1500, 100, 200, low, "description 3", 1, null, 3, 4, []);
-    const hike4 = new Hike(4, "title 4", 1600, 120, 350, mid, "description 4", 1, null, 2, 4, []);
+    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 1, null, 1, 2,null, []);
+    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 1, null, 1, 4,null, []);
+    const hike3 = new Hike(3, "title 3", 1500, 100, 200, low, "description 3", 1, null, 3, 4,null, []);
+    const hike4 = new Hike(4, "title 4", 1600, 120, 350, mid, "description 4", 1, null, 2, 4,null, []);
     testGetAllHikes([hike1, hike2, hike3, hike4]);
+
+    testGetSingleHike(1,hike1)
 
     testGetHikes(1600, undefined, undefined, undefined, undefined, undefined, undefined, [hike2, hike4]);
     testGetHikes(undefined, 1600, undefined, undefined, undefined, undefined, undefined, [hike1, hike3, hike4]);
@@ -95,14 +97,21 @@ function testGetMaxData(expectedObj) {
 function testInsertHike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId) {
     test('add new hike', async () => {
 
-        let lastID = await hikeDAO.insertHike(new Hike(undefined, title, length, expectedTime, ascent, difficulty, description, userId, gpxPath, startPointId, endPointId));
+        let lastID = await hikeDAO.insertHike(new Hike(undefined, title, length, expectedTime, ascent, difficulty, description, userId, gpxPath, startPointId, endPointId,null));
         expect(lastID).toBeTruthy();
 
-        const hike = new Hike(lastID, title, length, expectedTime, ascent, difficulty, description, userId, gpxPath, startPointId, endPointId, []);
+        const hike = new Hike(lastID, title, length, expectedTime, ascent, difficulty, description, userId, gpxPath, startPointId, endPointId,null);
 
         const res = await hikeDAO.getAllHikes();
         expect(res.length).toBeGreaterThan(0);
         expect(res).toEqual(expect.arrayContaining([hike]));
 
     })
+}
+
+function testGetSingleHike(hikeId, expectedHike) {
+    test('get a single hike', async () => {
+        const res = await hikeDAO.getHike(hikeId);
+        expect(res).toEqual(expectedHike);
+    });
 }

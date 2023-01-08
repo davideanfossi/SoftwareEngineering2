@@ -289,6 +289,55 @@ class HikeService {
       } else throw "generic error";
     }
   };
-}
+
+
+    getHutsNearHike =async (hikeId) => {
+        const hike = await this.hikeDAO.getHike(hikeId);
+        if (!hike)
+            throw {
+                returnCode: 404, msg: "hike not found"
+            }
+
+        let huts = await this.hutDAO.getAllHuts();
+        let returnedHuts = [];
+    
+        for (const hut of huts) {
+            hut.point = await this.pointDAO.getPoint(hut.point);
+            if (validateHutPoint(hut.point,hike.gpxPath))
+                returnedHuts.push(hut);
+        }
+    
+        return {huts  :returnedHuts};
+    }
+
+
+
+  }
+
+function validateHutPoint (hutPoint, hikeGpxPath)
+   {
+    const radius = 5;
+
+    if (hikeGpxPath === null)
+      throw { returnCode: 500, message: "Gpx file does not exist" };
+    const hikeGpxFile = path.resolve(config.gpxPath, hikeGpxPath);
+    if (!fs.existsSync(hikeGpxFile))
+      throw { returnCode: 500, message: "Gpx file does not exist" };
+
+    const gpx = new DOMParser().parseFromString(
+      fs.readFileSync(hikeGpxFile, "utf8")
+    );
+    const geoJson = togeojson.gpx(gpx);
+    let result=false;
+    // compare distance of hut point with all points of the hike
+    geoJson.features[0].geometry.coordinates.some((element) => {
+      if (isWithinCircle(element[1],element[0],hutPoint.latitude,hutPoint.longitude,radius)) 
+      {
+        result=true;
+        return result ;
+      }
+    });
+    return result;
+  };
 
 module.exports = HikeService;

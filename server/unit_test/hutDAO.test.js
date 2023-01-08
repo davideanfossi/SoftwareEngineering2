@@ -54,6 +54,7 @@ describe('Hut DAO unit test', () => {
    // testInsertHut("hut 2",20,3,"hut desc2",'32146582','test2@test.com','www.test2.com',1)
 
    testGetMaxData({"maxAltitude": 300, "maxNumOfBeds": 50});
+   testGetHutsbyUserId(1,[hut1,hut2]);
 });
 
 function testInsertHut(name,numOfBeds,pointId,description,phoneNumber,email,website,userId){
