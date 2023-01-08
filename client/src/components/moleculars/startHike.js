@@ -252,7 +252,7 @@ export const StartHike = (props) => {
           <CardMessage
             className="text-center w-100 justify-content-center my-1 mx-0"
             title="Congratulation, you terminated this hike!"
-            subtitle={"You spent " + dayjs.duration(dayjs(endDateValue.concat("T", endTimeValue)).diff(hikeStartDateTime)).asMinutes() + " minutes"}
+            subtitle={"You spent " + dayjs.duration(dayjs(endDateValue.concat("T", endTimeValue)).diff(hikeStartDateTime)).asMinutes().toFixed(0) + " minute(s)"}
             bgVariant="success"
             textVariant="white"
           />
