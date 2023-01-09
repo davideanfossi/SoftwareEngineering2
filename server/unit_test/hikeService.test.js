@@ -35,7 +35,7 @@ const undefinedAscent = { minAscent: undefined, maxAscent: undefined };
 const undefinedRad = { baseLat: undefined, baseLon: undefined, radius: undefined };
 
 
-describe('Hike DAO unit test', () => {
+describe('Hike Service unit test', () => {
     beforeAll(async () => {
         await purgeAllTables(dbManager);
         let sql = "INSERT INTO Points(latitude, longitude, altitude, name, address) VALUES (?, ?, ?, ?, ?);";
@@ -53,11 +53,11 @@ describe('Hike DAO unit test', () => {
         await dbManager.query(sql, ["title 3", 1500, 100, 200, low, 3, 4, "description 3", null, 1,"hike3 image"]);
         await dbManager.query(sql, ["title 4", 1600, 120, 350, mid, 2, 4, "description 4", null, 1,null]);
 
-        sql = "INSERT INTO ReferencePoints(hikeId, pointId) VALUES (?, ?);";
-        await dbManager.query(sql, [2, 2]);
-        await dbManager.query(sql, [2, 3]);
-        await dbManager.query(sql, [3, 2]);
-        await dbManager.query(sql, [4, 3]);
+        sql = "INSERT INTO ReferencePoints(hikeId, pointId, description, label) VALUES (?, ?, ?, ?);";
+        await dbManager.query(sql, [2, 2, "ref1", "lab1"]);
+        await dbManager.query(sql, [2, 3, "ref2", "lab2"]);
+        await dbManager.query(sql, [3, 2, "ref3", "lab3"]);
+        await dbManager.query(sql, [4, 3, "ref4", "lab4"]);
 
         try {
             fs.copyFile(testFileName, path.resolve(config.gpxPath, testFileBasename), (err) => {
@@ -89,11 +89,19 @@ describe('Hike DAO unit test', () => {
     const point2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
     const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
     const point4 = new Point(4, 47.574405, 8.455193, 300, "point 4", null);
+    const refPoint1Hike2 = {...point2};
+    refPoint1Hike2.description = "ref1";
+    const refPoint2Hike2 = {...point3};
+    refPoint2Hike2.description = "ref2";
+    const refPoint1Hike3 = {...point2};
+    refPoint1Hike3.description = "ref3";
+    const refPoint1Hike4 = {...point3};
+    refPoint1Hike4.description = "ref4";
 
     const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 1, testFileBasename, point1, point2,"hike1 image", []);
-    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 1, null, point1, point4,null, [point2, point3]);
-    const hike3 = new Hike(3, "title 3", 1500, 100, 200, low, "description 3", 1, null, point3, point4,"hike3 image", [point2]);
-    const hike4 = new Hike(4, "title 4", 1600, 120, 350, mid, "description 4", 1, null, point2, point4,null, [point3]);
+    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 1, null, point1, point4,null, [refPoint1Hike2, refPoint2Hike2]);
+    const hike3 = new Hike(3, "title 3", 1500, 100, 200, low, "description 3", 1, null, point3, point4,"hike3 image", [refPoint1Hike3]);
+    const hike4 = new Hike(4, "title 4", 1600, 120, 350, mid, "description 4", 1, null, point2, point4,null, [refPoint1Hike4]);
 
     testGetHikesLimits({ "maxLength": 2000, "maxExpectedTime": 180, "maxAscent": 500, "difficultyType": [low, mid, high] });
 

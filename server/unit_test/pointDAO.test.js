@@ -23,9 +23,9 @@ describe('Point DAO unit test', () => {
         sql = "INSERT INTO Hike(title, length, expectedTime, ascent, difficulty, startPointId, endPointId, description, gpxPath, userId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         await dbManager.query(sql, ["title 1", 1000, 120, 300, "Hiker", 1, 4, "description 1", null, 1]);
 
-        sql = "INSERT INTO ReferencePoints(hikeId, pointId) VALUES (?, ?);";
-        await dbManager.query(sql, [1, 2]);
-        await dbManager.query(sql, [1, 3]);
+        sql = "INSERT INTO ReferencePoints(hikeId, pointId, description, label) VALUES (?, ?, ?, ?);";
+        await dbManager.query(sql, [1, 2, "ref1", "lab1"]);
+        await dbManager.query(sql, [1, 3, "ref2", "lab2"]);
     });
 
     afterAll(async () => {
@@ -42,6 +42,9 @@ describe('Point DAO unit test', () => {
     const point2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
     const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
     testGetPoint(1, point1);
+
+    point2.description = "ref1";
+    point3.description = "ref2";
     testgetReferencePointsOfHike(1, [point2, point3]);
 
     testInsertPoint(44.0703393, 71.686864, 2000, "point A", "address A")

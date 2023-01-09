@@ -64,8 +64,8 @@ describe('Profile Service unit test', () => {
     const point2 = new Point(2, 45.070254, 7.702042, 250, "point 2", "address 2");
     const point3 = new Point(3, 45.119817, 7.565056, 250, "point 3", "address 3");
 
-    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 2, null, point1, point2, undefined, []);
-    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 2, null, point1, point3, undefined, []);
+    const hike1 = new Hike(1, "title 1", 1000, 120, 300, mid, "description 1", 2, null, point1, point2, null, []);
+    const hike2 = new Hike(2, "title 2", 2000, 180, 500, high, "description 2", 2, null, point1, point3, null, []);
 
     const user1 = new User(1, "user 1", "user1@test.it", "Hiker", "", "", "");
     const user2 = new User(2, "user 2", "user2@test.it", "Local Guide", "frank", "white", "123456789");

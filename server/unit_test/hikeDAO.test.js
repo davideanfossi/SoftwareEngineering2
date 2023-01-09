@@ -29,11 +29,11 @@ describe('Hike DAO unit test', () => {
         await dbManager.query(sql, ["title 3", 1500, 100, 200, low, 3, 4, "description 3", null, 1,null]);
         await dbManager.query(sql, ["title 4", 1600, 120, 350, mid, 2, 4, "description 4", null, 1,null]);
 
-        sql = "INSERT INTO ReferencePoints(hikeId, pointId) VALUES (?, ?);";
-        await dbManager.query(sql, [2, 2]);
-        await dbManager.query(sql, [2, 3]);
-        await dbManager.query(sql, [3, 2]);
-        await dbManager.query(sql, [4, 3]);
+        sql = "INSERT INTO ReferencePoints(hikeId, pointId, description, label) VALUES (?, ?, ?, ?);";
+        await dbManager.query(sql, [2, 2, "ref1", "lab1"]);
+        await dbManager.query(sql, [2, 3, "ref2", "lab2"]);
+        await dbManager.query(sql, [3, 2, "ref3", "lab3"]);
+        await dbManager.query(sql, [4, 3, "ref4", "lab4"]);
     });
 
     afterAll(async () => {
