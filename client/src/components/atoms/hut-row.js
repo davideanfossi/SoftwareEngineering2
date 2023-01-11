@@ -34,7 +34,7 @@ export const HutRow = ({ hut, even }) => {
                     API.SERVER_HOST +
                     ":" +
                     API.SERVER_PORT +
-                    "/hutimages/" +
+                    "/hutImages/" +
                     hut.image
                   }
                   alt="Not found"
