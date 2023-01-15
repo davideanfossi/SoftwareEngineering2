@@ -45,7 +45,7 @@ class AuthService {
 
         let salt = crypto.randomBytes(16).toString('hex');
         let encryptedPass = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
-        const res = await this.authDAO.insertUser(new User(undefined, username, email, role, encryptedPass, salt, name, surname, phoneNumber));
+        const res = await this.authDAO.insertUser({username, email, role, password: encryptedPass, salt, name, surname, phoneNumber});
         return res;
     };
 
