@@ -1,5 +1,4 @@
-# se2022-16-HikeTracker
-SoftEng 2 Main Project - HikeTracker
+# Software Engineering 2 project - HikeTracker
 
 ## Table of Contents
 - [Install](#install)
